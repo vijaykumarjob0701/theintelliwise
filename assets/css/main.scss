@@ -2,13 +2,13 @@
 ---
 
 :root {
-  --bg: #f3efe6;
-  --bg-elev: #faf7f0;
+  --bg: #efe8d8;
+  --bg-elev: #fbf7ee;
   --ink: #1b1914;
-  --ink-muted: #5c564c;
-  --rule: #d4cdc0;
+  --ink-muted: #4a453c;
+  --rule: #c4bbab;
   --accent: #2c4a3e;
-  --accent-soft: #dce6df;
+  --accent-soft: #d5e3da;
   --code-bg: #211f1b;
   --code-ink: #ece6d9;
   --focus: #2c4a3e;
@@ -179,10 +179,11 @@ main {
 
 .empty-state {
   margin-top: 2.2rem;
-  padding: 1.4rem 1.35rem 1.3rem;
+  padding: 1.45rem 1.4rem 1.35rem;
   background: var(--bg-elev);
-  border: 1px solid var(--rule);
+  border: 1px solid #a89f8d;
   border-radius: 0.35rem;
+  box-shadow: 0 1px 0 rgba(27, 25, 20, 0.06);
 }
 
 .empty-state h2 {
