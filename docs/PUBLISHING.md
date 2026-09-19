@@ -52,7 +52,9 @@ Do not copy unused screenshots from the private draft folder.
 ## Workflow
 
 1. Draft and revise in private `vj-blogs`. Iterate there until the piece is
-   actually ready.
+   actually ready. LinkedIn Pulse migrations can start from that repo's
+   `tools/linkedin-to-blog` converter, then follow the same copy-and-fix-paths
+   steps below.
 2. Run the approval checklist below. If anything fails, keep it private.
 3. Copy **only** that markdown file into `_posts/`, renaming to
    `YYYY-MM-DD-slug.md` if needed.
