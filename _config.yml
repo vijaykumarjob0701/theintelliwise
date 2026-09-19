@@ -1,0 +1,55 @@
+# Custom layouts/CSS only — do not pull minima/primer assets.
+theme: null
+
+title: Vijay Kumar
+tagline: Applied ML notes
+description: >-
+  Practical, engineer-to-engineer notes on PEFT, agents, RAG, and the
+  systems work that makes applied ML hold up — by Vijay Kumar in Dublin.
+author:
+  name: Vijay Kumar
+  url: https://github.com/vijaykumarjob0701
+url: https://vijaykumarjob0701.github.io
+baseurl: /vj-blog
+lang: en
+timezone: Europe/Dublin
+permalink: /posts/:title/
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge
+
+highlighter: rouge
+sass:
+  style: compressed
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# GitHub Pages also enables several default plugins (readme-index,
+# optional-front-matter, titles-from-headings). Keep repo docs out of the site.
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - README.md
+  - LICENSE
+  - docs
+  - .gitignore
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      author: Vijay Kumar
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: page

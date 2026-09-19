@@ -1,0 +1,12 @@
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="wordmark" href="{{ '/' | relative_url }}">
+      <span class="mark" aria-hidden="true">vj</span>
+      <span class="name">{{ site.title }}</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="{{ '/' | relative_url }}"{% if page.layout == 'home' or page.url == '/' %} aria-current="page"{% endif %}>Writing</a>
+      <a href="{{ '/about/' | relative_url }}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>About</a>
+    </nav>
+  </div>
+</header>
