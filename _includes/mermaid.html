@@ -15,12 +15,11 @@
     });
     const targets = [];
     blocks.forEach((block) => {
-      const code = block.querySelector("code");
-      const source = (code || block).textContent;
+      const host = block.closest("pre") || block;
       const diagram = document.createElement("div");
       diagram.className = "mermaid";
-      diagram.textContent = source;
-      block.replaceWith(diagram);
+      diagram.textContent = block.textContent;
+      host.replaceWith(diagram);
       targets.push(diagram);
     });
     await mermaid.run({ nodes: targets });

@@ -1,6 +1,6 @@
 ---
 title: "PEFT Made Simple: A Software Engineer's Guide to LoRA, QLoRA, Adapters & More"
-date: 2026-09-19
+date: 2026-09-19 09:00:00 +0100
 tags: [peft, lora, qlora, fine-tuning]
 excerpt: "Parameter-efficient fine-tuning for engineers who already ship APIs: when LoRA or QLoRA is the right tool, what the knobs mean, and how the rest of the PEFT family fits."
 ---

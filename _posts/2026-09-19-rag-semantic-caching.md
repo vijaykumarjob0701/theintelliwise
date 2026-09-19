@@ -1,6 +1,6 @@
 ---
 title: "Semantic Caching for RAG & LLMs: Remembering by Meaning"
-date: 2026-09-19
+date: 2026-09-19 11:00:00 +0100
 tags: [rag, caching, embeddings]
 excerpt: "Reuse answers when a new question means the same thing — and only when metadata says it is still safe. Exact match first, then normalisation, then embeddings."
 ---

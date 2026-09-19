@@ -1,6 +1,6 @@
 ---
 title: "Different Types of Memory in AI Agents: A Software Developer's Guide"
-date: 2026-09-19
+date: 2026-09-19 10:00:00 +0100
 tags: [agents, memory, rag]
 excerpt: "Agent memory is not one vector database. It is several stores with different lifetimes — context, profiles, episodes, and procedures — and you should ship two buckets before you ship seven."
 ---
