@@ -7,8 +7,6 @@ excerpt: "Cursor is one of the most well-designed AI coding agents out there. Bu
 
 ![Reverse Engineering the Cursor AI Agent — Architecture Patterns You Can Steal for Your Own Projects]({{ '/assets/images/reverse-engineering-cursor-ai-agent/01.png' | relative_url }})
 
-# Reverse Engineering the Cursor AI Agent — Architecture Patterns You Can Steal for Your Own Projects
-
 Cursor is one of the most well-designed AI coding agents out there. But Anysphere (the company behind Cursor) has not published any official architecture documentation publicly. So most of what we know comes from **reverse engineering** — looking at blog posts, community research, and in my case, digging through the actual files Cursor stores on disk.
 
 My goal is not just to explain how Cursor works. I want to **extract the design patterns** so that you (or I) can reuse them when building our own AI agent for any domain — healthcare, legal, education, whatever.
@@ -48,11 +46,7 @@ The **Merkle tree** approach is the key here:
 
 > **Design pattern to steal:** If you are building a RAG system that indexes documents, use Merkle trees for change detection. It is far more efficient than re-indexing everything on every change.
 
-## 
-
 ## Part 2: What Happens When a Query Is Asked
-
-##
 
 This is where the agent behaviour really shows up. When you type a question in Cursor, a layered pipeline processes it.
 
@@ -102,11 +96,7 @@ When a conversation gets very long, Cursor triggers a **summarisation step** —
 
 **Design pattern to steal:** Use hierarchical memory with periodic summarisation. Keep raw history accessible but summarised in the main context. This prevents the "lossy compression" problem where important details get lost.
 
-## 
-
 ## Part 3: How the Cursor Agent Actually Works
-
-##
 
 Now let us put it all together. Here is the overall architecture.
 
@@ -178,11 +168,7 @@ Cursor's tool system uses the **Model Context Protocol (MCP)** — an open stand
 
 > **Design pattern to steal:** Build guardrails at multiple levels — input constraints (rules), tool permissions (auto-approve), action scoping (mode restrictions), and output review (diff preview). No single guardrail is enough; you need defense in depth.
 
-## 
-
 ## Part 4: Key Design Decisions Worth Stealing
-
-##
 
 Here are the architectural choices Cursor made that are worth studying for any AI agent project.
 
@@ -264,19 +250,11 @@ Cursor treats terminal output, MCP tool responses, and even chat history as "vir
 
 **When to use this pattern:** When your agent deals with large tool outputs (API responses, database query results, log files). Store them externally and let the agent pull only what it needs.
 
-## 
-
 ## Summary: Architecture Patterns Cheat Sheet
-
-##
 
 ![Article content]({{ '/assets/images/reverse-engineering-cursor-ai-agent/19.png' | relative_url }})
 
-## 
-
 ## Final Thoughts
-
-##
 
 Cursor is not just a "VS Code with AI chat." It is a thoughtfully designed agent system with proper RAG, multi-layer retrieval, hierarchical memory, tool integration, and guardrails. The patterns it uses — Merkle tree sync, semantic chunking, hybrid retrieval with reranking, context priority, Think-Act-Observe loops — are all transferable to any AI agent you might build.
 
