@@ -1,12 +1,18 @@
 ---
 layout: default
 ---
-<header class="page-head">
-  <p class="eyebrow">Writing</p>
-  <h1>{{ site.tagline }}</h1>
+<header class="masthead">
+  <p class="eyebrow">A notebook from Dublin</p>
+  <h1 class="masthead-title">{{ site.title }}</h1>
+  <p class="masthead-tagline">{{ site.tagline }}</p>
   <p class="lede">
-    Practical notes on PEFT, agents, RAG, and the engineering that makes
-    applied ML hold up — written for other engineers.
+    Practical notes on PEFT, agents, RAG, evaluation, and the engineering
+    that makes applied ML hold up in production — written for other engineers.
+  </p>
+  <p class="byline">
+    <span class="byline-name">{{ site.author.name }}</span>
+    <span class="byline-role">{{ site.author.role }} · {{ site.author.location }}</span>
+    <span class="byline-focus">Moving into AI/ML: LLMs, RAG, fine-tuning, agentic systems, MCPs.</span>
   </p>
 </header>
 
@@ -25,26 +31,34 @@ layout: default
     </p>
   </section>
 {% else %}
-  <ol class="post-list">
-    {% for post in site.posts %}
-      <li class="post-card">
-        <time datetime="{{ post.date | date: '%Y-%m-%d' }}" class="post-date">
-          {{ post.date | date: '%d %b %Y' }}
-        </time>
-        <h2>
-          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-        </h2>
-        {% if post.excerpt %}
-          <p class="excerpt">{{ post.excerpt | strip_html | truncate: 220 }}</p>
-        {% endif %}
-        {% if post.tags.size > 0 %}
-          <ul class="tags" aria-label="Topics">
-            {% for tag in post.tags %}
-              <li>{{ tag }}</li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ol>
+  <section class="writing-index" aria-labelledby="index-title">
+    <h2 id="index-title" class="index-label">Latest notes</h2>
+    <ol class="post-list">
+      {% for post in site.posts %}
+        <li>
+          <article class="post-card">
+            <div class="post-card-meta">
+              <time datetime="{{ post.date | date: '%Y-%m-%d' }}" class="post-date">
+                {{ post.date | date: '%d %b %Y' }}
+              </time>
+              {% if post.tags.size > 0 %}
+                <ul class="tags" aria-label="Topics">
+                  {% for tag in post.tags %}
+                    <li>{{ tag }}</li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+            <h3>
+              <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+            </h3>
+            {% if post.excerpt %}
+              <p class="excerpt">{{ post.excerpt | strip_html | truncate: 220 }}</p>
+            {% endif %}
+            <p class="read-more">Read note</p>
+          </article>
+        </li>
+      {% endfor %}
+    </ol>
+  </section>
 {% endif %}

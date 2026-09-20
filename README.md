@@ -1,6 +1,7 @@
 # vj-blog
 
-Public GitHub Pages site for **approved** technical posts by
+Public GitHub Pages site for **approved** technical posts on
+**Path Future**, written by
 [Vijay Kumar](https://github.com/vijaykumarjob0701) (Dublin).
 
 Live URL after Pages is enabled:
@@ -61,6 +62,17 @@ bundle exec jekyll build
 
 writes the site to `_site/` (gitignored).
 
+## Comments (Giscus)
+
+Post pages load [Giscus](https://giscus.app/) so readers can leave comments
+and reactions through GitHub Discussions (`Announcements` category,
+mapped by pathname).
+
+Discussions are already enabled on this repo. If the comment widget is
+blank or shows a configuration error, an admin still needs to install
+the [giscus GitHub App](https://github.com/apps/giscus) on
+`vijaykumarjob0701/vj-blog` and grant it access to Discussions.
+
 ## Publish workflow (private → public)
 
 Full checklist: [`docs/PUBLISHING.md`](docs/PUBLISHING.md).
@@ -78,13 +90,13 @@ Short version:
 ## Repository layout
 
 ```text
-_config.yml          Site title, description, baseurl
+_config.yml          Site title (Path Future), author, baseurl
 _layouts/            Home, post, page, default
-_includes/           Head, header, footer
-_posts/              Approved posts only (empty on purpose)
+_includes/           Head, header, footer, giscus, author links
+_posts/              Approved posts only
 assets/css/          Site styles
 assets/images/       Per-post figures
-about.md             Short site / author page
+about.md             Author page
 docs/PUBLISHING.md   Private → public approval workflow
 docs/post-template.md  Front-matter template for a new public post
 ```

@@ -2,11 +2,13 @@
 layout: default
 ---
 <article class="post">
-  <header class="page-head">
+  <header class="page-head post-head">
     <p class="eyebrow">
       <time datetime="{{ page.date | date: '%Y-%m-%d' }}">
         {{ page.date | date: '%d %B %Y' }}
       </time>
+      <span class="meta-sep" aria-hidden="true">·</span>
+      <span class="byline-inline">{{ page.author | default: site.author.name }}</span>
     </p>
     <h1>{{ page.title }}</h1>
     {% if page.tags.size > 0 %}
@@ -21,6 +23,19 @@ layout: default
   <div class="prose">
     {{ content }}
   </div>
+
+  <section class="comments" id="comments" aria-labelledby="comments-heading">
+    <div class="comments-head">
+      <p class="eyebrow">Comments</p>
+      <h2 id="comments-heading">Discussion</h2>
+      <p class="comments-lede">
+        Reactions and replies via GitHub Discussions. Sign in with GitHub to comment.
+      </p>
+    </div>
+    <div class="giscus-wrap">
+      {% include giscus.html %}
+    </div>
+  </section>
 </article>
 
 <nav class="post-nav" aria-label="Post">

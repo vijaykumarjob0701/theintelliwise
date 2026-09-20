@@ -1,9 +1,11 @@
 <footer class="site-footer">
-  <div class="wrap bar">
-    <p>
-      © {{ site.time | date: '%Y' }} {{ site.author.name }} · Dublin
+  <div class="wrap footer-inner">
+    <p class="footer-brand">
+      <span class="footer-title">{{ site.title }}</span>
+      <span class="footer-copy">© {{ site.time | date: '%Y' }} {{ site.author.name }} · {{ site.author.location }}</span>
     </p>
-    <p>
+    {% include author-links.html %}
+    <p class="footer-meta">
       Approved posts only.
       <a href="https://github.com/vijaykumarjob0701/vj-blog">Source</a>
     </p>
