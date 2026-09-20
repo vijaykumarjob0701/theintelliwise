@@ -1,7 +1,7 @@
 ---
 layout: page
 title: About
-eyebrow: Author
+eyebrow: Contributor
 lede: Full-stack at T-Pro in Dublin, writing the parts of applied ML that show up when you try to ship them.
 permalink: /about/
 ---
