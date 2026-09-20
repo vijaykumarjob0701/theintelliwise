@@ -1,7 +1,6 @@
 # vj-blog
 
-Public GitHub Pages site for **approved** technical posts on
-**Path Future**, written by
+Public GitHub Pages site for **approved** technical posts by
 [Vijay Kumar](https://github.com/vijaykumarjob0701) (Dublin).
 
 Live URL after Pages is enabled:
@@ -90,7 +89,7 @@ Short version:
 ## Repository layout
 
 ```text
-_config.yml          Site title (Path Future), author, baseurl
+_config.yml          Site title (Vijay Kumar), author, baseurl
 _layouts/            Home, post, page, default
 _includes/           Head, header, footer, giscus, author links
 _posts/              Approved posts only
