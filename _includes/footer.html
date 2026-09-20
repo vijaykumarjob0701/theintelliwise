@@ -1,12 +1,14 @@
 <footer class="site-footer">
-  <div class="wrap footer-inner">
+  <div class="wrap bar">
     <p class="footer-copy">
       © {{ site.time | date: '%Y' }} {{ site.author.name }} · {{ site.author.location }}
     </p>
-    {% include author-links.html %}
-    <p class="footer-meta">
-      Approved posts only.
-      <a href="https://github.com/vijaykumarjob0701/vj-blog">Source</a>
-    </p>
+    <div class="footer-meta">
+      {% include author-links.html %}
+      <p>
+        Approved posts only.
+        <a href="https://github.com/vijaykumarjob0701/vj-blog">Source</a>
+      </p>
+    </div>
   </div>
 </footer>

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="{{ site.lang | default: 'en' }}">
   {% include head.html %}
-  <body>
+  <body class="layout-{{ page.layout }}">
     <a class="skip-link" href="#main">Skip to content</a>
     {% include header.html %}
-    <main id="main" class="wrap">
-      {{ content }}
+    <main id="main">
+      <div class="wrap">
+        {{ content }}
+      </div>
     </main>
     {% include footer.html %}
     {% include mermaid.html %}

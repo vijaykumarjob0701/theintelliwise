@@ -1,12 +1,30 @@
 ---
 layout: default
 ---
-<article class="page">
-  <header class="page-head">
+<article class="page{% if page.url == '/about/' %} contributor{% endif %}">
+  <header class="page-head{% if page.url == '/about/' %} contributor-head{% endif %}">
     <p class="eyebrow">{{ page.eyebrow | default: 'Page' }}</p>
-    <h1>{{ page.title }}</h1>
+    <h1>
+      {% if page.url == '/about/' %}
+        {{ site.author.name }}
+      {% else %}
+        {{ page.title }}
+      {% endif %}
+    </h1>
     {% if page.lede %}
       <p class="lede">{{ page.lede }}</p>
+    {% endif %}
+    {% if page.url == '/about/' %}
+      <dl class="contributor-facts">
+        <div>
+          <dt>Role</dt>
+          <dd>{{ site.author.role }}</dd>
+        </div>
+        <div>
+          <dt>Based</dt>
+          <dd>{{ site.author.location }}</dd>
+        </div>
+      </dl>
     {% endif %}
   </header>
   <div class="prose">
