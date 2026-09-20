@@ -8,12 +8,24 @@ description: >-
   systems work that makes applied ML hold up — by Vijay Kumar in Dublin.
 author:
   name: Vijay Kumar
+  location: Dublin, Ireland
+  role: Full-stack developer at T-Pro
   url: https://github.com/vijaykumarjob0701
+  github: https://github.com/vijaykumarjob0701
+  linkedin: https://www.linkedin.com/in/vijay-kumar-59b28b4a/
+  kaggle: https://www.kaggle.com/vijaykr0701
 url: https://vijaykumarjob0701.github.io
 baseurl: /vj-blog
 lang: en
 timezone: Europe/Dublin
 permalink: /posts/:title/
+
+social:
+  name: Vijay Kumar
+  links:
+    - https://www.linkedin.com/in/vijay-kumar-59b28b4a/
+    - https://github.com/vijaykumarjob0701
+    - https://www.kaggle.com/vijaykr0701
 
 markdown: kramdown
 kramdown:
