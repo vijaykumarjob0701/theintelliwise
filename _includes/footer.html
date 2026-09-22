@@ -1,7 +1,8 @@
 <footer class="site-footer">
   <div class="wrap bar">
     <p class="footer-copy">
-      © {{ site.time | date: '%Y' }} {{ site.author.name }} · {{ site.author.location }}
+      {% include brand-mark.html class="brand-mark--footer" %}
+      <span>© {{ site.time | date: '%Y' }} {{ site.author.name }} · {{ site.author.location }}</span>
     </p>
     <div class="footer-meta">
       {% include author-links.html %}
