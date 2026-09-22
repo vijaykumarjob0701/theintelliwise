@@ -2,10 +2,10 @@
 theme: null
 
 title: Vijay Kumar
-tagline: Applied ML notes
+tagline: Applied engineering notes
 description: >-
-  Practical, engineer-to-engineer notes on PEFT, agents, RAG, and the
-  systems work that makes applied ML hold up — by Vijay Kumar in Dublin.
+  Practical, engineer-to-engineer notes on databases, Postgres, systems,
+  and applied ML/AI — by Vijay Kumar in Dublin.
 author:
   name: Vijay Kumar
   location: Dublin, Ireland
