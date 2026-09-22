@@ -1,8 +1,8 @@
 ---
 title: "Jev: Fast Decisions for Software"
 date: 2026-09-22 18:00:00 +0000
-tags: [jev, typesafe, system-one, llm, structured-outputs]
-excerpt: "Chat models write letters. Jev fills labeled boxes. TypeSafe’s first System One model returns typed guesses your code can read. Use it to route and score. Keep the essay writer for essays."
+tags: [jev, typesafe, system-one, llm, structured-outputs, laya, convai]
+excerpt: "Chat models write letters. Jev fills labeled boxes. Laya is another System One house with the same three toys. Use them to route and score. Keep the essay writer for essays."
 ---
 
 Chat models write letters.
@@ -31,6 +31,8 @@ flowchart LR
 ```
 
 Keep the letter-writer for letters. Keep Jev for **smart if-statements**.
+
+Another house uses the same three stamps. That is **Laya**. Same toys. Different kitchen. The comparison is below.
 
 ![A chat LLM writes a letter one character at a time. Jev fills three answer boxes in one pass.]({{ '/assets/images/jev-system-one-model/01-llm-letter-vs-jev-boxes.gif' | relative_url }})
 
@@ -275,6 +277,86 @@ Say it out loud:
 
 ---
 
+## Jev vs Laya
+
+Same three toys. Different houses.
+
+**Laya** is another **System One** / **System 1** decision model. **Convai Innovations** made it. India. Project materials often name **Nandakishor M** as CEO. Treat that as their materials, not a company we audited.
+
+Same idea as Jev. You send **state** plus typed questions. You get typed answers with probabilities. **No letter.** No poem. No function.
+
+Same three toys: **Noul**, **Choice**, **Score**. Convai’s helpers use a Jev-shaped request. The stamps look familiar on purpose.
+
+The house is different.
+
+- **Jev** is a restaurant. You sit down. You `POST` to TypeSafe. They stamp the tray.
+- **Laya** is a stamp kit. **Apache 2.0** weights on Hugging Face. `pip install laya`. You run it on **your** GPU or CPU. This story is not a hosted TypeSafe-style API.
+
+![Two lunchrooms. Same three stamp boxes. Jev is the restaurant that stamps for you. Laya is the kit you keep in your kitchen.]({{ '/assets/images/jev-system-one-model/07-restaurant-vs-kitchen-kit.gif' | relative_url }})
+
+### What Convai publishes (theirs)
+
+| Claim | What they published | How to hold it |
+| --- | --- | --- |
+| Internals | **ModernBERT-large** encoder + a typed decision head ≈ **421M** (English). Multilingual **mmBERT-base** ≈ **322M**. | They published this. Jev has not published a matching diagram. Do not copy those layers onto TypeSafe. |
+| License / run | Apache 2.0. `pip install laya`. Your machine. | Weights are free. You pay GPU, CPU, and ops. |
+| Context | Often **512** tokens (English) or **1024** (other checkpoints) per question | Much smaller than Jev’s documented **64k** request / **32k** state+longest-question budget. |
+| Many Choice labels | Publishers commonly advise fewer options (~**20** at defaults). Options share a prompt budget. | Jev’s official cap is **255**. Convai’s own note says Jev leads when the list is long. |
+| Training | They also call it **RLCD**. They publish more of the recipe (encoder, head, reward). | TypeSafe uses the same name and does **not** publish Jev’s recipe. |
+| Languages | **100+** languages + a router that picks a checkpoint | Convai’s claim. Test the languages you care about. |
+| Speed | About **33 ms** on their GPU figures. They say faster than Jev. | **Convai’s numbers.** Not a shared bake-off. Some write-ups warn the head-to-head mixes sources. |
+| Fine-tune | You can train a checkpoint on your data | Jev is a versioned hosted model. You shape it with prompts and pin a version. |
+
+Wrong answers are still allowed. A kitchen kit can still stamp the wrong box.
+
+### Fair lunch-line table
+
+| | Jev (TypeSafe) | Laya (Convai) |
+| --- | --- | --- |
+| Deployment | Hosted API | Open weights; you run it |
+| Internals | Parallel sampling + RLCD described; network unpublished | ModernBERT/mmBERT + typed head documented |
+| Same toys? | Noul / Choice / Score | Same three |
+| Big inputs | Larger documented token budget | Smaller default budgets |
+| Many labels | Up to 255 Choice options | Prefer fewer options at defaults |
+| Adapt | Change prompts/state; pin version | Fine-tune checkpoint + calibration |
+| Money | Input token price (output free) | Weights free; you pay GPU/ops |
+| Best first try | Want a managed decision API | Need local / air-gap / own weights |
+
+![Jev’s documented tray is big. Laya’s default tray is smaller. Same stamps. Different room to write.]({{ '/assets/images/jev-system-one-model/08-big-tray-vs-small-tray.gif' | relative_url }})
+
+### Do not invent a winner
+
+Convai publishes a “Laya vs Jev” scoreboard. They also say some Jev numbers were **not** measured on their machines (no TypeSafe API access; they cite third-party write-ups). Independent notes warn those tables mix sources — a fine-tuned Laya checkpoint next to hosted Jev, their T4 milliseconds next to someone else’s p50.
+
+**That is Convai’s published comparison. It is not an independent shared bake-off.**
+
+We will not paste their full “beats Jev on X” table as proven fact. We will not invent accuracy numbers of our own.
+
+Pick the house for the job. Then test **your** tickets.
+
+### Cascade still works
+
+Both models can sit in the same chair:
+
+1. **Jev or Laya** does the cheap snap.
+2. **Your code** reads the numbers.
+3. A **chat LLM** writes the letter — only if a letter is needed.
+
+```mermaid
+flowchart TB
+  T[Ticket / log / agent trace] --> S[Jev or Laya: Noul + Choice + Score]
+  S --> C{Code thresholds}
+  C -->|high confidence + easy shape| A[Act: route, block, file]
+  C -->|medium / messy| H[Human review]
+  C -->|need a paragraph or patch| L[Frontier LLM]
+```
+
+Say it out loud:
+
+> “Same three stamps. Jev is the restaurant. Laya is the kit you keep at home.”
+
+---
+
 ## Training, kept light
 
 TypeSafe’s training name is **RLCD** — **Reinforcement Learning for Calibrated Decisions**.
@@ -286,6 +368,8 @@ TypeSafe’s training name is **RLCD** — **Reinforcement Learning for Calibrat
 **Calibrated** means: when it says about **90%** on many guesses, it should be right about **90%** of the time. One guess can still be wrong. A 90% weather forecast can still rain on a picnic.
 
 They have **not** published architecture, weights, or a paper. Do not invent layers, parameter counts, or “it is just BERT.” Outside write-ups guess. That is guesswork.
+
+**Laya** (the other house) *does* publish an encoder + head and more of the RLCD recipe. That is Convai’s model, not Jev’s. Do not copy those layers onto TypeSafe.
 
 What *is* sourced:
 
@@ -322,6 +406,12 @@ What *is* sourced:
 | You need many questions on one state, fast | You need a tool-using agent to *write* |
 | You want a cheap guardrail *on* an LLM | You want the LLM itself |
 
+| First try **Jev** when… | First try **Laya** when… |
+| --- | --- |
+| You want a managed API and a published token price | You need the weights on *your* machine (local / air-gap) |
+| Inputs can be fat (TypeSafe’s 64k story) | You can live with a smaller default context |
+| You may need a long Choice list | You can keep Choice lists shorter, or raise Laya’s budget yourself |
+
 ---
 
 ## Honest caveats
@@ -333,6 +423,7 @@ What *is* sourced:
 - **Documented example outputs are not tests.** Learn Jev notes a launch-week report that an official Python sample did not match the docs. Run it. Believe *your* distribution.
 - **Output-is-free is a Jev billing story**, not “Jev output tokens = LLM output tokens.” TypeSafe’s CEO said on Hacker News they are not really comparable. Your bill is mostly **how fat `state` is** and **how often you send it**.
 - **English first.** Official models page: other languages work less evenly. Test.
+- **Convai’s Jev scoreboard is theirs.** Not a shared bake-off. Their card even says some Jev figures were never measured in their lab. Treat Laya speed and “faster than Jev” as **Convai’s numbers**.
 
 ---
 
@@ -350,6 +441,13 @@ Secondary (company facts, not architecture):
 
 - [Wikipedia: Jev (AI model)](https://en.wikipedia.org/wiki/Jev_(AI_model))
 - [TechCrunch, 18 Sep 2026](https://techcrunch.com/2026/09/18/a-new-kind-of-ai-model-from-a-chatgpt-inventor-is-thrilling-developers/) (transformer-based + synthetic data, as Almeida told them)
+
+Laya / Convai (vendor pages; claims are theirs):
+
+- [Hugging Face: convaiinnovations/laya](https://huggingface.co/convaiinnovations/laya)
+- [PyPI: laya](https://pypi.org/project/laya/)
+- [GitHub: NandhaKishorM/laya](https://github.com/NandhaKishorM/laya)
+- [laya.convaiinnovations.com](https://laya.convaiinnovations.com/)
 
 ---
 
@@ -374,9 +472,12 @@ You do not need this to get the story. It is here so the robot talks make sense 
 | Jev first, code next, LLM last | **cascade** |
 | Cannot leave the listed boxes | **schema / type-safe outputs** |
 | Still a bad pick | **decision error** (not a type error) |
+| The other house with the same stamps | **Laya** (Convai Innovations) |
+| Restaurant door vs kitchen kit | **hosted API** vs **open weights** (Apache 2.0) |
+| Encoder Laya published | **ModernBERT-large** / **mmBERT-base** |
 
 ---
 
 ## Say this back
 
-**Send state plus three kinds of questions. Get numbers your `if` can read. Let Jev classify, route, score, and guardrail. Keep the chat model for the letter.**
+**Send state plus three kinds of questions. Get numbers your `if` can read. Let Jev (or Laya) classify, route, score, and guardrail. Keep the chat model for the letter. Jev is the restaurant. Laya is the kitchen kit.**
