@@ -97,7 +97,7 @@ body {
 
 .bar {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 1rem 2rem;
 }
@@ -126,6 +126,12 @@ body {
   margin: 0;
 }
 
+.footer-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
 .footer-meta {
   display: flex;
   flex-wrap: wrap;
@@ -144,19 +150,49 @@ body {
 }
 
 .wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   color: inherit;
   text-decoration: none;
   font-weight: 600;
   letter-spacing: -0.03em;
   font-size: 0.9375rem;
+  line-height: 1;
+}
+
+.wordmark-text {
+  color: var(--ink);
+}
+
+.wordmark:hover {
+  opacity: 0.85;
+}
+
+.brand-mark {
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: 0 0 auto;
+  color: currentColor;
+}
+
+.brand-mark--footer {
+  width: 0.95rem;
+  height: 0.95rem;
+  color: var(--ink-muted);
 }
 
 .nav {
   display: flex;
+  align-items: center;
   gap: 1.35rem;
 }
 
 .nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   color: var(--ink-muted);
   text-decoration: none;
 }
@@ -164,6 +200,13 @@ body {
 .nav a[aria-current="page"],
 .nav a:hover {
   color: var(--ink);
+}
+
+.nav-icon {
+  display: block;
+  width: 0.9rem;
+  height: 0.9rem;
+  flex: 0 0 auto;
 }
 
 main {
@@ -749,25 +792,6 @@ a:focus-visible,
   }
 }
 
-.wordmark {
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
-  color: var(--ink);
-  line-height: 0;
-}
-
-.wordmark:hover {
-  opacity: 0.85;
-}
-
-.site-logo {
-  display: block;
-  width: 220px;
-  height: 32px;
-  color: currentColor;
-}
-
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -778,8 +802,4 @@ a:focus-visible,
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-
-.bar {
-  align-items: center;
 }
