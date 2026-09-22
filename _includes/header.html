@@ -1,9 +1,13 @@
 <header class="site-header">
   <div class="wrap bar">
-    <a class="wordmark" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+    <a class="wordmark" href="{{ '/' | relative_url }}" aria-label="{{ site.title }}">
+      <canvas class="site-logo" width="280" height="40" role="img" aria-hidden="true"></canvas>
+      <span class="visually-hidden">{{ site.title }}</span>
+    </a>
     <nav class="nav" aria-label="Primary">
       <a href="{{ '/' | relative_url }}"{% if page.layout == 'home' or page.url == '/' %} aria-current="page"{% endif %}>Writing</a>
       <a href="{{ '/about/' | relative_url }}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>About</a>
     </nav>
   </div>
 </header>
+<script src="{{ '/assets/js/site-logo.js' | relative_url }}" defer></script>

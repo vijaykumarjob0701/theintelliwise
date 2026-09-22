@@ -1,7 +1,7 @@
 # Custom layouts/CSS only — do not pull minima/primer assets.
 theme: null
 
-title: Vijay Kumar
+title: The Intelliwise
 tagline: Applied engineering notes
 description: >-
   Practical, engineer-to-engineer notes on databases, Postgres, systems,
@@ -15,7 +15,7 @@ author:
   linkedin: https://www.linkedin.com/in/vijay-kumar-59b28b4a/
   kaggle: https://www.kaggle.com/vijaykr0701
 url: https://vijaykumarjob0701.github.io
-baseurl: /vj-blog
+baseurl: /theintelliwise
 lang: en
 timezone: Europe/Dublin
 permalink: /posts/:title/
