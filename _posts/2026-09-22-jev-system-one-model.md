@@ -2,7 +2,7 @@
 title: "Jev: Fast Decisions for Software"
 date: 2026-09-22 18:00:00 +0000
 tags: [jev, typesafe, system-one, llm, structured-outputs, laya, convai]
-excerpt: "Chat models write letters. Jev fills labeled boxes. Laya is another System One house with the same three toys. Use them to route and score. Keep the essay writer for essays."
+excerpt: "Chat models write letters. Jev fills labeled boxes. One ticket can name a team, an urgency Score that sits between rungs, and a refund Noul that is not an approval. Laya is another System One house with the same three toys."
 ---
 
 Chat models write letters.
@@ -11,11 +11,13 @@ Chat models write letters.
 
 It is **not** a chat LLM. You do not ask it for a poem. You do not ask it for a function. You send it a pile of facts and a list of questions. It sends back **typed guesses** your code can read — yes/no numbers, one winning label, a spot on a ladder.
 
+[Denis Timonin](https://www.linkedin.com/pulse/jev-llm-decisions-chat-denis-timonin-nzxue) wrote a LinkedIn Pulse called *Jev: an LLM for decisions, not chat*. This post keeps our lunch-line story. It also borrows a few teaching points from that Pulse — in our words, not a copy. Credit goes to Denis for the ticket walk-through and the “labels ride with the request” idea.
+
 Think of a lunch line.
 
 A chat model writes a note: “Hmm, maybe this kid wants juice, or maybe a sandwich, let me explain…”
 
-Jev stamps three boxes: **urgent?** **which desk?** **how bad?** Then your code moves the tray.
+Jev stamps three boxes: **which desk?** **how soon?** **did they ask for a refund?** Then your code moves the tray.
 
 **TypeSafe AI** made it. San Francisco. Founded in 2024. The company calls Jev its first public **System One** model. Early access was announced on **15 September 2026**. Wikipedia and the press put a seed of about **$40 million**, led by **DCVC**. Treat that as reporting, not a bank statement we audited.
 
@@ -31,6 +33,8 @@ flowchart LR
 ```
 
 Keep the letter-writer for letters. Keep Jev for **smart if-statements**.
+
+TypeSafe says the architecture is new. They have **not** published the design. So this post talks about **what the stamps do**, not how the kitchen is built. From the outside, nobody can say whose face is behind the mask.
 
 Another house uses the same three stamps. That is **Laya**. Same toys. Different kitchen. The comparison is below.
 
@@ -154,39 +158,40 @@ Say it out loud:
 
 ---
 
-## A tiny toy ticket
+## A tiny support ticket
 
-Made-up state. No real people. The numbers below are a **teaching story**, not a live Jev call.
+Made-up state. No real people. We wrote the ticket. The answer **shapes** and sample numbers follow TypeSafe’s published examples. They are **not** a live Jev call on this note, and they are **not** a promise about your queue.
+
+One ticket. Three named questions. Typed answers come back under the same names. Jev does **not** write the reply.
 
 ```json
 {
   "state": {
-    "ticket": "The shop cart froze on the juice page. I have a class demo in 20 minutes."
+    "ticket": "The shop charged me twice for juice. Please refund the extra charge. I have a class demo today."
   },
   "model": "jev-1.13.0",
   "questions": {
-    "is_urgent": {
-      "type": "noul",
-      "instructions": "Does this message express urgency or a deadline?"
-    },
-    "route": {
+    "team": {
       "type": "choice",
-      "instructions": "Which desk should see this first?",
+      "instructions": "Which desk should handle this ticket?",
       "criteria": {
-        "billing": "Money, refunds, charges",
+        "billing": "Payments, invoices and refunds",
         "technical": "Bugs, broken buttons, outages",
-        "sales": "Pricing, upgrades, new accounts",
-        "other": "None of those"
+        "sales": "Questions before buying"
       }
     },
-    "severity": {
+    "urgency": {
       "type": "score",
-      "instructions": "How severe is the breakage for the customer right now?",
+      "instructions": "How soon does this need a person?",
       "criteria": [
-        "Annoyed, can wait",
-        "Blocked on something important",
-        "Everything is on fire"
+        "Routine. It can wait.",
+        "Handle it today.",
+        "Handle it now."
       ]
+    },
+    "refund_requested": {
+      "type": "noul",
+      "instructions": "Did the customer ask for a refund?"
     }
   }
 }
@@ -198,40 +203,69 @@ Story answers, so you can see the shape:
 {
   "model": "jev-1.13.0",
   "answers": {
-    "is_urgent": { "type": "noul", "noul": 0.91 },
-    "route": {
+    "team": {
       "type": "choice",
-      "choice": "technical",
+      "choice": "billing",
       "probabilities": {
-        "billing": 0.06,
-        "technical": 0.84,
-        "sales": 0.03,
-        "other": 0.07
+        "billing": 0.87,
+        "technical": 0.13,
+        "sales": 0.00
       },
-      "confidence": 0.74
+      "confidence": 0.80
     },
-    "severity": {
+    "urgency": {
       "type": "score",
-      "score": 1.4,
+      "score": 1.05,
       "legend": {
-        "0": "Annoyed, can wait",
-        "1": "Blocked on something important",
-        "2": "Everything is on fire"
+        "0": "Routine. It can wait.",
+        "1": "Handle it today.",
+        "2": "Handle it now."
       },
-      "probabilities": { "0": 0.10, "1": 0.40, "2": 0.50 },
-      "confidence": 0.58
-    }
+      "probabilities": { "0": 0.00, "1": 0.95, "2": 0.05 },
+      "confidence": 0.92
+    },
+    "refund_requested": { "type": "noul", "noul": 0.95 }
   }
 }
 ```
 
-What your code does with that:
+Read those stamps like this:
 
-- `is_urgent` near 0.91 → jump the line.
-- `route` = `technical` → open that queue.
-- `severity` = 1.4 → above a “page someone” threshold you chose, or not. **You** pick the cut.
+- **`team`** is a **Choice**. The desk is `billing`. Your code opens that queue.
+- **`urgency`** is a **Score**. `1.05` sits **between** “today” and “now”. That is allowed. It is a spot on *your* ladder. It is **not** a number of hours.
+- **`refund_requested`** is a **Noul**. `0.95` means “this note looks like they asked.” It does **not** mean the refund is approved. Your code (and a person) still decide the money.
+
+Choice and Score also send **confidence**. Score sends a **legend** that maps rung numbers to the words you wrote. Noul has **no** extra confidence field. The number *is* the belief.
 
 Official docs: ask every question that shares the same state in **one** request. Extra questions are cheap (output is free; they run in parallel). The instinct to ask one thing at a time is the expensive habit.
+
+---
+
+## Independent questions do not peek
+
+All three stamps read the **same** ticket. These are **independent questions**. Each stamp works **alone**. The team guess does not see the urgency guess. The refund guess does not see either of them.
+
+If a later question needs an earlier answer — “now that it is billing, which billing skill?” — that is a **second request**. Put the first answer into the next `state`, or pick the next labels in your code, then ask again.
+
+If your code can already combine the three numbers with `if`, keep them in **one** call. Two calls are for a real chain, not a habit.
+
+![Same ticket, three private stamps. None sees the other answers. A chain needs a second request.]({{ '/assets/images/jev-system-one-model/09-independent-questions.gif' | relative_url }})
+
+Say it out loud:
+
+> “Same ticket. Private stamps. Need a chain? Send a second request.”
+
+---
+
+## Labels ride on the request
+
+**BERT** is an old, famous reader model from Google. A usual fine-tuned BERT classifier learns its boxes at school. A small output layer has one slot per label. Those labels freeze into the model. Want a new “subscriptions” desk? You need new examples and another round of training. Serving that model behind an API does not change the rule.
+
+**Jev** takes the labels in the **request**. The question, the options, and a plain-English note for each option travel with every call. Adding “subscriptions” means adding one option to `criteria`. TypeSafe does **not** offer customer fine-tuning, so the request is the thing you change. Official models page: same weights for every account.
+
+You still need a pile of tickets with **known answers** to check if the guesses are good enough. You just do not need to train a new head to *try* a new question.
+
+One fair caveat: some “no extra homework” classifiers — often built on **NLI** models, which guess if one sentence follows from another — can also take labels at request time. The comparison here is with the usual frozen fine-tune, not with every encoder trick.
 
 ---
 
@@ -270,6 +304,8 @@ flowchart TB
 ![Ticket to Jev to code. Easy work stays in code. Only hard prose goes to a chat model.]({{ '/assets/images/jev-system-one-model/03-cascade-jev-code-llm.gif' | relative_url }})
 
 TypeSafe’s own use-case list matches this: smart if-statements, map-reduce over lots of text, real-time UX around **100 ms**, and **judge / guardrail** work on LLM traces. They also showed a Doom bot and Wikiracing as toys — structured *state*, not pixels.
+
+That cascade stays. Jev or Laya for the snap. Code for the `if`. A generative LLM only when you need a letter.
 
 Say it out loud:
 
@@ -359,17 +395,21 @@ Say it out loud:
 
 ## Training, kept light
 
-TypeSafe’s training name is **RLCD** — **Reinforcement Learning for Calibrated Decisions**.
+TypeSafe’s training name is **RLCD** — **Reinforcement Learning for Calibrated Decisions**. That is **their claim** about the training target. It is not proof that *your* tickets are calibrated.
 
 **RLHF** (the chat-era method) rewards “text people like.”
 
 **RLCD** (their name) rewards “probabilities that match how often you are actually right.”
 
-**Calibrated** means: when it says about **90%** on many guesses, it should be right about **90%** of the time. One guess can still be wrong. A 90% weather forecast can still rain on a picnic.
+**Calibrated** means: gather many cases where the model said about **0.7**. About **70%** of that pile should turn out true. That describes a **group**, not a promise about one ticket. A 70% weather forecast can still ruin one picnic.
 
-They have **not** published architecture, weights, or a paper. Do not invent layers, parameter counts, or “it is just BERT.” Outside write-ups guess. That is guesswork.
+You still need **eval examples** — tickets where a person already marked the true answer. Check the pile. Then pick a cutoff. A wrong refund and a wrong queue need **different** cutoffs. Estimate the mistakes and the review work each cut will cost.
 
-**Laya** (the other house) *does* publish an encoder + head and more of the RLCD recipe. That is Convai’s model, not Jev’s. Do not copy those layers onto TypeSafe.
+**Confidence** (on Choice and Score) says how peaked the probability pile is. It is **not** a second, independently checked chance of being right. Do not skip a person just because confidence looks high, until you have checked it on *your* examples.
+
+They have **not** published architecture, weights, or a paper. Do not invent layers, parameter counts, or “it is just BERT.” Outside write-ups guess. That is guesswork. This post describes **behavior**, not internals.
+
+**Laya** (the other house) *does* publish an encoder + head and more of the RLCD recipe. That is Convai’s model, not Jev’s. Do not copy those layers onto TypeSafe. ModernBERT, NeoBERT, and mmBERT explain the encoder *story*. They are not Jev’s family tree.
 
 What *is* sourced:
 
@@ -381,6 +421,21 @@ What *is* sourced:
 ---
 
 ## When to use it / when not to
+
+Start with the answer your product needs.
+
+- **Exact sums, dates, counts?** Start in **code**. Jev is a guesser. TypeSafe lists weak spots in arithmetic, counting, dates, and sneaky instructions inside the text.
+- **Known boxes?** Try **Jev** (or **Laya**). Pick a team. Rate a ladder. Check a yes/no.
+- **A letter, a plan, or an open hunt?** Use a **generative LLM**. Jev will not write the email. It also will not pick an address your code never listed.
+
+Kid table:
+
+| Job | First try |
+| --- | --- |
+| Add the two charges. Compare two dates. | **Code** |
+| Which desk? How urgent? Did they ask for a refund? | **Jev** or **Laya** |
+| Write the reply. Plan the next tool call. Hunt with no list. | **Generative LLM** |
+| Filter easy tickets, then escalate the messy ones | **Cascade** (stays the same) |
 
 **Use Jev when** the job is a snap your code can act on:
 
@@ -398,6 +453,8 @@ What *is* sourced:
 - Open chat
 - Anything whose answer is not already in a coin, a labeled box, or a short ladder
 - Pictures / audio / video as input (not supported)
+- A value your code never found (Jev cannot invent a missing email)
+- An **embedding** search. Jev does not document an embedding door. That list-of-numbers search is a different tool.
 
 | Use Jev when… | Use a chat LLM when… |
 | --- | --- |
@@ -424,6 +481,8 @@ What *is* sourced:
 - **Output-is-free is a Jev billing story**, not “Jev output tokens = LLM output tokens.” TypeSafe’s CEO said on Hacker News they are not really comparable. Your bill is mostly **how fat `state` is** and **how often you send it**.
 - **English first.** Official models page: other languages work less evenly. Test.
 - **Convai’s Jev scoreboard is theirs.** Not a shared bake-off. Their card even says some Jev figures were never measured in their lab. Treat Laya speed and “faster than Jev” as **Convai’s numbers**.
+- **TypeSafe lists weak spots** in arithmetic, counting, dates, indirect reasoning, hostile instructions inside the input, and long leftover context. Keep the calculator in code. Test sneaky tickets. A legal box is not a correct box.
+- **A valid answer shape is not a correct decision.** Schema safety does not finish the eval.
 
 ---
 
@@ -441,6 +500,7 @@ Secondary (company facts, not architecture):
 
 - [Wikipedia: Jev (AI model)](https://en.wikipedia.org/wiki/Jev_(AI_model))
 - [TechCrunch, 18 Sep 2026](https://techcrunch.com/2026/09/18/a-new-kind-of-ai-model-from-a-chatgpt-inventor-is-thrilling-developers/) (transformer-based + synthetic data, as Almeida told them)
+- [Denis Timonin, LinkedIn Pulse: Jev: an LLM for decisions, not chat](https://www.linkedin.com/pulse/jev-llm-decisions-chat-denis-timonin-nzxue) (21 Sep 2026; teaching ticket and caveats, paraphrased here)
 
 Laya / Convai (vendor pages; claims are theirs):
 
@@ -475,9 +535,15 @@ You do not need this to get the story. It is here so the robot talks make sense 
 | The other house with the same stamps | **Laya** (Convai Innovations) |
 | Restaurant door vs kitchen kit | **hosted API** vs **open weights** (Apache 2.0) |
 | Encoder Laya published | **ModernBERT-large** / **mmBERT-base** |
+| Labels travel with the call | **request-time criteria** (not a frozen BERT head) |
+| Usual “labels at request time” caveat | **NLI zero-shot** classifiers |
+| Stamps do not see each other | **independent questions** |
+| Later guess needs an earlier answer | **second request** |
+| “0.7 on a pile ≈ 70% true” | **calibration** (group, not one ticket) |
+| How peaked the probability pile is | **confidence** (not a second checked chance) |
 
 ---
 
 ## Say this back
 
-**Send state plus three kinds of questions. Get numbers your `if` can read. Let Jev (or Laya) classify, route, score, and guardrail. Keep the chat model for the letter. Jev is the restaurant. Laya is the kitchen kit.**
+**Send state plus three kinds of questions. Get numbers your `if` can read. A Score can sit between rungs. A refund Noul is “they asked,” not “pay them.” Stamps do not peek; a chain needs a second request. Labels ride on the call. Check a pile of known answers before you trust the odds. Let Jev (or Laya) classify, route, score, and guardrail. Keep code for exact math. Keep the chat model for the letter. Jev is the restaurant. Laya is the kitchen kit. Thanks to Denis Timonin for the Pulse this update leans on.**
