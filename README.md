@@ -1,11 +1,11 @@
-# vj-blog
+# The Intelliwise
 
 Public GitHub Pages site for **approved** technical posts by
-[Vijay Kumar](https://github.com/vijaykumarjob0701) (Dublin).
+[Vijay Kumar](https://github.com/vijayliebe) (Dublin).
 
 Live URL after Pages is enabled:
 
-**https://vijaykumarjob0701.github.io/vj-blog/**
+**https://vijaykumarjob0701.github.io/theintelliwise/**
 
 This repository is the public shelf. It starts with **zero** posts on
 purpose. Drafts, outlines, and rough notes stay in the private
@@ -19,22 +19,22 @@ not be cloned, pulled, or synced into this tree.
 (`github-pages` gem 232 / Jekyll 3.10). No custom plugins, no extra build
 pipeline.
 
-Project-pages `baseurl` is `/vj-blog`. Layouts use `relative_url` /
+Project-pages `baseurl` is `/theintelliwise`. Layouts use `relative_url` /
 `absolute_url` so assets resolve on
-`https://vijaykumarjob0701.github.io/vj-blog/`.
+`https://vijaykumarjob0701.github.io/theintelliwise/`.
 
 ## Enable GitHub Pages
 
 An admin has to flip this in the GitHub UI. An agent cannot do it.
 
-1. Open [github.com/vijaykumarjob0701/vj-blog](https://github.com/vijaykumarjob0701/vj-blog).
+1. Open [github.com/vijaykumarjob0701/theintelliwise](https://github.com/vijaykumarjob0701/theintelliwise).
 2. **Settings → Pages**.
 3. Under **Build and deployment → Source**, choose **Deploy from a branch**.
 4. Branch: **`main`**. Folder: **`/` (root)**.
 5. Click **Save**.
 6. Wait for the Pages build (Actions tab, or the Pages settings status).
-7. Confirm **https://vijaykumarjob0701.github.io/vj-blog/** loads the empty
-   home page, and `/vj-blog/about/` loads About.
+7. Confirm **https://vijaykumarjob0701.github.io/theintelliwise/** loads the
+   home page, and `/theintelliwise/about/` loads About.
 
 If the site 404s after a green build, the usual cause is a missing
 `baseurl` on a hard-coded `/` asset path. All theme links already go
@@ -52,7 +52,7 @@ bundle install
 bundle exec jekyll serve
 ```
 
-Open http://localhost:4000/vj-blog/ — keep the `/vj-blog` prefix so paths
+Open http://localhost:4000/theintelliwise/ — keep the `/theintelliwise` prefix so paths
 match production.
 
 ```bash
@@ -70,7 +70,7 @@ mapped by pathname).
 Discussions are already enabled on this repo. If the comment widget is
 blank or shows a configuration error, an admin still needs to install
 the [giscus GitHub App](https://github.com/apps/giscus) on
-`vijaykumarjob0701/vj-blog` and grant it access to Discussions.
+`vijaykumarjob0701/theintelliwise` and grant it access to Discussions.
 
 ## Publish workflow (private → public)
 
@@ -89,7 +89,7 @@ Short version:
 ## Repository layout
 
 ```text
-_config.yml          Site title (Vijay Kumar), author, baseurl
+_config.yml          Site title (The Intelliwise), author, baseurl
 _layouts/            Home, post, page, default
 _includes/           Head, header, footer, giscus, author links
 _posts/              Approved posts only
