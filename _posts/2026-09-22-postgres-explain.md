@@ -1,6 +1,6 @@
 ---
 title: "Postgres EXPLAIN: Ask for the Plan"
-date: 2026-09-22 12:00:00 +0000
+date: 2026-09-22 10:00:00 +0000
 tags: [postgresql, explain, query-plan, indexing, sql]
 excerpt: "Your question to the database feels slow. Do not guess. Ask Postgres for its homework plan. Then read the tree from the inside, check the table of contents, and watch the times."
 ---
