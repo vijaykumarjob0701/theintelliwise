@@ -241,9 +241,9 @@ Official docs: ask every question that shares the same state in **one** request.
 
 ---
 
-## Questions do not peek
+## Independent questions do not peek
 
-All three stamps read the **same** ticket. Each stamp works **alone**. The team guess does not see the urgency guess. The refund guess does not see either of them.
+All three stamps read the **same** ticket. These are **independent questions**. Each stamp works **alone**. The team guess does not see the urgency guess. The refund guess does not see either of them.
 
 If a later question needs an earlier answer — “now that it is billing, which billing skill?” — that is a **second request**. Put the first answer into the next `state`, or pick the next labels in your code, then ask again.
 
