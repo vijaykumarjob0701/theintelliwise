@@ -16,7 +16,7 @@
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   --measure: 40rem;
-  --home-measure: 48rem;
+  --home-measure: 60rem;
   --space: clamp(1.25rem, 4vw, 2.25rem);
   --display: clamp(3.1rem, 9vw, 5.4rem);
   color-scheme: light;
@@ -36,6 +36,16 @@
     --code-ink: #f5f5f7;
     --focus: #f5f5f7;
     color-scheme: dark;
+  }
+
+  .writing-card {
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.18), 0 12px 28px rgba(0, 0, 0, 0.22);
+  }
+
+  .writing-card:hover,
+  .writing-card:focus-within,
+  .chip--filter:hover {
+    border-color: rgba(213, 221, 216, 0.3);
   }
 }
 
@@ -215,16 +225,53 @@ main {
 }
 
 .layout-home main {
-  padding-top: 2.4rem;
+  padding-top: 0;
 }
 
 .layout-post main {
   padding-bottom: 0;
 }
 
+.library-band,
 .masthead {
-  padding-bottom: 3.25rem;
-  margin-bottom: 0.25rem;
+  position: relative;
+  padding: 2.4rem 0 2.85rem;
+  margin: 0 0 2rem;
+}
+
+.library-band::before,
+.masthead::before {
+  content: "";
+  position: absolute;
+  inset: 0 calc(50% - 50vw);
+  background: var(--bg-band);
+  z-index: -1;
+}
+
+.library-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.library-kicker .eyebrow {
+  margin: 0;
+}
+
+.library-pill {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.7rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .masthead-title {
@@ -260,7 +307,9 @@ main {
 .index-label,
 .post-meta,
 .post-topics,
-.story-meta {
+.post-byline,
+.story-meta,
+.writing-card__meta {
   margin: 0;
   font-size: 0.75rem;
   font-weight: 500;
@@ -340,47 +389,134 @@ main {
 }
 
 .writing-index {
-  margin-top: 0.5rem;
+  margin-top: 0.15rem;
+}
+
+.writing-index__head {
+  margin-bottom: 1.15rem;
 }
 
 .index-label {
-  margin: 0 0 0.35rem;
-  padding-bottom: 0.85rem;
-  border-bottom: 1px solid var(--rule);
+  margin: 0 0 0.85rem;
 }
 
-.story-list {
+.tag-filter__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 0.22rem 0.65rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--ink-muted);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.chip--date {
+  background: var(--accent-soft);
+  border-color: transparent;
+  color: var(--accent);
+}
+
+.chip--tag {
+  background: var(--bg);
+}
+
+.chip--filter {
+  cursor: pointer;
+}
+
+.chip--filter:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.chip--filter:hover {
+  color: var(--ink);
+  border-color: rgba(47, 63, 58, 0.28);
+}
+
+.chip--filter[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+
+.writing-list {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
 }
 
-.story-tile {
+.writing-list__item[hidden] {
+  display: none;
+}
+
+.writing-card {
   position: relative;
-  padding: 1.45rem 0 1.5rem;
-  border-bottom: 1px solid var(--rule);
+  display: flex;
+  gap: 1.15rem;
+  padding: 1.2rem 1.3rem 1.25rem;
+  background: var(--bg-elev);
+  border: 1px solid var(--rule);
+  border-radius: 1.15rem;
+  box-shadow: 0 1px 0 rgba(29, 29, 31, 0.03), 0 10px 28px rgba(29, 29, 31, 0.04);
 }
 
-.story-tile--lead {
-  padding-top: 1.7rem;
-  padding-bottom: 1.85rem;
+.writing-card--lead {
+  padding: 1.45rem 1.45rem 1.5rem;
 }
 
-.story-title {
-  margin: 0.45rem 0 0.5rem;
-  font-size: 1.35rem;
+.writing-card__media {
+  flex: 0 0 7.5rem;
+  align-self: stretch;
+  overflow: hidden;
+  border-radius: 0.85rem;
+  background: var(--bg-band);
+}
+
+.writing-card__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.writing-card__body {
+  min-width: 0;
+  flex: 1;
+}
+
+.writing-card__title {
+  margin: 0.7rem 0 0.5rem;
+  font-size: 1.32rem;
   line-height: 1.22;
   letter-spacing: -0.03em;
   font-weight: 600;
 }
 
-.story-tile--lead .story-title {
-  font-size: clamp(1.7rem, 3.4vw, 2.2rem);
+.writing-card--lead .writing-card__title {
+  font-size: clamp(1.65rem, 3.2vw, 2.15rem);
   line-height: 1.14;
-  letter-spacing: -0.036em;
+  letter-spacing: -0.038em;
 }
 
-.story-title a {
+.writing-card__title a {
   color: inherit;
   text-decoration: none;
   background-image: linear-gradient(currentColor, currentColor);
@@ -390,30 +526,35 @@ main {
   transition: background-size 0.2s ease;
 }
 
-.story-title a::after {
+.writing-card__title a::after {
   content: "";
   position: absolute;
   inset: 0;
 }
 
-.story-tile:hover .story-title a,
-.story-tile:focus-within .story-title a {
+.writing-card:hover,
+.writing-card:focus-within {
+  border-color: rgba(47, 63, 58, 0.2);
+}
+
+.writing-card:hover .writing-card__title a,
+.writing-card:focus-within .writing-card__title a {
   background-size: 100% 1px;
 }
 
-.story-meta {
+.writing-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
   text-transform: none;
-  letter-spacing: 0.01em;
-  font-size: 0.78rem;
-}
-
-.story-topics {
-  color: var(--ink-muted);
+  letter-spacing: 0;
+  font-size: 0.72rem;
 }
 
 .excerpt {
   margin: 0;
-  max-width: 38rem;
+  max-width: 42rem;
   font-size: 0.98rem;
   line-height: 1.5;
   display: -webkit-box;
@@ -422,10 +563,9 @@ main {
   overflow: hidden;
 }
 
-.story-tile--lead .excerpt {
-  max-width: 34rem;
+.writing-card--lead .excerpt {
+  max-width: 40rem;
   font-size: 1.05rem;
-  -webkit-line-clamp: 3;
 }
 
 .meta-sep {
@@ -450,10 +590,30 @@ a:focus-visible,
   padding-bottom: 2.1rem;
 }
 
+.post-hero {
+  position: relative;
+  padding: 1.6rem 0 2.25rem;
+  margin-bottom: 0.4rem;
+}
+
+.post-hero::before {
+  content: "";
+  position: absolute;
+  inset: -1.5rem calc(50% - 50vw) 0;
+  background: var(--bg-band);
+  z-index: -1;
+}
+
 .post-head h1 {
   margin-top: 0.7rem;
 }
 
+.post-hero h1 {
+  margin-top: 0.85rem;
+  letter-spacing: -0.048em;
+}
+
+.post-byline,
 .post-meta,
 .post-topics {
   text-transform: none;
@@ -461,8 +621,25 @@ a:focus-visible,
   font-weight: 400;
 }
 
+.post-byline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0;
+  font-size: 0.86rem;
+}
+
 .post-topics {
   margin-top: 0.9rem;
+}
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 1.05rem 0 0;
+  padding: 0;
 }
 
 .prose {
@@ -740,6 +917,7 @@ a:focus-visible,
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .writing-card__title a,
   .story-title a {
     transition: none;
   }
@@ -762,7 +940,31 @@ a:focus-visible,
   }
 
   .layout-home main {
-    padding-top: 1.1rem;
+    padding-top: 0;
+  }
+
+  .library-band,
+  .masthead {
+    padding: 1.35rem 0 2.1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .writing-card,
+  .writing-card--lead {
+    padding: 1.05rem 1.05rem 1.1rem;
+  }
+
+  .writing-card__media {
+    display: none;
+  }
+
+  .post-hero {
+    padding-top: 1.15rem;
+    padding-bottom: 1.7rem;
+  }
+
+  .post-hero::before {
+    top: -0.75rem;
   }
 
   .layout-post main {

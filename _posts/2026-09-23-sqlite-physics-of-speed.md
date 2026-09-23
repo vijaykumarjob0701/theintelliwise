@@ -1,6 +1,6 @@
 ---
 title: "SQLite: Why 300 Stamps Become a Million"
-date: 2026-09-23 14:00:00 +0000
+date: 2026-09-23 10:00:00 +0000
 tags: [sqlite, wal, fsync, tps, performance]
 excerpt: "Default SQLite waits on disk stamps. Tanay Karnik (Foo Community) showed why that starts near 300 writes a second — and how WAL, sync trade-offs, and sharing one stamp can climb toward a million. Those are his demo numbers."
 ---
