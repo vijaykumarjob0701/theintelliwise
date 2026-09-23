@@ -4,6 +4,24 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
+  {% if page.layout == 'post' %}
+  {% assign post_slug = page.url | replace: '/posts/', '' | replace: '/', '' %}
+  {% capture post_context %}
+    post_slug: {{ post_slug | jsonify }},
+    post_title: {{ page.title | truncate: 100, '' | jsonify }},
+    post_tags: {{ page.tags | join: ',' | truncate: 100, '' | jsonify }}
+  {% endcapture %}
+  gtag('config', '{{ site.ga_measurement_id }}', {
+    content_group: 'post',
+    {{ post_context | strip }}
+  });
+  if (typeof gtag === 'function') {
+    gtag('event', 'blog_view', {
+      {{ post_context | strip }}
+    });
+  }
+  {% else %}
   gtag('config', '{{ site.ga_measurement_id }}');
+  {% endif %}
 </script>
 {% endif %}
