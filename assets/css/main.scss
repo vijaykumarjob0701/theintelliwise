@@ -1014,6 +1014,74 @@ a:focus-visible,
   }
 }
 
+.consent-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem 1.2rem;
+  padding: 0.75rem var(--space);
+  background: #ffffff;
+  color: #1d1d1f;
+  border-top: 1px solid rgba(29, 29, 31, 0.1);
+  box-shadow: 0 -6px 24px rgba(29, 29, 31, 0.06);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.consent-banner p {
+  margin: 0;
+  max-width: 38rem;
+}
+
+.consent-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.consent-banner__btn {
+  margin: 0;
+  padding: 0.32rem 0.8rem;
+  border: 1px solid rgba(47, 63, 58, 0.22);
+  border-radius: 999px;
+  background: #f6f5f2;
+  color: #2f3f3a;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+}
+
+.consent-banner__btn:hover {
+  border-color: #2f3f3a;
+}
+
+.consent-banner__btn:focus-visible {
+  outline: 2px solid #1d1d1f;
+  outline-offset: 2px;
+}
+
+.consent-banner__btn--accept {
+  background: #2f3f3a;
+  border-color: #2f3f3a;
+  color: #f6f5f2;
+}
+
+.consent-banner__btn--accept:hover {
+  background: #25332f;
+}
+
+body.has-consent-banner {
+  padding-bottom: 4.5rem;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

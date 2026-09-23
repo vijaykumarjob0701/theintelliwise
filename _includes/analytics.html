@@ -1,0 +1,103 @@
+{% if site.ga_measurement_id %}
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'analytics_storage': 'denied',
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'wait_for_update': 500
+  });
+  try {
+    if (window.localStorage.getItem('ga-consent') === 'accepted') {
+      gtag('consent', 'update', { 'analytics_storage': 'granted' });
+    }
+  } catch (err) {}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ site.ga_measurement_id }}"></script>
+<script>
+  gtag('js', new Date());
+  gtag('config', '{{ site.ga_measurement_id }}');
+</script>
+<script>
+  (function () {
+    var STORAGE_KEY = 'ga-consent';
+    var choice = null;
+
+    try {
+      choice = window.localStorage.getItem(STORAGE_KEY);
+    } catch (err) {
+      choice = null;
+    }
+
+    if (choice === 'accepted' || choice === 'declined') {
+      return;
+    }
+
+    function remember(value) {
+      try {
+        window.localStorage.setItem(STORAGE_KEY, value);
+      } catch (err) {}
+    }
+
+    function hide(banner) {
+      if (banner && banner.parentNode) {
+        banner.parentNode.removeChild(banner);
+      }
+      document.body.classList.remove('has-consent-banner');
+    }
+
+    function showBanner() {
+      if (!document.body) {
+        return;
+      }
+
+      var banner = document.createElement('div');
+      banner.className = 'consent-banner';
+      banner.setAttribute('role', 'dialog');
+      banner.setAttribute('aria-label', 'Analytics cookies');
+
+      var text = document.createElement('p');
+      text.textContent = 'This site uses Google Analytics to count visits.';
+
+      var actions = document.createElement('div');
+      actions.className = 'consent-banner__actions';
+
+      var accept = document.createElement('button');
+      accept.type = 'button';
+      accept.className = 'consent-banner__btn consent-banner__btn--accept';
+      accept.textContent = 'Accept';
+
+      var decline = document.createElement('button');
+      decline.type = 'button';
+      decline.className = 'consent-banner__btn';
+      decline.textContent = 'Decline';
+
+      accept.addEventListener('click', function () {
+        gtag('consent', 'update', { 'analytics_storage': 'granted' });
+        remember('accepted');
+        hide(banner);
+      });
+
+      decline.addEventListener('click', function () {
+        remember('declined');
+        hide(banner);
+      });
+
+      actions.appendChild(accept);
+      actions.appendChild(decline);
+      banner.appendChild(text);
+      banner.appendChild(actions);
+      document.body.appendChild(banner);
+      document.body.classList.add('has-consent-banner');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', showBanner);
+    } else {
+      showBanner();
+    }
+  })();
+</script>
+{% endif %}
