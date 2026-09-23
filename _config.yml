@@ -20,6 +20,9 @@ lang: en
 timezone: Europe/Dublin
 permalink: /posts/:title/
 
+# Google Analytics 4. Leave blank to disable the gtag include.
+ga_measurement_id: G-FSD4T32ZPP
+
 logo: /assets/brand/intelliwise-mark.png
 
 twitter:
