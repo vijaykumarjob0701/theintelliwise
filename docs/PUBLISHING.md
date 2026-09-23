@@ -27,6 +27,7 @@ title: "A concrete title an engineer can scan"
 date: 2026-09-19
 tags: [peft, evaluation]
 excerpt: "One or two sentences for the home listing. No teaser fluff."
+card_image: /assets/images/your-slug/01-figure.gif
 ---
 ```
 

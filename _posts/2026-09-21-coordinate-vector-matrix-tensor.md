@@ -3,6 +3,7 @@ title: "Coordinate → Vector → Matrix → Tensor"
 date: 2026-09-21 21:00:00 +0000
 tags: [tensor, pytorch, numpy, linear-algebra, ml-basics]
 excerpt: "Grown-ups keep saying tensor. It is not a robot spell. One number on a map is a coordinate. Two numbers together are an arrow — a vector, not a table. Stack lists and you get a score sheet. Stack pages and you get a photo book."
+card_image: /assets/images/coordinate-vector-matrix-tensor/01-coordinate-vs-vector.gif
 ---
 
 Grown-ups keep saying **tensor**.

@@ -3,6 +3,7 @@ title: "Semantic Caching for RAG & LLMs: Remembering by Meaning"
 date: 2026-09-19 11:00:00 +0100
 tags: [rag, caching, embeddings]
 excerpt: "Reuse answers when a new question means the same thing — and only when metadata says it is still safe. Exact match first, then normalisation, then embeddings."
+card_image: /assets/images/rag-semantic-caching/semantic-cache-overview.png
 ---
 
 If a teammate asks *"Where is the sprint dashboard?"* you paste the link. Five minutes later someone asks *"Can you share the sprint board URL?"* you do not rebuild the dashboard. You reuse the answer.

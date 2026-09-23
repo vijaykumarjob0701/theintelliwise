@@ -3,6 +3,7 @@ title: "Jev: Stamp the Answer, Don't Write It"
 date: 2026-09-22 20:00:00 +0000
 tags: [jev, typesafe, system-one, llm, structured-outputs, laya, convai, anyjev]
 excerpt: "Chat writes letters. Decision models stamp labeled boxes. You can also wrap the LLM you already run so it answers like a decision model — no extra training."
+card_image: /assets/images/jev-system-one-model/01-llm-letter-vs-jev-boxes.gif
 ---
 
 Chat models write letters.

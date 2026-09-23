@@ -3,6 +3,7 @@ title: "Why LLMs Forget Everything — and How We Give Them Memory"
 date: 2026-03-29 10:00:00 +0100
 tags: [llm, memory, rag, agents]
 excerpt: "LLMs are powerful, but they do not remember your past chats by default. That is the biggest trap in GenAI app design."
+card_image: /assets/images/why-llms-forget-memory/01.png
 ---
 
 ![Why LLMs Forget Everything — and How We Give Them Memory]({{ '/assets/images/why-llms-forget-memory/01.png' | relative_url }})

@@ -4,6 +4,7 @@ date: 2026-09-22 11:00:00 +0000
 permalink: /posts/bunnyshell-ephemeral-environments/
 tags: [bunnyshell, preview-environments, ephemeral-environments, kubernetes, developer-experience]
 excerpt: "The class has one sandbox. Two kids want it. Bunnyshell clones the whole shop for each pull request — app, database, and friends — comments a URL, then throws the clone away."
+card_image: /assets/images/bunnyshell-ephemeral-environments/01-shared-queue-vs-own-clone.gif
 ---
 
 The class has **one** sandbox.

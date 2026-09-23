@@ -4,6 +4,7 @@ date: 2026-09-22 10:00:00 +0000
 permalink: /posts/postgres-explain/
 tags: [postgres, sql, explain, databases]
 excerpt: "Ask Postgres for its plan. Read the tree from the inside. JOINs, Index Cond vs Filter, SubPlans, and buffers — explained simply."
+card_image: /assets/images/postgres-explain/01-ask-for-the-plan.gif
 ---
 
 Your question to the database feels **slow**.
