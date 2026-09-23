@@ -9,6 +9,15 @@
 
   var chips = root ? root.querySelectorAll("[data-tag]") : [];
   var activeTag = "all";
+  var searchTimer = null;
+  var lastSearchTerm = "";
+  var SEARCH_DEBOUNCE_MS = 600;
+  var MIN_SEARCH_LENGTH = 2;
+
+  function track(name, params) {
+    if (typeof gtag !== "function") return;
+    gtag("event", name, params || {});
+  }
 
   function query() {
     return search ? search.value.trim().toLowerCase() : "";
@@ -24,6 +33,19 @@
     if (!q) return true;
     var hay = card.getAttribute("data-search") || "";
     return hay.indexOf(q) !== -1;
+  }
+
+  function visibleCount() {
+    var n = 0;
+    cards.forEach(function (card) {
+      if (!card.hidden) n += 1;
+    });
+    return n;
+  }
+
+  function slugFromHref(href) {
+    var parts = (href || "").split("/").filter(Boolean);
+    return parts.length ? parts[parts.length - 1] : "";
   }
 
   function applyFilters() {
@@ -59,16 +81,47 @@
     }
   }
 
+  function trackSearch() {
+    if (!search) return;
+    var term = search.value.trim();
+    if (term.length < MIN_SEARCH_LENGTH) return;
+    var key = term.toLowerCase();
+    if (key === lastSearchTerm) return;
+    lastSearchTerm = key;
+    track("search", {
+      search_term: term.slice(0, 100),
+      results_count: visibleCount()
+    });
+  }
+
   chips.forEach(function (chip) {
     chip.addEventListener("click", function () {
       activeTag = chip.getAttribute("data-tag") || "all";
       applyFilters();
+      track("tag_click", { tag_name: activeTag.slice(0, 100) });
     });
   });
 
   if (search) {
-    search.addEventListener("input", applyFilters);
+    search.addEventListener("input", function () {
+      applyFilters();
+      if (searchTimer) window.clearTimeout(searchTimer);
+      searchTimer = window.setTimeout(trackSearch, SEARCH_DEBOUNCE_MS);
+    });
   }
+
+  cards.forEach(function (card) {
+    var link = card.querySelector(".writing-card__title a");
+    if (!link) return;
+    link.addEventListener("click", function () {
+      var title = (link.textContent || "").trim();
+      track("post_card_click", {
+        post_title: title.slice(0, 100),
+        post_slug: slugFromHref(link.getAttribute("href")),
+        link_url: link.getAttribute("href") || ""
+      });
+    });
+  });
 
   function syncTopicsOpen() {
     if (!topics) return;
