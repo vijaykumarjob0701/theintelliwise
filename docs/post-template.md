@@ -3,6 +3,7 @@ title: "Replace with the public title"
 date: 2026-01-01
 tags: [topic]
 excerpt: "One or two sentences for the home listing."
+card_image: /assets/images/your-slug/figure.png
 ---
 
 Lead with the problem and the setup. Then show what you tried, what you

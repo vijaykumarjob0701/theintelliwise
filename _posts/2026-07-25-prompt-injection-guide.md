@@ -3,6 +3,7 @@ title: "Prompt Injection: A Simple Guide to Protecting Your AI Apps"
 date: 2026-07-25 10:00:00 +0100
 tags: [prompt-injection, security, llm, ai-apps]
 excerpt: "Prompt injection hides fake instructions inside AI input. Eleven attack patterns and a layered defence model for protecting AI apps."
+card_image: /assets/images/prompt-injection-guide/01.png
 ---
 
 ![Prompt Injection: A Simple Guide to Protecting Your AI Apps]({{ '/assets/images/prompt-injection-guide/01.png' | relative_url }})

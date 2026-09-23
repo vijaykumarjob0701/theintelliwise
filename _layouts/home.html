@@ -1,20 +1,10 @@
 ---
 layout: default
 ---
-<header class="library-band">
-  <div class="library-kicker">
-    <p class="eyebrow">{{ site.author.location }}</p>
-    <p class="library-pill">The library</p>
-  </div>
-  <h1 class="masthead-title">{{ site.title }}</h1>
-  <p class="masthead-tagline">{{ site.tagline }}</p>
-  <p class="lede">
-    Practical notes on Postgres, systems, and applied ML — written for
-    other engineers.
-  </p>
-  <p class="byline">
-    {{ site.author.role }}
-  </p>
+<header class="writing-band">
+  <p class="library-pill">The library</p>
+  <h1 class="writing-heading">Writing</h1>
+  <p class="writing-sub">Notes on Postgres, systems, and applied ML.</p>
 </header>
 
 {% if site.posts.size == 0 %}
@@ -41,58 +31,86 @@ layout: default
   {% assign unique_tags = collected_tags | split: "," | compact | uniq | sort %}
 
   <section class="writing-index" aria-labelledby="index-title">
-    <div class="writing-index__head">
-      <h2 id="index-title" class="index-label">Writing</h2>
-      <p class="visually-hidden" id="tag-filter-label">Filter writing by topic</p>
-      <p class="visually-hidden" data-filter-status aria-live="polite"></p>
-      <div class="tag-filter" data-tag-filter>
-        <div class="tag-filter__chips" role="group" aria-labelledby="tag-filter-label">
-          <button type="button" class="chip chip--filter" data-tag="all" aria-pressed="true">
-            All
-          </button>
-          {% for tag in unique_tags %}
-            {% if tag != "" %}
-              <button type="button" class="chip chip--filter" data-tag="{{ tag | escape }}" aria-pressed="false">
-                #{{ tag }}
-              </button>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
+    <h2 id="index-title" class="visually-hidden">Posts</h2>
+    <p class="visually-hidden" data-filter-status aria-live="polite"></p>
+
+    <div class="writing-index__main">
+      <ol class="writing-list">
+        {% for post in site.posts %}
+          {% assign thumb = post.card_image | default: post.image %}
+          {% if thumb.path %}
+            {% assign thumb = thumb.path %}
+          {% endif %}
+          <li
+            class="writing-list__item"
+            data-writing-card
+            data-tags="|{% if post.tags.size > 0 %}{{ post.tags | join: '|' }}|{% endif %}"
+            data-search="{{ post.title | downcase | escape }} {{ post.excerpt | strip_html | downcase | escape }} {{ post.tags | join: ' ' | downcase | escape }}"
+          >
+            <article class="writing-card{% if forloop.first %} writing-card--lead{% endif %}">
+              {% if thumb %}
+                <div class="writing-card__media">
+                  <img
+                    src="{{ thumb | relative_url }}"
+                    alt=""
+                    {% unless forloop.first %}loading="lazy"{% endunless %}
+                    decoding="async"
+                  >
+                </div>
+              {% endif %}
+              <div class="writing-card__body">
+                <p class="writing-card__meta">
+                  <time class="chip chip--date" datetime="{{ post.date | date: '%Y-%m-%d' }}">
+                    {{ post.date | date: '%d %b %Y' }}
+                  </time>
+                  {% for tag in post.tags limit: 2 %}
+                    <span class="chip chip--tag">#{{ tag }}</span>
+                  {% endfor %}
+                </p>
+                <h3 class="writing-card__title">
+                  <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                </h3>
+                {% if post.excerpt %}
+                  <p class="excerpt">{{ post.excerpt | strip_html | truncate: 180 }}</p>
+                {% endif %}
+              </div>
+            </article>
+          </li>
+        {% endfor %}
+      </ol>
+      <p class="writing-empty" data-filter-empty hidden>No posts match this search and topic.</p>
     </div>
 
-    <ol class="writing-list">
-      {% for post in site.posts %}
-        <li
-          class="writing-list__item"
-          data-writing-card
-          data-tags="|{% if post.tags.size > 0 %}{{ post.tags | join: '|' }}|{% endif %}"
+    <aside class="writing-rail" aria-label="Search and topics">
+      <div class="writing-search">
+        <label class="writing-search__label" for="writing-search">Search</label>
+        <input
+          id="writing-search"
+          class="writing-search__input"
+          type="search"
+          data-writing-search
+          placeholder="Title, excerpt, or tag"
+          autocomplete="off"
         >
-          <article class="writing-card{% if forloop.first %} writing-card--lead{% endif %}">
-            {% if post.card_image %}
-              <div class="writing-card__media">
-                <img src="{{ post.card_image | relative_url }}" alt="">
-              </div>
-            {% endif %}
-            <div class="writing-card__body">
-              <p class="writing-card__meta">
-                <time class="chip chip--date" datetime="{{ post.date | date: '%Y-%m-%d' }}">
-                  {{ post.date | date: '%d %b %Y' }}
-                </time>
-                {% for tag in post.tags %}
-                  <span class="chip chip--tag">#{{ tag }}</span>
-                {% endfor %}
-              </p>
-              <h3 class="writing-card__title">
-                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-              </h3>
-              {% if post.excerpt %}
-                <p class="excerpt">{{ post.excerpt | strip_html | truncate: 180 }}</p>
+      </div>
+      <details class="writing-topics" data-topics-panel>
+        <summary>Topics</summary>
+        <p class="visually-hidden" id="tag-filter-label">Filter writing by topic</p>
+        <div class="tag-filter" data-tag-filter>
+          <div class="tag-filter__chips" role="group" aria-labelledby="tag-filter-label">
+            <button type="button" class="chip chip--filter" data-tag="all" aria-pressed="true">
+              All
+            </button>
+            {% for tag in unique_tags %}
+              {% if tag != "" %}
+                <button type="button" class="chip chip--filter" data-tag="{{ tag | escape }}" aria-pressed="false">
+                  #{{ tag }}
+                </button>
               {% endif %}
-            </div>
-          </article>
-        </li>
-      {% endfor %}
-    </ol>
+            {% endfor %}
+          </div>
+        </div>
+      </details>
+    </aside>
   </section>
 {% endif %}

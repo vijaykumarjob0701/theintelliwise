@@ -3,6 +3,7 @@ title: "Reverse Engineering the Cursor AI Agent — Architecture Patterns You Ca
 date: 2026-05-09
 tags: [cursor, agents, architecture]
 excerpt: "Cursor is one of the most well-designed AI coding agents out there. But Anysphere (the company behind Cursor) has not published any official architecture documentation publicly."
+card_image: /assets/images/reverse-engineering-cursor-ai-agent/01.png
 ---
 
 ![Reverse Engineering the Cursor AI Agent — Architecture Patterns You Can Steal for Your Own Projects]({{ '/assets/images/reverse-engineering-cursor-ai-agent/01.png' | relative_url }})

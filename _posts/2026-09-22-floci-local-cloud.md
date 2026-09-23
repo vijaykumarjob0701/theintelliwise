@@ -4,6 +4,7 @@ date: 2026-09-22 13:00:00 +0000
 permalink: /posts/floci-local-cloud/
 tags: [floci, aws, azure, gcp, local-development]
 excerpt: "You do not need a real cloud account to try a bucket. Floci is four pretend clouds on your desk — AWS, Azure, GCP, and OCI — each behind its own door."
+card_image: /assets/images/floci-local-cloud/01-laptop-vs-far-cloud.gif
 ---
 
 You do not need a real cloud account to find out your prefix logic is wrong.

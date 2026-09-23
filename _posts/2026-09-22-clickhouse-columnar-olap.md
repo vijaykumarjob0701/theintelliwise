@@ -4,6 +4,7 @@ date: 2026-09-22 13:00:00 +0000
 permalink: /posts/clickhouse-columnar-olap/
 tags: [clickhouse, olap, columnar, postgresql, analytics]
 excerpt: "Postgres is great at one lunch order. It is less great at summing juice for the whole school. ClickHouse stores columns in piles and reads only the ones you name. Keep the ledger in Postgres."
+card_image: /assets/images/clickhouse-columnar-olap/01-row-store-vs-column-store.gif
 ---
 
 Postgres is very good at “this one order, this one customer, this one write.”

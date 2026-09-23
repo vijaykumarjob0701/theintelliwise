@@ -3,6 +3,7 @@ title: "Can Tabular Foundation Models Really Beat AutoML?"
 date: 2026-09-20 20:00:00 +0100
 tags: [tabular, tabpfn, autogluon, catboost, automl]
 excerpt: "A standup claim, a Slack table, and a same-split bake-off on Adult Income. AutoGluon edged AUC. CatBoost won the production shape. TabPFN trained in a blink — on 3,000 rows — and paid for it at inference."
+card_image: /assets/images/cards/tabular-vs-automl.png
 ---
 
 Monday standup. Someone says tabular foundation models are done cooking AutoML. *You just fit TabPFN. No search. No stack. It already knows tables.*
