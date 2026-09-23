@@ -224,76 +224,8 @@ main {
   padding-block: 1.5rem 4.5rem;
 }
 
-.layout-home main {
-  padding-top: 0;
-}
-
 .layout-post main {
   padding-bottom: 0;
-}
-
-.writing-band,
-.library-band,
-.masthead {
-  position: relative;
-  padding: 1.05rem 0 1.2rem;
-  margin: 0 0 1.35rem;
-}
-
-.writing-band::before,
-.library-band::before,
-.masthead::before {
-  content: "";
-  position: absolute;
-  inset: 0 calc(50% - 50vw);
-  background: var(--bg-band);
-  z-index: -1;
-}
-
-.library-pill {
-  margin: 0 0 0.55rem;
-  display: inline-flex;
-  align-items: center;
-  padding: 0.22rem 0.7rem;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.writing-heading {
-  margin: 0;
-  font-size: clamp(1.55rem, 3.4vw, 2rem);
-  line-height: 1.15;
-  letter-spacing: -0.035em;
-  font-weight: 600;
-}
-
-.writing-sub {
-  margin: 0.35rem 0 0;
-  max-width: 36rem;
-  font-size: 0.95rem;
-  line-height: 1.4;
-  color: var(--ink-muted);
-}
-
-.masthead-title {
-  margin: 0.35rem 0 0.55rem;
-  font-size: var(--display);
-  line-height: 0.95;
-  letter-spacing: -0.045em;
-  font-weight: 600;
-}
-
-.masthead-tagline {
-  margin: 0 0 1.35rem;
-  font-size: 1.05rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: var(--ink-muted);
 }
 
 .page-head h1 {
@@ -1042,17 +974,6 @@ a:focus-visible,
 
   main {
     padding-block: 0.75rem 3.25rem;
-  }
-
-  .layout-home main {
-    padding-top: 0;
-  }
-
-  .writing-band,
-  .library-band,
-  .masthead {
-    padding: 0.9rem 0 1.05rem;
-    margin-bottom: 1.1rem;
   }
 
   .writing-card,
