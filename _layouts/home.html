@@ -44,16 +44,6 @@ layout: default
             data-search="{{ post.title | downcase | escape }} {{ post.excerpt | strip_html | downcase | escape }} {{ post.tags | join: ' ' | downcase | escape }}"
           >
             <article class="writing-card{% if forloop.first %} writing-card--lead{% endif %}">
-              {% if thumb %}
-                <div class="writing-card__media">
-                  <img
-                    src="{{ thumb | relative_url }}"
-                    alt=""
-                    {% unless forloop.first %}loading="lazy"{% endunless %}
-                    decoding="async"
-                  >
-                </div>
-              {% endif %}
               <div class="writing-card__body">
                 <p class="writing-card__meta">
                   <time class="chip chip--date" datetime="{{ post.date | date: '%Y-%m-%d' }}">
@@ -66,10 +56,20 @@ layout: default
                 <h3 class="writing-card__title">
                   <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
                 </h3>
-                {% if post.excerpt %}
-                  <p class="excerpt">{{ post.excerpt | strip_html | truncate: 180 }}</p>
-                {% endif %}
               </div>
+              {% if thumb %}
+                <div class="writing-card__media">
+                  <img
+                    src="{{ thumb | relative_url }}"
+                    alt=""
+                    {% unless forloop.first %}loading="lazy"{% endunless %}
+                    decoding="async"
+                  >
+                </div>
+              {% endif %}
+              {% if post.excerpt %}
+                <p class="excerpt">{{ post.excerpt | strip_html | truncate: 180 }}</p>
+              {% endif %}
             </article>
           </li>
         {% endfor %}
