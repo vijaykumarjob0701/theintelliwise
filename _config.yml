@@ -20,6 +20,10 @@ lang: en
 timezone: Europe/Dublin
 permalink: /posts/:title/
 
+# Same-day posts keep their listed clock times (10:00 / 12:00 / 14:00 UTC)
+# without waiting for GitHub Pages to rebuild after that hour.
+future: true
+
 # Google Analytics 4. Leave blank to disable the gtag include.
 ga_measurement_id: G-57ZMP2XQLQ
 
