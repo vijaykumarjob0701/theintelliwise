@@ -251,13 +251,9 @@ Copy this for your next AI feature launch:
 ## Further reading
 
 
-- [OWASP LLM Top 10 — Prompt Injection](https://www.linkedin.com/redir/redirect?url=https%3A%2F%2Fgenai%2Eowasp%2Eorg%2Fllmrisk%2Fllm01-prompt-injection%2F&urlhash=gmYv&trk=article-ssr-frontend-pulse_little-text-block)
-- [NIST AI Risk Management Framework](https://www.linkedin.com/redir/redirect?url=https%3A%2F%2Fwww%2Enist%2Egov%2Fartificial-intelligence%2Fexecutive-order-safe-secure-and-trustworthy-artificial-intelligence&urlhash=aVvu&trk=article-ssr-frontend-pulse_little-text-block)
-- [Simon Willison's Prompt Injection series](https://www.linkedin.com/redir/redirect?url=https%3A%2F%2Fsimonwillison%2Enet%2Fseries%2Fprompt-injection%2F&urlhash=VQKU&trk=article-ssr-frontend-pulse_little-text-block) — best ongoing resource
-- [Anthropic's AI safety research](https://www.linkedin.com/redir/redirect?url=https%3A%2F%2Fwww%2Eanthropic%2Ecom%2Fresearch&urlhash=NWKi&trk=article-ssr-frontend-pulse_little-text-block)
-- [Microsoft's AI red teaming guide](https://www.linkedin.com/redir/redirect?url=https%3A%2F%2Flearn%2Emicrosoft%2Ecom%2Fen-us%2Fazure%2Fai-services%2Fopenai%2Fconcepts%2Fred-teaming&urlhash=1-5t&trk=article-ssr-frontend-pulse_little-text-block)
-- [Google's Secure AI Framework (SAIF)](https://www.linkedin.com/redir/redirect?url=https%3A%2F%2Fsafety%2Egoogle%2Fcybersecurity-advancements%2Fsaif%2F&urlhash=-H3q&trk=article-ssr-frontend-pulse_little-text-block)
-
----
-
-*Originally published on LinkedIn: [Prompt Injection: A Simple Guide to Protecting Your AI Apps](https://www.linkedin.com/pulse/prompt-injection-simple-guide-protecting-your-ai-apps-vijay-kumar-rwkcf)*
+- [OWASP LLM Top 10 — Prompt Injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
+- [NIST AI Risk Management Framework](https://www.nist.gov/artificial-intelligence/executive-order-safe-secure-and-trustworthy-artificial-intelligence)
+- [Simon Willison's Prompt Injection series](https://simonwillison.net/series/prompt-injection/) — best ongoing resource
+- [Anthropic's AI safety research](https://www.anthropic.com/research)
+- [Microsoft's AI red teaming guide](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/red-teaming)
+- [Google's Secure AI Framework (SAIF)](https://safety.google/cybersecurity-advancements/saif/)

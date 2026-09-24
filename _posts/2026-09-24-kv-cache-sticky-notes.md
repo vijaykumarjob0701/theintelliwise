@@ -28,8 +28,6 @@ flowchart LR
 
 That is the whole idea. The rest of this post is sticky notes, a growing locker, and why memory gets tight.
 
-An Instagram teaching reel by **@academy_thc** asked the same kid question in Hinglish: why does ChatGPT answer so fast, and what does KV cache actually buy you? We used that spark, then wrote our own simple walkthrough (and checked public explainers for the mechanics).
-
 ---
 
 ## Three sticky notes per word
@@ -287,7 +285,6 @@ Public explainers we used while writing (mechanics, not our measurements):
 - [KV Cache Explained (Learn Code Camp)](https://learncodecamp.net/kv-cache-explained/)
 - [KV cache and context memory costs (Wes Kennedy)](https://wes.today/series/inference/what-happens/prefill-decode/kv-cache/)
 - [KV cache concept note (ZeroEntropy)](https://zeroentropy.dev/concepts/kv-cache/)
-- Instagram teaching reel by [@academy_thc](https://www.instagram.com/academy_thc/) ([reel](https://www.instagram.com/reel/DdnXKNVMbi4/)): ChatGPT feels fast because past Key/Value matrices are cached; without that, an autoregressive model would redo prior-token work for every new token. On-screen frames used **STORED → FETCHED → USED**, **RECOMPUTE** vs **CACHE**, and “more tokens = more work.” Inspiration only — full teaching is our rewrite.
 
 ---
 

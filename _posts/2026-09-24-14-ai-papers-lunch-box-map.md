@@ -2,13 +2,13 @@
 title: "14 AI Papers: A Lunch-Box Reading Map"
 date: 2026-09-24 14:00:00 +0000
 tags: [ai-papers, transformers, lora, rag, rlhf, diffusion]
-excerpt: "A reel listed 14 famous AI papers. Here is the same list as a lunch-box map: what each idea is for, which to read first, and how they fit together — in simple English."
+excerpt: "Fourteen famous AI papers as a lunch-box map: what each idea is for, which to read first, and how they fit together — in simple English."
 card_image: /assets/images/14-ai-papers-lunch-box-map/01-map-overview.gif
 ---
 
-A reel by **@xouryn** flashes **14 research papers** every AI engineer keeps hearing about.
+Fourteen research papers every AI engineer keeps hearing about.
 
-The reel is a **checklist**. This post is the **lunch-box map**.
+The common list is a **checklist**. This post is the **lunch-box map**.
 
 Same 14 names. Grouped so a ten-year-old (and a busy adult) can see *why* each box exists, and *which box to open first*.
 
@@ -35,7 +35,7 @@ Say it out loud:
 
 ---
 
-## The 14 names (reel order)
+## The 14 names (common list order)
 
 | # | Short name | One kid line |
 | --- | --- | --- |
@@ -232,16 +232,14 @@ You do **not** need all 14 in one weekend.
 
 ## Honest caveats
 
-- A reel list is a **map**, not a PhD.  
+- A common list is a **map**, not a PhD.  
 - Paper titles evolve (RAG stacks, diffusion variants, LLaMA versions). Learn the **idea**, then check the latest version.  
-- “Part 1” on the reel means more lists may exist — we only teach this fourteen.  
-- We credit **@xouryn** for the spark checklist. Explanations here are our teaching rewrite.
+- More lists may exist — we only teach this fourteen.
 
 ---
 
 ## Sources
 
-- Instagram reel by [@xouryn](https://www.instagram.com/xouryn/) — [14 Research Papers for AI Professionals (Part 1)](https://www.instagram.com/reel/DdYPOerRWc8/)
 - Landmark papers / lineages named above (Vaswani et al. Transformer; Devlin et al. BERT; Hu et al. LoRA; Dosovitskiy et al. ViT; Goodfellow et al. GAN; Kingma & Welling VAE; Lewis et al. RAG; InstructGPT / RLHF literature; LLaMA; RoFormer/RoPE; diffusion / latent diffusion). Prefer the official PDFs when you sit down to read.
 
 ---

@@ -262,7 +262,3 @@ Cursor is not just a "VS Code with AI chat." It is a thoughtfully designed agent
 If you are building an AI agent for **document analysis**, **customer support**, **code review**, or **any domain** — start with these building blocks. They work.
 
 *This analysis is based on examining Cursor v2.3.35's file system on macOS, combined with publicly available information from the Cursor blog, Turbopuffer case studies, and community engineering teardowns. Cursor (Anysphere) has not published an official architecture document, so some server-side details are inferred from observed behaviour and third-party sources.*
-
----
-
-*Originally published on LinkedIn: [Reverse Engineering the Cursor AI Agent — Architecture Patterns You Can Steal for Your Own Projects](https://www.linkedin.com/pulse/reverse-engineering-cursor-ai-agent-architecture-patterns-vijay-kumar-u4tfe)*

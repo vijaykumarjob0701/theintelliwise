@@ -93,7 +93,3 @@ In production, the orchestration is the hard part. You need DB connections, asyn
 **Takeaway: **Managed memory layers are often the fastest path to production.
 
 LLMs are powerful, but without memory, they are just smart calculators. If you want to build real AI products, memory is not optional—it’s the core. Start simple, be selective with what you store, and focus on user experience. The difference between a demo and a real product is memory.
-
----
-
-*Originally published on LinkedIn: [Why LLMs Forget Everything — and How We Give Them Memory](https://www.linkedin.com/pulse/why-llms-forget-everything-how-we-give-them-memory-vijay-kumar-pikqf)*

@@ -16,7 +16,7 @@ In his talk he took a default SQLite notebook near **300** writes a second and c
 
 The original write-up is on [Foo Community](https://foo.community/blog/the-physics-of-database-speed). The full talk (~18 min) is on [YouTube](https://www.youtube.com/watch?v=vOEL_pHFYK0). Tanay is at [tanay.xyz](https://tanay.xyz) (`tanayvk` on GitHub and X).
 
-An Instagram reaction reel by `@rishabhsinghtech` later showed a shortened graphic of that same Foo / YouTube card. The reel is a **reaction**. It is **not** the experiment. Do **not** credit the reactor as the person who ran the 1M TPS demo.
+Later shortened recaps of that same Foo / YouTube card are **reactions**. They are **not** the experiment. Do **not** credit a reactor as the person who ran the 1M TPS demo.
 
 ```mermaid
 flowchart LR
@@ -32,7 +32,7 @@ That is the whole trick. The rest of this post is a desk, a locked cabinet, a lo
 
 ## Tanay’s speed ladder
 
-Use **Tanay’s** chapter numbers. Instagram squeezed two sync steps into one “optimize sync” graphic (~12k) and then jumped to batching. Prefer the fuller ladder.
+Use **Tanay’s** chapter numbers. Some shortened recaps squeezed two sync steps into one “optimize sync” graphic (~12k) and then jumped to batching. Prefer the fuller ladder.
 
 | Step | What changes | Tanay’s reported TPS (approx) |
 | --- | --- | --- |
@@ -242,7 +242,7 @@ We are **not** publishing a stopwatch from this folder. If you want *your* TPS, 
 
 ## Honest caveats
 
-- **Tanay ran the ladder.** Foo Community published it. Instagram only reacted.
+- **Tanay ran the ladder.** Foo Community published it. Later recaps only reacted.
 - **TPS numbers are demo numbers.** Hardware, disk, batch size, and the exact SQL all move them.
 - **`synchronous = OFF` can lose recent work** — or worse — on crash / power loss. SQLite says this plainly.
 - **NORMAL is not “no risk.”** In WAL it is usually “no corruption, maybe missing last tickets.”

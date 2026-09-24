@@ -10,7 +10,7 @@ System design interviews sound scary.
 
 They are mostly **picking the right lunch tray** for the problem.
 
-A reel by **@ikritika.mishra** (Kritika Mishra) — [https://www.instagram.com/reel/DdjJDRfPOVW/](https://www.instagram.com/reel/DdjJDRfPOVW/) — lists the core trays in one sweep. We used that checklist as a spark, then wrote our own simple map — with why each tray exists, when to reach for it, and a tiny picture in your head.
+This map covers the core trays — why each exists, when to reach for it, and a tiny picture in your head.
 
 ```mermaid
 flowchart TB
@@ -36,7 +36,7 @@ Say it out loud:
 
 **Pain:** millions of people ask for the **same** thing. The database sweats.
 
-| Pattern | Kid idea | Grown-up line from the reel |
+| Pattern | Kid idea | Grown-up name |
 | --- | --- | --- |
 | **Caching** | Keep the popular snack on a nearby shelf | “Reuse frequently requested data” |
 | **Read replicas** | Extra photocopies of the notebook for readers | “Offload reads to database copies” |
@@ -60,7 +60,7 @@ flowchart LR
 
 **Pain:** everyone wants to **save** at once. The pen is too slow.
 
-| Pattern | Kid idea | Reel line |
+| Pattern | Kid idea | Grown-up name |
 | --- | --- | --- |
 | **Batching** | Drop many letters in one mail bag | “Group writes to reduce overhead” |
 | **Async processing** | Stamp “we got it” now; finish later | “Move work off the request path” |
@@ -76,7 +76,7 @@ flowchart LR
 
 **Pain:** Service A rings Service B, which rings C… one sneeze breaks the chain.
 
-| Pattern | Kid idea | Reel line |
+| Pattern | Kid idea | Grown-up name |
 | --- | --- | --- |
 | **Message queues** | A school inbox between classrooms | “Buffer messages between services” |
 | **Event-driven architecture** | Post a note on the board; people react | “React to published events” |
@@ -99,7 +99,7 @@ flowchart LR
 
 **Pain:** the user waits while you bake a huge cake.
 
-| Pattern | Kid idea | Reel line |
+| Pattern | Kid idea | Grown-up name |
 | --- | --- | --- |
 | **Background workers** | Kitchen staff, not the waiter | “Run work outside the request” |
 | **Job queues** | Ticket spike for the kitchen | “Queue jobs for available workers” |
@@ -115,7 +115,7 @@ flowchart LR
 
 **Pain:** the network hiccups. Bad code retries forever and makes it worse.
 
-| Pattern | Kid idea | Reel line |
+| Pattern | Kid idea | Grown-up name |
 | --- | --- | --- |
 | **Retries with backoff** | Knock, wait longer, knock again | “Retry with increasing delays” |
 | **Timeouts** | Stop waiting after the bell | “Limit the caller’s waiting time” |
@@ -134,7 +134,7 @@ Say it out loud:
 
 **Pain:** one notebook cannot hold the whole school.
 
-| Pattern | Kid idea | Reel line |
+| Pattern | Kid idea | Grown-up name |
 | --- | --- | --- |
 | **Partitioning** | Split the class list into folders | “Split data into subsets” |
 | **Sharding** | Folders live on different shelves | “Store subsets on different nodes” |
@@ -150,7 +150,7 @@ Say it out loud:
 
 **Pain:** the user wants news **now**, not on refresh.
 
-| Pattern | Kid idea | Reel line |
+| Pattern | Kid idea | Grown-up name |
 | --- | --- | --- |
 | **WebSockets** | Walkie-talkie both ways | “Keep a two-way channel open” |
 | **Server-Sent Events** | Radio from school to kids | “Stream server events to the client” |
@@ -180,14 +180,13 @@ Say it out loud:
 
 - Patterns are **tools**, not magic stickers. Wrong tool hurts.
 - Every tray adds **ops cost**: monitoring, failure modes, money.
-- The Instagram reel is a **checklist**. This post is the **why**.
+- The common list is a **checklist**. This post is the **why**.
 - We did not invent these patterns; they are common industry practice.
 
 ---
 
 ## Sources
 
-- Instagram teaching reel by [@ikritika.mishra](https://www.instagram.com/ikritika.mishra/) ([reel](https://www.instagram.com/reel/DdjJDRfPOVW/)): core system-design pattern checklist (read / write / decouple / long tasks / failures / distribute / realtime). Caption is a “comment notes” CTA.
 - Standard public SD interview guides (caching, replicas, queues, breakers, sharding, realtime transports) used to expand each one-liner into kid-clear why/when.
 
 ---
