@@ -66,6 +66,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow-x: clip;
+  isolation: isolate;
   background: var(--bg);
   color: var(--ink);
   font-family: var(--sans);
@@ -73,6 +74,86 @@ body {
   line-height: 1.55;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Atmosphere from the featured graphic: charcoal, coral, neural nodes,
+   paper stack. Lettering in the asset is cropped, masked, and blurred so
+   it cannot be read as a second masthead or as a topic tagline. */
+.site-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.site-bg::before {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  background-image: url("../images/brand/intelliwise-featured-thumb.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 100% 8%;
+  transform: scale(1.85);
+  transform-origin: 100% 6%;
+  opacity: 0.07;
+  filter: saturate(0.7) contrast(0.92) blur(1.2px);
+  mix-blend-mode: multiply;
+  -webkit-mask-image: linear-gradient(
+    112deg,
+    transparent 0%,
+    transparent 36%,
+    rgba(0, 0, 0, 0.28) 52%,
+    #000 68%
+  );
+  mask-image: linear-gradient(
+    112deg,
+    transparent 0%,
+    transparent 36%,
+    rgba(0, 0, 0, 0.28) 52%,
+    #000 68%
+  );
+}
+
+.site-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 58% 50% at 0% 100%, rgba(201, 92, 74, 0.09), transparent 72%),
+    radial-gradient(ellipse 44% 42% at 100% 0%, rgba(232, 140, 90, 0.08), transparent 70%),
+    radial-gradient(ellipse 26% 22% at 90% 22%, rgba(255, 176, 96, 0.05), transparent 68%);
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-color-scheme: dark) {
+  .site-bg::before {
+    opacity: 0.1;
+    mix-blend-mode: lighten;
+    filter: saturate(0.65) brightness(0.96) contrast(1.02) blur(1.2px);
+  }
+
+  .site-bg::after {
+    mix-blend-mode: screen;
+    background:
+      radial-gradient(ellipse 58% 50% at 0% 100%, rgba(201, 92, 74, 0.08), transparent 72%),
+      radial-gradient(ellipse 44% 42% at 100% 0%, rgba(232, 140, 90, 0.07), transparent 70%),
+      radial-gradient(ellipse 26% 22% at 90% 22%, rgba(255, 176, 96, 0.07), transparent 68%);
+  }
+}
+
+@media print {
+  .site-bg {
+    display: none;
+  }
+}
+
+.site-header,
+main,
+.site-footer {
+  position: relative;
+  z-index: 1;
 }
 
 ::selection {
