@@ -85,35 +85,35 @@ body {
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 28%,
+    rgba(0, 0, 0, 0.35) 48%,
+    #000 64%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 28%,
+    rgba(0, 0, 0, 0.35) 48%,
+    #000 64%
+  );
 }
 
 .site-bg::before {
   content: "";
   position: absolute;
-  inset: -8%;
+  inset: -10%;
   background-image: url("../images/brand/intelliwise-featured-thumb.jpg");
   background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 100% 42%;
-  transform: scale(1.7);
-  transform-origin: 100% 46%;
+  /* Zoom into the right-hand neural net + stacked layers; keep the
+     left-side title and subtitle off-canvas. */
+  background-size: 260% 160%;
+  background-position: 100% 50%;
   opacity: 0.07;
-  filter: saturate(0.7) contrast(0.92) blur(1.2px);
+  filter: saturate(0.68) contrast(0.92) blur(1.6px);
   mix-blend-mode: multiply;
-  -webkit-mask-image: linear-gradient(
-    112deg,
-    transparent 0%,
-    transparent 38%,
-    rgba(0, 0, 0, 0.28) 54%,
-    #000 70%
-  );
-  mask-image: linear-gradient(
-    112deg,
-    transparent 0%,
-    transparent 38%,
-    rgba(0, 0, 0, 0.28) 54%,
-    #000 70%
-  );
 }
 
 .site-bg::after {
@@ -129,9 +129,9 @@ body {
 
 @media (prefers-color-scheme: dark) {
   .site-bg::before {
-    opacity: 0.1;
+    opacity: 0.09;
     mix-blend-mode: lighten;
-    filter: saturate(0.65) brightness(0.96) contrast(1.02) blur(1.2px);
+    filter: saturate(0.6) brightness(0.94) contrast(1.02) blur(2px);
   }
 
   .site-bg::after {
