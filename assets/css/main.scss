@@ -145,9 +145,35 @@ body {
 .footer-meta {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   justify-content: flex-end;
   gap: 0.65rem 1.25rem;
+}
+
+.footer-tip {
+  display: flex;
+  align-items: center;
+}
+
+.tip-link {
+  display: inline-block;
+  line-height: 0;
+}
+
+.tip-button {
+  display: block;
+  width: auto;
+  height: auto;
+  max-height: 40px;
+  max-width: 100%;
+}
+
+.tip-link--post .tip-button {
+  max-height: 48px;
+}
+
+.tip-link:hover .tip-button {
+  opacity: 0.88;
 }
 
 .site-footer a {
@@ -876,19 +902,12 @@ a:focus-visible,
   padding-top: 1.4rem;
   border-top: 1px solid var(--rule);
   max-width: 66ch;
+}
+
+.post-tip-lede {
+  margin: 0 0 0.75rem;
   font-size: 0.9rem;
   color: var(--ink-muted);
-}
-
-.post-tip a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.post-tip a:hover {
-  color: var(--ink);
-  text-decoration: underline;
-  text-underline-offset: 0.18em;
 }
 
 .post-nav {

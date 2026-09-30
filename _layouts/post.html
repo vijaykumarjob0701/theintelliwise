@@ -25,9 +25,10 @@ layout: default
   </div>
 
   {% if site.buymeacoffee_url %}
-  <p class="post-tip">
-    If this helped, {% include tip-link.html label="buy me a coffee" %}.
-  </p>
+  <div class="post-tip">
+    <p class="post-tip-lede">If this helped:</p>
+    {% include tip-link.html class="tip-link--post" %}
+  </div>
   {% endif %}
 </article>
 
