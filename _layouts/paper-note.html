@@ -1,0 +1,24 @@
+---
+layout: default
+---
+{% assign parent_url = page.parent_url | default: '/posts/14-ai-papers-lunch-box-map/' %}
+<article class="post paper-note">
+  <header class="page-head post-head post-hero">
+    <p class="eyebrow">The Intelliwise — lunch-box note</p>
+    <p class="paper-note-back">
+      <a href="{{ parent_url | relative_url }}">← Back to the lunch-box map</a>
+    </p>
+    <h1>{{ page.title }}</h1>
+    {% if page.lede %}
+      <p class="lede">{{ page.lede }}</p>
+    {% endif %}
+  </header>
+
+  <div class="prose">
+    {{ content }}
+  </div>
+</article>
+
+<nav class="post-nav" aria-label="Lunch-box map">
+  <a href="{{ parent_url | relative_url }}">Back to the lunch-box map</a>
+</nav>

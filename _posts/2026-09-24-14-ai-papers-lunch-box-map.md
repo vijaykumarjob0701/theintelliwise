@@ -14,7 +14,13 @@ Same 14 names. Grouped so a ten-year-old (and a busy adult) can see *why* each b
 
 We did **not** invent these papers. We only sorted the tray.
 
-Each paper section has a **Quick easy read**: the gist in plain English, then a real **Paper** link (and a **Dataset** link only when a public corpus is honestly tied to that paper). Skim the quick read. Open the paper when you want depth.
+Each paper has **three layers**:
+
+1. **This map** — why the box exists, a short **Quick easy read**, and the diagrams.
+2. **A longer guide** — still brief, enough idea that you do not need to grind the PDF. Linked from the table and from each paper. These guides live under this post. They are **not** listed on the Writing index or in the RSS feed.
+3. **The real paper** — official abstract, PDF, conference page, and a **Dataset** link only when a public corpus is honestly tied to that paper.
+
+Skim the map. Open the longer guide when you want more idea. Open the paper when you want the proof.
 
 ```mermaid
 flowchart TB
@@ -39,24 +45,24 @@ Say it out loud:
 
 ## The 14 names (common list order)
 
-Names jump to the box. **Paper** goes to the official abstract.
+Names jump to the box. **Paper** goes to the official abstract. **Longer guide** is the unlisted sub-page.
 
-| # | Short name | One kid line |
-| --- | --- | --- |
-| 1 | [**Attention Is All You Need**](#attention) · [paper](https://arxiv.org/abs/1706.03762) | The engine that looks at every word at once |
-| 2 | [**LoRA**](#lora) · [paper](https://arxiv.org/abs/2106.09685) | Stick a tiny sticky note on a big model to teach it |
-| 3 | [**PEFT**](#peft) · [docs](https://huggingface.co/docs/peft/en/index) | The family name for “cheap fine-tuning” |
-| 4 | [**ViT**](#vit) · [paper](https://arxiv.org/abs/2010.11929) | Cut a photo into patches; use a transformer |
-| 5 | [**GANs**](#gans) · [paper](https://arxiv.org/abs/1406.2661) | Artist vs critic fighting to make fakes look real |
-| 6 | [**BERT**](#bert) · [paper](https://aclanthology.org/N19-1423/) | Read left *and* right to understand a sentence |
-| 7 | [**Diffusion**](#diffusion) · [paper](https://arxiv.org/abs/2006.11239) | Start from noise; slowly clean into a picture |
-| 8 | [**RAG**](#rag) · [paper](https://arxiv.org/abs/2005.11401) | Look up notes before you answer |
-| 9 | [**MoE**](#moe) · [paper](https://arxiv.org/abs/2101.03961) | Many small experts; only a few wake up |
-| 10 | [**RLHF**](#rlhf) · [paper](https://arxiv.org/abs/1706.03741) | Humans score answers; the model learns taste |
-| 11 | [**LLaMA**](#llama) · [paper](https://arxiv.org/abs/2302.13971) | Meta’s open-ish large language model recipe |
-| 12 | [**RoPE**](#rope) · [paper](https://arxiv.org/abs/2104.09864) | A smart way to tell the model *where* a word sits |
-| 13 | [**InstructGPT**](#instructgpt) · [paper](https://arxiv.org/abs/2203.02155) | Train the model to follow instructions |
-| 14 | [**VAE**](#vae) · [paper](https://arxiv.org/abs/1312.6114) | Squeeze a picture into a small code, then rebuild |
+| # | Short name | One kid line | Longer guide |
+| --- | --- | --- | --- |
+| 1 | [**Attention Is All You Need**](#attention) · [paper](https://arxiv.org/abs/1706.03762) | The engine that looks at every word at once | [guide]({{ '/posts/14-ai-papers-lunch-box-map/attention-is-all-you-need/' | relative_url }}) |
+| 2 | [**LoRA**](#lora) · [paper](https://arxiv.org/abs/2106.09685) | Stick a tiny sticky note on a big model to teach it | [guide]({{ '/posts/14-ai-papers-lunch-box-map/lora/' | relative_url }}) |
+| 3 | [**PEFT**](#peft) · [docs](https://huggingface.co/docs/peft/en/index) | The family name for “cheap fine-tuning” | [guide]({{ '/posts/14-ai-papers-lunch-box-map/peft/' | relative_url }}) |
+| 4 | [**ViT**](#vit) · [paper](https://arxiv.org/abs/2010.11929) | Cut a photo into patches; use a transformer | [guide]({{ '/posts/14-ai-papers-lunch-box-map/vit/' | relative_url }}) |
+| 5 | [**GANs**](#gans) · [paper](https://arxiv.org/abs/1406.2661) | Artist vs critic fighting to make fakes look real | [guide]({{ '/posts/14-ai-papers-lunch-box-map/gans/' | relative_url }}) |
+| 6 | [**BERT**](#bert) · [paper](https://aclanthology.org/N19-1423/) | Read left *and* right to understand a sentence | [guide]({{ '/posts/14-ai-papers-lunch-box-map/bert/' | relative_url }}) |
+| 7 | [**Diffusion**](#diffusion) · [paper](https://arxiv.org/abs/2006.11239) | Start from noise; slowly clean into a picture | [guide]({{ '/posts/14-ai-papers-lunch-box-map/diffusion/' | relative_url }}) |
+| 8 | [**RAG**](#rag) · [paper](https://arxiv.org/abs/2005.11401) | Look up notes before you answer | [guide]({{ '/posts/14-ai-papers-lunch-box-map/rag/' | relative_url }}) |
+| 9 | [**MoE**](#moe) · [paper](https://arxiv.org/abs/2101.03961) | Many small experts; only a few wake up | [guide]({{ '/posts/14-ai-papers-lunch-box-map/moe-switch-transformers/' | relative_url }}) |
+| 10 | [**RLHF**](#rlhf) · [paper](https://arxiv.org/abs/1706.03741) | Humans score answers; the model learns taste | [guide]({{ '/posts/14-ai-papers-lunch-box-map/rlhf-christiano/' | relative_url }}) |
+| 11 | [**LLaMA**](#llama) · [paper](https://arxiv.org/abs/2302.13971) | Meta’s open-ish large language model recipe | [guide]({{ '/posts/14-ai-papers-lunch-box-map/llama/' | relative_url }}) |
+| 12 | [**RoPE**](#rope) · [paper](https://arxiv.org/abs/2104.09864) | A smart way to tell the model *where* a word sits | [guide]({{ '/posts/14-ai-papers-lunch-box-map/rope-roformer/' | relative_url }}) |
+| 13 | [**InstructGPT**](#instructgpt) · [paper](https://arxiv.org/abs/2203.02155) | Train the model to follow instructions | [guide]({{ '/posts/14-ai-papers-lunch-box-map/instructgpt/' | relative_url }}) |
+| 14 | [**VAE**](#vae) · [paper](https://arxiv.org/abs/1312.6114) | Squeeze a picture into a small code, then rebuild | [guide]({{ '/posts/14-ai-papers-lunch-box-map/vae/' | relative_url }}) |
 
 Now the boxes.
 
@@ -65,6 +71,8 @@ Now the boxes.
 ## Box 1 — The engine room
 
 <h3 id="attention">Attention Is All You Need (Transformers)</h3>
+
+<p class="paper-guide-link"><strong>Longer guide</strong> → <a href="{{ '/posts/14-ai-papers-lunch-box-map/attention-is-all-you-need/' | relative_url }}">more idea without grinding the PDF</a></p>
 
 Before this, models often read words **one after another**, like a single-file line.
 
@@ -111,6 +119,8 @@ Imagine a classroom where every kid can glance at every other kid at the same ti
 
 <h3 id="rope">RoPE (Rotary Position Embedding)</h3>
 
+<p class="paper-guide-link"><strong>Longer guide</strong> → <a href="{{ '/posts/14-ai-papers-lunch-box-map/rope-roformer/' | relative_url }}">more idea without grinding the PDF</a></p>
+
 Transformers need to know **order**. “Dog bites man” ≠ “Man bites dog.”
 
 **RoPE** rotates number arrows so position is baked into attention in a neat way. Many open models (including LLaMA-style stacks) use ideas like this.
@@ -142,6 +152,8 @@ Two kids on a spinning playground. How much one has spun relative to the other *
 ## Box 3 — Reading both ways
 
 <h3 id="bert">BERT</h3>
+
+<p class="paper-guide-link"><strong>Longer guide</strong> → <a href="{{ '/posts/14-ai-papers-lunch-box-map/bert/' | relative_url }}">more idea without grinding the PDF</a></p>
 
 **BERT** is an **encoder** transformer. It looks left **and** right.
 
@@ -177,6 +189,8 @@ A teacher covers one word in a sentence and asks the class to guess it — but e
 
 <h3 id="vit">ViT (Vision Transformer)</h3>
 
+<p class="paper-guide-link"><strong>Longer guide</strong> → <a href="{{ '/posts/14-ai-papers-lunch-box-map/vit/' | relative_url }}">more idea without grinding the PDF</a></p>
+
 Chop a picture into little **patches**, like stamp tiles. Treat each tile like a “word.” Run a transformer.
 
 **Kid line:** a photo becomes a comic strip of tiles, then attention reads the strip.
@@ -206,6 +220,8 @@ Take a poster, cut it into postage stamps, line the stamps up like a sentence, a
 ## Box 5 — An open language recipe
 
 <h3 id="llama">LLaMA</h3>
+
+<p class="paper-guide-link"><strong>Longer guide</strong> → <a href="{{ '/posts/14-ai-papers-lunch-box-map/llama/' | relative_url }}">more idea without grinding the PDF</a></p>
 
 **LLaMA** (Meta) shared a strong **large language model** recipe with the research world. Many later open models rhyme with it.
 
@@ -250,6 +266,8 @@ flowchart LR
 
 <h3 id="instructgpt">InstructGPT</h3>
 
+<p class="paper-guide-link"><strong>Longer guide</strong> → <a href="{{ '/posts/14-ai-papers-lunch-box-map/instructgpt/' | relative_url }}">more idea without grinding the PDF</a></p>
+
 **InstructGPT**: train / tune so the model obeys prompts better. The OpenAI paper that named the chat-style habit: supervised demos, then preference training.
 
 <h4 id="instructgpt-quick">Quick easy read</h4>
@@ -274,6 +292,8 @@ A student first copies marked homework (demos). Then a teacher points at two ess
 **Links:** [Paper — Ouyang et al. (arXiv)](https://arxiv.org/abs/2203.02155)
 
 <h3 id="rlhf">RLHF</h3>
+
+<p class="paper-guide-link"><strong>Longer guide</strong> → <a href="{{ '/posts/14-ai-papers-lunch-box-map/rlhf-christiano/' | relative_url }}">more idea without grinding the PDF</a></p>
 
 **RLHF**: humans (or preference data) score answers; the model moves toward “better taste.”
 
@@ -312,6 +332,8 @@ Full fine-tuning touches **all** the weights. That is expensive.
 
 <h3 id="lora">LoRA</h3>
 
+<p class="paper-guide-link"><strong>Longer guide</strong> → <a href="{{ '/posts/14-ai-papers-lunch-box-map/lora/' | relative_url }}">more idea without grinding the PDF</a></p>
+
 **LoRA** = freeze the big model; train tiny low-rank add-ons.
 
 **Kid line:** keep the whole textbook; only rewrite a sticky note.
@@ -337,6 +359,8 @@ A huge printed textbook stays on the shelf. You teach a new course by sticking a
 **Links:** [Paper — Hu et al. (arXiv)](https://arxiv.org/abs/2106.09685)
 
 <h3 id="peft">PEFT</h3>
+
+<p class="paper-guide-link"><strong>Longer guide</strong> → <a href="{{ '/posts/14-ai-papers-lunch-box-map/peft/' | relative_url }}">more idea without grinding the PDF</a></p>
 
 **PEFT** = Parameter-Efficient Fine-Tuning. Not one paper. A **family**: LoRA, adapters, prompt/prefix tuning, and friends.
 
@@ -368,6 +392,8 @@ The library building stays put. Each new subject gets a thin pamphlet, not a sec
 ## Box 8 — Sparse giants
 
 <h3 id="moe">MoE (Mixture of Experts)</h3>
+
+<p class="paper-guide-link"><strong>Longer guide</strong> → <a href="{{ '/posts/14-ai-papers-lunch-box-map/moe-switch-transformers/' | relative_url }}">more idea without grinding the PDF</a></p>
 
 Instead of one huge brain always on, keep **many expert** brains. For each token, wake **only a few**.
 
@@ -401,6 +427,8 @@ A hospital with many specialists. The triage nurse sends you to *one* doctor. Th
 ## Box 9 — Look it up first
 
 <h3 id="rag">RAG (Retrieval-Augmented Generation)</h3>
+
+<p class="paper-guide-link"><strong>Longer guide</strong> → <a href="{{ '/posts/14-ai-papers-lunch-box-map/rag/' | relative_url }}">more idea without grinding the PDF</a></p>
 
 Models forget and hallucinate. **RAG** fetches fresh notes from your files / search, then asks the model to answer **with** those notes.
 
@@ -439,6 +467,8 @@ Two older ways to make pictures. Diffusion (next box) mostly won the “pretty i
 
 <h3 id="gans">GANs</h3>
 
+<p class="paper-guide-link"><strong>Longer guide</strong> → <a href="{{ '/posts/14-ai-papers-lunch-box-map/gans/' | relative_url }}">more idea without grinding the PDF</a></p>
+
 **GAN:** a forger and a detective. The forger gets better until fakes fool the detective.
 
 <h4 id="gans-quick">Quick easy read</h4>
@@ -462,6 +492,8 @@ Art forger vs museum detective. Every week the forger studies what got caught. T
 **Links:** [Paper — Goodfellow et al. (arXiv)](https://arxiv.org/abs/1406.2661) · [Dataset used in the paper: CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html)
 
 <h3 id="vae">VAE</h3>
+
+<p class="paper-guide-link"><strong>Longer guide</strong> → <a href="{{ '/posts/14-ai-papers-lunch-box-map/vae/' | relative_url }}">more idea without grinding the PDF</a></p>
 
 **VAE:** squeeze an image into a small code, then rebuild. Good for smooth “latents.”
 
@@ -493,6 +525,8 @@ Stuff a poster into a tiny envelope of numbers, then unpack it. Nearby envelopes
 ## Box 11 — Picture makers (now)
 
 <h3 id="diffusion">Diffusion (Stable Diffusion lineage)</h3>
+
+<p class="paper-guide-link"><strong>Longer guide</strong> → <a href="{{ '/posts/14-ai-papers-lunch-box-map/diffusion/' | relative_url }}">more idea without grinding the PDF</a></p>
 
 Start with **TV static**. Step by step, remove noise until a clean picture appears. Modern image models lean hard on this idea (often with a VAE latent space).
 
@@ -570,4 +604,4 @@ Official abstracts and resources used in this post (prefer these over roundups):
 
 ## Say this back
 
-**Fourteen famous papers are really about seven lunch boxes: the transformer engine, position, deep reading, vision tiles, open LLM recipes, instruction + human taste, cheap adapters, sparse experts, retrieval, and three ways to make pictures. Learn the box, then open the paper.**
+**Fourteen famous papers are really about seven lunch boxes: the transformer engine, position, deep reading, vision tiles, open LLM recipes, instruction + human taste, cheap adapters, sparse experts, retrieval, and three ways to make pictures. Learn the box on this map, open the longer guide if you want more idea, then open the paper.**
