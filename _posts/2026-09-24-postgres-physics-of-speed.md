@@ -3,7 +3,7 @@ title: "Postgres: Why My Writes Got Faster (Docker Notebook)"
 date: 2026-09-24 19:30:00 +0000
 permalink: /posts/postgres-physics-of-speed/
 tags: [postgres, wal, synchronous_commit, docker, performance]
-excerpt: "I ran Postgres 16 in Docker with a toy lunch_notes table and a tiny load script. Here is what changed my commits-per-minute: durability waits, synchronous_commit, batching, and a few clients — with real numbers from that run."
+excerpt: "A write lands on the desk (shared buffers). WAL and dirty pages run in parallel, with an LSN gate. Then four Docker runs on a toy lunch_notes table: wait knob, batching, a few clients — with real RPM numbers."
 card_image: /assets/images/postgres-physics-of-speed/01-docker-start.gif
 ---
 
@@ -11,16 +11,88 @@ A durable save can feel **slow**. I write one lunch note. I wait. I write the ne
 
 I wanted numbers from **this** box, not a story from someone else's laptop. So I started **Postgres 16** in Docker, made a toy `lunch_notes` table, and ran a tiny Python load script. I counted **commits per minute** (RPM) for **12 seconds** at a time.
 
+Before the stopwatch: what a write actually does.
+
+## Foundation — what happens on a write
+
+A lunch note does **not** go straight into a locked cabinet.
+
+First it lands on the **desk**. That desk is **shared buffers** — RAM the whole notebook shares.
+
+From the desk, **two jobs start at the same time**. They do not wait for each other.
+
+![A write lands on the desk, then WAL and a dirty page run in parallel. An LSN gate checks the tape before the table page may hit disk.]({{ '/assets/images/postgres-physics-of-speed/07-write-path-lsn.gif' | relative_url }})
+
+### Job 1: the WAL tape
+
+- A **WAL record** (one strip of tape) is written into the **WAL buffer** — still memory.
+- Later that tape is stamped into the **disk WAL** cabinet.
+- A helper called **`wal_writer`** wakes on a timer (`wal_writer_delay`, default **200 ms**) and flushes what it can.
+- **`COMMIT`** can also force a flush **right now**.
+
+### Job 2: the dirty page
+
+- The **table page** on the desk is now **dirty** (the paper has a new scribble).
+- Later the **background writer** or the **checkpointer** copies that page into the **table files** cabinet.
+- The background writer wakes every **200 ms** (`bgwriter_delay`). It also wakes when the desk is getting full (**buffer pressure**).
+
+### The LSN gate
+
+The two jobs can run at different speeds. The **on-disk order** is still strict.
+
+Postgres stamps every dirty page with an **LSN** — the tape number of the WAL record that changed it.
+
+Before the background writer or the checkpointer puts a page into the table cabinet, it looks at the **WAL flush position**.
+
+- If that tape number is **already** in the WAL cabinet: write the page.
+- If it is **not** on disk yet: **flush WAL first**, then write the page.
+
+Kid picture: you may not lock the notebook page in the cabinet until the matching tape strip is already locked. Crash recovery can replay the tape. It cannot invent a page the tape never mentioned.
+
+```mermaid
+flowchart TB
+  A[INSERT] --> B[Shared buffers — the desk]
+  B --> C[WAL buffer]
+  B --> D[Dirty table page + LSN stamp]
+  C --> E["wal_writer 200ms or COMMIT"]
+  E --> F[Disk WAL]
+  D --> G{WAL flushed past this LSN?}
+  G -->|not yet| E
+  G -->|yes| H[bgwriter / checkpointer]
+  H --> I[Table files]
+```
+
+### Helpers at a glance
+
+| Helper | When it wakes | What it stamps |
+| --- | --- | --- |
+| `wal_writer` | every **200 ms** (`wal_writer_delay`), and **COMMIT** can force it | WAL tape → disk WAL |
+| background writer | every **200 ms** (`bgwriter_delay`), and when the desk is full | dirty pages → table files (after the LSN gate) |
+| checkpointer | on its own checkpoint schedule | a bigger pile of dirty pages → table files (same LSN gate) |
+
+### The wait knob
+
+`synchronous_commit` only changes whether **you** wait for job 1's cabinet stamp.
+
+| Knob | What COMMIT does |
+| --- | --- |
+| **on** | Sit still until the WAL tape is on disk. |
+| **off** | Come back now. The tape may still sit in the WAL buffer. Grown-up picture: fire-and-forget, like UDP. If the lights go out, the newest notes can vanish. |
+
+**Off** is not "skip the tape." The tape is still written. You just stop waiting.
+
+### Why a bus of notes is cheaper
+
+Each **COMMIT** can force a disk sync of the WAL.
+
+- 50 notes, 50 commits = **50** stamps.
+- 50 notes, **one** commit = **one** stamp.
+
+The four runs below keep the cabinet wait **on**, then flip the knob, then put fifty notes on one bus.
+
 ## Desk vs cabinet
 
-A **durable** save means: if the lights go out, the note is still there.
-
-- Memory is a **desk**. Fast. Forgets when power dies.
-- Disk is a **locked cabinet**. The stamp into the cabinet is the expensive wait.
-
-Postgres **always** writes a **WAL** (write-ahead log) — a tape of every change. The wait knob is not “do we have a log?” It is: does `COMMIT` sit still until that tape is stamped into the cabinet?
-
-That knob is `synchronous_commit`.
+You already met the desk and the two cabinets. The four runs only flip one knob: does **COMMIT** wait for the **WAL** cabinet stamp?
 
 ```mermaid
 flowchart TB
@@ -30,11 +102,6 @@ flowchart TB
   D -->|on| E[Wait for the cabinet stamp]
   D -->|off| F[Come back now. Stamp can happen later]
 ```
-
-| Kid idea | What I set |
-| --- | --- |
-| Wait for the cabinet every commit | `SET synchronous_commit = on` |
-| Do not wait. Stamp later | `SET synchronous_commit = off` |
 
 **Off** does **not** mean “no WAL.” The tape is still written. `COMMIT` just stops waiting for the locked cabinet. If the machine or the database crashes before the flush, you can lose the **last** commits. The notebook should not go silly. The newest tickets can still vanish.
 
@@ -177,8 +244,15 @@ You do not need this to get the story.
 | --- | --- |
 | Lunch notebook | **PostgreSQL 16** in Docker (`postgres:16`) |
 | Door on my box | **127.0.0.1:55432** → container **5432** |
+| The desk | **shared buffers** |
 | Log tape | **WAL** (write-ahead log) |
-| Paper on the desk | memory / OS buffers |
+| Tape still in RAM | **WAL buffer** |
+| Tape-stamp helper | **`wal_writer`** (`wal_writer_delay`, default **200 ms**) |
+| Dirty-page helper | **background writer** (`bgwriter_delay`, default **200 ms**) |
+| Big tidy of dirty pages | **checkpointer** |
+| Tape number on a dirty page | **LSN** (log sequence number) |
+| “Is that tape on disk yet?” | LSN vs WAL flush position |
+| Notebook pages on disk | **table files** / relation files |
 | Stamp into the locked cabinet | WAL **flush** / durable wait |
 | Wait-for-cabinet knob | **`synchronous_commit`** |
 | Many notes, one stamp | **batching** / group commit |
@@ -192,11 +266,14 @@ You do not need this to get the story.
 Official references (Postgres docs only):
 
 - [Write-Ahead Logging (WAL)](https://www.postgresql.org/docs/current/wal-intro.html)
+- [WAL internals](https://www.postgresql.org/docs/current/wal-internals.html)
 - [`synchronous_commit`](https://www.postgresql.org/docs/current/runtime-config-wal.html#GUC-SYNCHRONOUS-COMMIT)
+- [`wal_writer_delay`](https://www.postgresql.org/docs/current/runtime-config-wal.html#GUC-WAL-WRITER-DELAY)
+- [`bgwriter_delay`](https://www.postgresql.org/docs/current/runtime-config-resource.html#GUC-BGWRITER-DELAY)
 - [WAL reliability](https://www.postgresql.org/docs/current/wal-reliability.html)
 - [EXPLAIN](https://www.postgresql.org/docs/current/sql-explain.html)
 - [The Statistics Collector](https://www.postgresql.org/docs/current/monitoring-stats.html)
 
 ## Say this back
 
-**A durable Postgres save waits for the WAL stamp. The log is always there. `synchronous_commit` only chooses whether COMMIT waits. On my Docker run, turning the wait off was a small lift (~1.13×). Putting 50 notes on one bus was the big climb (~3.64M row RPM). Four clients helped (~1.58×). These are my 12-second numbers on a shared VM — not a promise.**
+**A write lands on the desk. Two jobs start at once: the WAL tape, and a dirty page. The LSN gate will not put the page in the table cabinet until that tape number is on disk. COMMIT’s wait knob is only the WAL stamp. On my Docker run, turning the wait off was a small lift (~1.13×). Putting 50 notes on one bus was the big climb (~3.64M row RPM). Four clients helped (~1.58×). These are my 12-second numbers on a shared VM — not a promise.**
