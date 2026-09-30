@@ -88,3 +88,11 @@ defaults:
       type: pages
     values:
       layout: page
+  # Unlisted lunch-box guides (not in _posts, so they stay off Writing / RSS).
+  - scope:
+      path: "papers"
+    values:
+      layout: paper-note
+      sitemap: false
+      robots: noindex
+      author: Vijay Kumar

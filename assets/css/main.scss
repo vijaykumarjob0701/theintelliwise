@@ -991,6 +991,27 @@ a:focus-visible,
   color: var(--ink-muted);
 }
 
+.paper-note-back {
+  margin: 0.55rem 0 0;
+  font-size: 0.9rem;
+}
+
+.paper-note-back a {
+  color: var(--ink-muted);
+  text-decoration: none;
+}
+
+.paper-note-back a:hover {
+  color: var(--ink);
+}
+
+.prose .paper-guide-link {
+  margin: 1.1rem 0 1.4rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--rule);
+  background: var(--bg-band);
+}
+
 .post-nav {
   margin-top: 3rem;
   font-size: 0.9rem;
