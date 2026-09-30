@@ -6,6 +6,9 @@
     </p>
     <div class="footer-meta">
       {% include author-links.html %}
+      {% if site.buymeacoffee_url %}
+      <p class="footer-tip">{% include tip-link.html %}</p>
+      {% endif %}
       <p>
         Approved posts only.
         <a href="https://github.com/vijaykumarjob0701/theintelliwise">Source</a>
