@@ -42,6 +42,23 @@ The two jobs can run at different speeds. The **on-disk order** is still strict.
 
 Postgres stamps every dirty page with an **LSN** — the tape number of the WAL record that changed it.
 
+Walk it like a lunch line:
+
+- A dirty page on the desk holds an **LSN**. That is the tape number of the WAL record that scribbled on it.
+- The WAL stream is a line of records with **increasing** tape numbers: 10, then 20, then 30, then 42…
+- Before that page may be written to the **table file on disk**, Postgres asks one question: has the WAL tape been flushed **at least past this page's LSN**?
+- If the flush is still behind, the page **stalls at the gate**. It waits. It does not sneak into the table files.
+- When the WAL flush catches up past that LSN, the gate opens. Then the page may hit the table files.
+
+![A dirty page stamped LSN 42 waits at the gate while the WAL flush crawls 10, 20, 30, then 42. The gate opens and the page writes to the table files.]({{ '/assets/images/postgres-physics-of-speed/08-lsn-gate.gif' | relative_url }})
+
+| At the gate | What it means |
+| --- | --- |
+| Page **LSN** | tape number stamped on this dirty page |
+| WAL **flush position** | how far the tape has been locked in the WAL cabinet |
+| Flush **behind** the page LSN | page waits |
+| Flush **past** the page LSN | page may write to the table files |
+
 Before the background writer or the checkpointer puts a page into the table cabinet, it looks at the **WAL flush position**.
 
 - If that tape number is **already** in the WAL cabinet: write the page.
@@ -76,17 +93,28 @@ flowchart TB
 
 | Knob | What COMMIT does |
 | --- | --- |
-| **on** | Sit still until the WAL tape is on disk. |
-| **off** | Come back now. The tape may still sit in the WAL buffer. Grown-up picture: fire-and-forget, like UDP. If the lights go out, the newest notes can vanish. |
+| **on** | Sit still until the WAL tape is on **disk**. |
+| **off** | Come back now. COMMIT returns once the WAL record is in the **OS page cache** (memory). It does not wait for the locked cabinet. |
 
-**Off** is not "skip the tape." The tape is still written. You just stop waiting.
+What **off** changes, and what it does not:
+
+- The commit session no longer waits for WAL to reach **disk**.
+- COMMIT returns once the WAL record is in the **OS page cache** (memory).
+- This only affects the **commit wait**.
+- The **LSN gate** between shared buffers and table files still applies **exactly the same** whether the knob is on or off. Dirty pages still cannot hit table files until WAL is flushed past their LSN.
+
+**Off** is not "skip the tape." The tape is still written. You just stop waiting. Grown-up picture: fire-and-forget, like UDP. If the lights go out, the newest notes can vanish.
 
 ### Why a bus of notes is cheaper
 
 Each **COMMIT** can force a disk sync of the WAL.
 
-- 50 notes, 50 commits = **50** stamps.
-- 50 notes, **one** commit = **one** stamp.
+- 50 notes, 50 commits = **50** WAL stamps.
+- 50 notes, **one** commit = **one** WAL stamp.
+
+Batching only groups **WAL records**. You get fewer, larger WAL disk writes — one COMMIT stamp for many rows.
+
+It does **not** batch how **table pages** (the heap) are written to disk. Those dirty pages still sit on the desk. The background writer still flushes them on its own schedule, one page at a time, and each of those writes still goes through the **LSN gate**.
 
 The four runs below keep the cabinet wait **on**, then flip the knob, then put fifty notes on one bus.
 
@@ -247,6 +275,7 @@ You do not need this to get the story.
 | The desk | **shared buffers** |
 | Log tape | **WAL** (write-ahead log) |
 | Tape still in RAM | **WAL buffer** |
+| Memory the OS keeps for a file | **OS page cache** |
 | Tape-stamp helper | **`wal_writer`** (`wal_writer_delay`, default **200 ms**) |
 | Dirty-page helper | **background writer** (`bgwriter_delay`, default **200 ms**) |
 | Big tidy of dirty pages | **checkpointer** |
@@ -276,4 +305,4 @@ Official references (Postgres docs only):
 
 ## Say this back
 
-**A write lands on the desk. Two jobs start at once: the WAL tape, and a dirty page. The LSN gate will not put the page in the table cabinet until that tape number is on disk. COMMIT’s wait knob is only the WAL stamp. On my Docker run, turning the wait off was a small lift (~1.13×). Putting 50 notes on one bus was the big climb (~3.64M row RPM). Four clients helped (~1.58×). These are my 12-second numbers on a shared VM — not a promise.**
+**A write lands on the desk. Two jobs start at once: the WAL tape, and a dirty page. The LSN gate will not put the page in the table cabinet until that tape number is on disk. That gate is the same with the wait knob on or off. COMMIT's wait knob is only the WAL stamp. Batching only groups WAL stamps, not table-page writes. On my Docker run, turning the wait off was a small lift (~1.13×). Putting 50 notes on one bus was the big climb (~3.64M row RPM). Four clients helped (~1.58×). These are my 12-second numbers on a shared VM — not a promise.**
