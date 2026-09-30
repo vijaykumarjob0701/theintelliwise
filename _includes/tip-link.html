@@ -1,3 +1,12 @@
 {%- if site.buymeacoffee_url -%}
-<a href="{{ site.buymeacoffee_url }}"{% if include.class %} class="{{ include.class }}"{% endif %} target="_blank" rel="noopener noreferrer">{{ include.label | default: "Buy me a coffee" }}</a>
+<a class="tip-link{% if include.class %} {{ include.class }}{% endif %}" href="{{ site.buymeacoffee_url }}" target="_blank" rel="noopener noreferrer">
+  <img
+    class="tip-button"
+    src="{{ site.buymeacoffee_button | default: 'https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png' }}"
+    alt="{{ include.label | default: 'Buy me a coffee' }}"
+    width="545"
+    height="153"
+    decoding="async"
+  >
+</a>
 {%- endif -%}
