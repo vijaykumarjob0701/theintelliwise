@@ -23,6 +23,12 @@ layout: default
   <div class="prose">
     {{ content }}
   </div>
+
+  {% if site.buymeacoffee_url %}
+  <p class="post-tip">
+    If this helped, {% include tip-link.html label="buy me a coffee" %}.
+  </p>
+  {% endif %}
 </article>
 
 <nav class="post-nav" aria-label="Post">

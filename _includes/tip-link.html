@@ -1,0 +1,3 @@
+{%- if site.buymeacoffee_url -%}
+<a href="{{ site.buymeacoffee_url }}"{% if include.class %} class="{{ include.class }}"{% endif %} target="_blank" rel="noopener noreferrer">{{ include.label | default: "Buy me a coffee" }}</a>
+{%- endif -%}
