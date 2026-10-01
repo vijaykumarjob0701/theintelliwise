@@ -43,26 +43,26 @@ The habit to keep:
 
 ---
 
-## The 14 names (common list order)
+## The 14 names (same order as the boxes below)
 
 Names jump to the box. **Paper** goes to the official abstract. **Longer guide** is the unlisted sub-page.
 
 | # | Short name | In one line | Longer guide |
 | --- | --- | --- | --- |
 | 1 | [**Attention Is All You Need**](#attention) · [paper](https://arxiv.org/abs/1706.03762) | The engine that looks at every word at once | [guide]({{ '/posts/14-ai-papers-lunch-box-map/attention-is-all-you-need/' | relative_url }}) |
-| 2 | [**LoRA**](#lora) · [paper](https://arxiv.org/abs/2106.09685) | Train a small add-on instead of rewriting a big model | [guide]({{ '/posts/14-ai-papers-lunch-box-map/lora/' | relative_url }}) |
-| 3 | [**PEFT**](#peft) · [docs](https://huggingface.co/docs/peft/en/index) | The family name for cheap fine-tuning | [guide]({{ '/posts/14-ai-papers-lunch-box-map/peft/' | relative_url }}) |
+| 2 | [**RoPE**](#rope) · [paper](https://arxiv.org/abs/2104.09864) | A clean way to tell the model *where* a word sits | [guide]({{ '/posts/14-ai-papers-lunch-box-map/rope-roformer/' | relative_url }}) |
+| 3 | [**BERT**](#bert) · [paper](https://aclanthology.org/N19-1423/) | Read left *and* right to understand a sentence | [guide]({{ '/posts/14-ai-papers-lunch-box-map/bert/' | relative_url }}) |
 | 4 | [**ViT**](#vit) · [paper](https://arxiv.org/abs/2010.11929) | Cut a photo into patches; use a transformer | [guide]({{ '/posts/14-ai-papers-lunch-box-map/vit/' | relative_url }}) |
-| 5 | [**GANs**](#gans) · [paper](https://arxiv.org/abs/1406.2661) | Generator vs discriminator, fighting until fakes look real | [guide]({{ '/posts/14-ai-papers-lunch-box-map/gans/' | relative_url }}) |
-| 6 | [**BERT**](#bert) · [paper](https://aclanthology.org/N19-1423/) | Read left *and* right to understand a sentence | [guide]({{ '/posts/14-ai-papers-lunch-box-map/bert/' | relative_url }}) |
-| 7 | [**Diffusion**](#diffusion) · [paper](https://arxiv.org/abs/2006.11239) | Start from noise; slowly clean it into a picture | [guide]({{ '/posts/14-ai-papers-lunch-box-map/diffusion/' | relative_url }}) |
-| 8 | [**RAG**](#rag) · [paper](https://arxiv.org/abs/2005.11401) | Look up notes before you answer | [guide]({{ '/posts/14-ai-papers-lunch-box-map/rag/' | relative_url }}) |
-| 9 | [**MoE**](#moe) · [paper](https://arxiv.org/abs/2101.03961) | Many small experts; only a few wake up | [guide]({{ '/posts/14-ai-papers-lunch-box-map/moe-switch-transformers/' | relative_url }}) |
-| 10 | [**RLHF**](#rlhf) · [paper](https://arxiv.org/abs/1706.03741) | Humans score answers; the model learns preference | [guide]({{ '/posts/14-ai-papers-lunch-box-map/rlhf-christiano/' | relative_url }}) |
-| 11 | [**LLaMA**](#llama) · [paper](https://arxiv.org/abs/2302.13971) | Meta’s open-ish large language model recipe | [guide]({{ '/posts/14-ai-papers-lunch-box-map/llama/' | relative_url }}) |
-| 12 | [**RoPE**](#rope) · [paper](https://arxiv.org/abs/2104.09864) | A clean way to tell the model *where* a word sits | [guide]({{ '/posts/14-ai-papers-lunch-box-map/rope-roformer/' | relative_url }}) |
-| 13 | [**InstructGPT**](#instructgpt) · [paper](https://arxiv.org/abs/2203.02155) | Train the model to follow instructions | [guide]({{ '/posts/14-ai-papers-lunch-box-map/instructgpt/' | relative_url }}) |
-| 14 | [**VAE**](#vae) · [paper](https://arxiv.org/abs/1312.6114) | Squeeze a picture into a small code, then rebuild | [guide]({{ '/posts/14-ai-papers-lunch-box-map/vae/' | relative_url }}) |
+| 5 | [**LLaMA**](#llama) · [paper](https://arxiv.org/abs/2302.13971) | Meta’s open-ish large language model recipe | [guide]({{ '/posts/14-ai-papers-lunch-box-map/llama/' | relative_url }}) |
+| 6 | [**InstructGPT**](#instructgpt) · [paper](https://arxiv.org/abs/2203.02155) | Train the model to follow instructions | [guide]({{ '/posts/14-ai-papers-lunch-box-map/instructgpt/' | relative_url }}) |
+| 7 | [**RLHF**](#rlhf) · [paper](https://arxiv.org/abs/1706.03741) | Humans score answers; the model learns preference | [guide]({{ '/posts/14-ai-papers-lunch-box-map/rlhf-christiano/' | relative_url }}) |
+| 8 | [**LoRA**](#lora) · [paper](https://arxiv.org/abs/2106.09685) | Train a small add-on instead of rewriting a big model | [guide]({{ '/posts/14-ai-papers-lunch-box-map/lora/' | relative_url }}) |
+| 9 | [**PEFT**](#peft) · [docs](https://huggingface.co/docs/peft/en/index) | The family name for cheap fine-tuning | [guide]({{ '/posts/14-ai-papers-lunch-box-map/peft/' | relative_url }}) |
+| 10 | [**MoE**](#moe) · [paper](https://arxiv.org/abs/2101.03961) | Many small experts; only a few wake up | [guide]({{ '/posts/14-ai-papers-lunch-box-map/moe-switch-transformers/' | relative_url }}) |
+| 11 | [**RAG**](#rag) · [paper](https://arxiv.org/abs/2005.11401) | Look up notes before you answer | [guide]({{ '/posts/14-ai-papers-lunch-box-map/rag/' | relative_url }}) |
+| 12 | [**GANs**](#gans) · [paper](https://arxiv.org/abs/1406.2661) | Generator vs discriminator, fighting until fakes look real | [guide]({{ '/posts/14-ai-papers-lunch-box-map/gans/' | relative_url }}) |
+| 13 | [**VAE**](#vae) · [paper](https://arxiv.org/abs/1312.6114) | Squeeze a picture into a small code, then rebuild | [guide]({{ '/posts/14-ai-papers-lunch-box-map/vae/' | relative_url }}) |
+| 14 | [**Diffusion**](#diffusion) · [paper](https://arxiv.org/abs/2006.11239) | Start from noise; slowly clean it into a picture | [guide]({{ '/posts/14-ai-papers-lunch-box-map/diffusion/' | relative_url }}) |
 
 Now the boxes.
 
@@ -586,19 +586,19 @@ You do **not** need all 14 in one weekend.
 Official abstracts and resources used in this post (prefer these over roundups):
 
 1. Vaswani et al., [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
-2. Hu et al., [LoRA: Low-Rank Adaptation of Large Language Models](https://arxiv.org/abs/2106.09685)
-3. [Hugging Face PEFT](https://huggingface.co/docs/peft/en/index); Houlsby et al., [Parameter-Efficient Transfer Learning for NLP](https://arxiv.org/abs/1902.00751)
+2. Su et al., [RoFormer: Enhanced Transformer with Rotary Position Embedding](https://arxiv.org/abs/2104.09864)
+3. Devlin et al., [BERT](https://aclanthology.org/N19-1423/) ([arXiv](https://arxiv.org/abs/1810.04805)); [Wikipedia dumps](https://dumps.wikimedia.org/); BooksCorpus via [Zhu et al.](https://arxiv.org/abs/1506.06724)
 4. Dosovitskiy et al., [An Image is Worth 16×16 Words](https://arxiv.org/abs/2010.11929); [ImageNet](https://www.image-net.org/)
-5. Goodfellow et al., [Generative Adversarial Nets](https://arxiv.org/abs/1406.2661)
-6. Devlin et al., [BERT](https://aclanthology.org/N19-1423/) ([arXiv](https://arxiv.org/abs/1810.04805)); [Wikipedia dumps](https://dumps.wikimedia.org/); BooksCorpus via [Zhu et al.](https://arxiv.org/abs/1506.06724)
-7. Ho et al., [Denoising Diffusion Probabilistic Models](https://arxiv.org/abs/2006.11239); Rombach et al., [Latent Diffusion Models](https://arxiv.org/abs/2112.10752)
-8. Lewis et al., [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401)
-9. Fedus, Zoph & Shazeer, [Switch Transformers](https://arxiv.org/abs/2101.03961); Shazeer et al., [Sparsely-Gated Mixture-of-Experts](https://arxiv.org/abs/1701.06538)
-10. Christiano et al., [Deep Reinforcement Learning from Human Preferences](https://arxiv.org/abs/1706.03741)
-11. Touvron et al., [LLaMA: Open and Efficient Foundation Language Models](https://arxiv.org/abs/2302.13971); [Meta Llama GitHub](https://github.com/meta-llama/llama)
-12. Su et al., [RoFormer: Enhanced Transformer with Rotary Position Embedding](https://arxiv.org/abs/2104.09864)
-13. Ouyang et al., [Training language models to follow instructions with human feedback](https://arxiv.org/abs/2203.02155)
-14. Kingma & Welling, [Auto-Encoding Variational Bayes](https://arxiv.org/abs/1312.6114)
+5. Touvron et al., [LLaMA: Open and Efficient Foundation Language Models](https://arxiv.org/abs/2302.13971); [Meta Llama GitHub](https://github.com/meta-llama/llama)
+6. Ouyang et al., [Training language models to follow instructions with human feedback](https://arxiv.org/abs/2203.02155)
+7. Christiano et al., [Deep Reinforcement Learning from Human Preferences](https://arxiv.org/abs/1706.03741)
+8. Hu et al., [LoRA: Low-Rank Adaptation of Large Language Models](https://arxiv.org/abs/2106.09685)
+9. [Hugging Face PEFT](https://huggingface.co/docs/peft/en/index); Houlsby et al., [Parameter-Efficient Transfer Learning for NLP](https://arxiv.org/abs/1902.00751)
+10. Fedus, Zoph & Shazeer, [Switch Transformers](https://arxiv.org/abs/2101.03961); Shazeer et al., [Sparsely-Gated Mixture-of-Experts](https://arxiv.org/abs/1701.06538)
+11. Lewis et al., [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401)
+12. Goodfellow et al., [Generative Adversarial Nets](https://arxiv.org/abs/1406.2661)
+13. Kingma & Welling, [Auto-Encoding Variational Bayes](https://arxiv.org/abs/1312.6114)
+14. Ho et al., [Denoising Diffusion Probabilistic Models](https://arxiv.org/abs/2006.11239); Rombach et al., [Latent Diffusion Models](https://arxiv.org/abs/2112.10752)
 
 ---
 
