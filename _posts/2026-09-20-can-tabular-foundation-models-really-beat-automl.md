@@ -146,7 +146,7 @@ I am not adding log-loss, accuracy, or a leaderboard score. Those were not part 
 
 **“AutoGluon won.”** On AUC, yes — by 0.0020 over CatBoost, under a ~90s cap. That is a real edge and a small one. I would not rewrite a serving stack for it without a second seed and the 180s notebook default.
 
-**“So we keep CatBoost.”** For a CPU service that cares about ms/row, that is the row I would take to standup. Eight seconds to train. Two-thousandths of a millisecond per row. AUC within shouting distance of the AutoML stack.
+**“So we keep CatBoost.”** For a CPU service that cares about ms/row, that is the row I would take to standup. Eight seconds to train. Two-thousandths of a millisecond per row. AUC close enough to the AutoML stack that I would not migrate for the gap.
 
 ```mermaid
 %%{init: {"theme": "base", "themeVariables": {"fontSize": "14px"}, "flowchart": {"nodeSpacing": 20, "rankSpacing": 30}}}%%

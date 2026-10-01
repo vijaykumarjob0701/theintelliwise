@@ -6,17 +6,13 @@ excerpt: "Parameter-efficient fine-tuning for engineers who already ship APIs: w
 card_image: /assets/images/peft-lora-qlora-guide/childhood-to-expertise.png
 ---
 
-Coming from **software development** and diving into AI/ML?
-
-You've probably heard these terms flying around:
+Coming from software development into AI/ML, you will hear these names a lot:
 
 > LoRA, QLoRA, Adapters, Prefix Tuning, Prompt Tuning, P-Tuning, IA3, BitFit...
 
-And thought:
+The usual question is: **why are there so many ways to fine-tune a model?**
 
-> **"Why are there so many ways to fine-tune a model?"**
-
-Let's skip the matrices-first explanation. Instead, follow a **child growing up to become a software engineer** — and map that journey to how we adapt AI models.
+I will skip the matrices-first explanation. Think of an experienced engineer who already knows the job, then takes a short specialist course. That is closer to how we adapt a pretrained model.
 
 This post is the first in a three-post series for full-stack engineers moving into AI work: **cheaply specialise a model (this post)**, then give an agent memory, then cache repeated questions by meaning.
 
@@ -27,7 +23,7 @@ This post is the first in a three-post series for full-stack engineers moving in
   <a href="{{ '/posts/rag-semantic-caching/' | relative_url }}">Semantic caching</a>
 </p>
 
-![From Childhood to Expertise: Understanding PEFT Methods]({{ '/assets/images/peft-lora-qlora-guide/childhood-to-expertise.png' | relative_url }})
+![From general training to a specialist skill: PEFT methods]({{ '/assets/images/peft-lora-qlora-guide/childhood-to-expertise.png' | relative_url }})
 
 ---
 
@@ -52,25 +48,25 @@ If you already ship APIs, you already know the pattern: **don't rebuild the whol
 
 ---
 
-## Jargon Buster — Read This First
+## Terms first
 
 | Term | Plain English |
 |---|---|
-| **Model** | A program that has learned patterns from huge amounts of text/data. Think of it as a brain that has read millions of books. |
-| **Weights** | The billions of numbers inside a model's brain. Each number is a tiny piece of learned knowledge. |
+| **Model** | A program that has learned patterns from huge amounts of text/data. |
+| **Weights** | The billions of numbers inside the model. Each number is a small piece of learned knowledge. |
 | **Parameters** | Weights plus a few extras called biases. "A 7B model" means about 7 billion of these numbers. |
 | **Matrix** | A grid of numbers, like a spreadsheet. Model weights live in lots of these grids. |
 | **Frozen** | "Don't touch these numbers." Locked weights do not change during training. |
-| **Training** | Adjusting numbers so the model gets better at a task. Studying for an exam. |
-| **Fine-tuning** | Training a model that *already* knows a lot, for one specific job. A general doctor becoming a heart surgeon. |
+| **Training** | Adjusting numbers so the model gets better at a task. |
+| **Fine-tuning** | Training a model that *already* knows a lot, for one specific job. A generalist becoming a specialist. |
 | **GPU / VRAM** | A chip that is fast at maths on many numbers at once, plus its workspace. If the model does not fit in VRAM, you cannot train it the naive way. |
-| **Inference** | Using the trained model — answering questions, generating text. Training is studying; inference is the exam. |
+| **Inference** | Using the trained model — answering questions, generating text. Training is study; inference is the exam. |
 | **Layers** | A stack of processing steps. Deeper layers tend to handle more abstract patterns. |
 | **Activations** | The signals flowing through the model while it processes your input. |
 | **Vector / tensor** | A list of numbers, or numbers organised as a list, grid, or cube. |
 | **Rank (`r`)** | How much capacity a LoRA adapter has. Higher rank = more learning power and a bigger adapter. |
 | **Alpha (`lora_alpha`)** | A scaling knob on the LoRA update. Common default: scale by `alpha / r`. |
-| **Target modules** | Which layers get a LoRA sticky note — often attention projections such as `q_proj` and `v_proj`. |
+| **Target modules** | Which layers get a LoRA add-on — often attention projections such as `q_proj` and `v_proj`. |
 | **Low-rank** | Represent a huge grid of changes with two thin grids. Capture the important delta with far fewer numbers. |
 | **Quantisation** | Storing each number with fewer bits. Rounding 3.14159 to 3.1: less space, a little less detail. |
 | **4-bit / 16-bit** | How many bits store each number. Fewer bits = less memory, slightly less precision. |
@@ -82,15 +78,15 @@ If you already ship APIs, you already know the pattern: **don't rebuild the whol
 
 ---
 
-## 1. The Journey: From Child to Engineer
+## 1. From general training to a specialist
 
 ```mermaid
 %%{init: {"theme": "base", "themeVariables": {"fontSize": "14px"}, "flowchart": {"nodeSpacing": 20, "rankSpacing": 30}}}%%
 flowchart LR
-    A["Survival -- eat, walk, talk"]
-    B["School -- maths, science, reading"]
-    C["Higher Ed -- CS, programming"]
-    D["Engineer -- Python, DBs, cloud"]
+    A["Pre-training -- general patterns"]
+    B["Foundation model -- useful as-is"]
+    C["Adaptation -- task or domain data"]
+    D["Specialist -- one product job"]
 
     A -->|grows| B -->|specialises| C -->|masters| D
 
@@ -100,24 +96,24 @@ flowchart LR
     style D fill:#F3E5F5,stroke:#8E24AA,color:#333
 ```
 
-The key insight: **the child never throws away what they already know.** They add specialisation on top.
+The model does not throw away what it already knows. You add specialisation on top.
 
-| Child's Stage | AI Equivalent |
+| Stage | What it means |
 |---|---|
-| Basic survival | Pre-training (raw pattern learning) |
-| School education | Pre-trained foundation model |
-| Higher education | Continued training / adaptation |
-| Software engineer | **Fine-tuning** for a specific task |
+| Basic pattern learning | Pre-training |
+| A useful general model | Pre-trained foundation model |
+| Extra study on a domain | Continued training / adaptation |
+| One product job | **Fine-tuning** for a specific task |
 
-The overview figure uses the same idea: one childhood, several PEFT "specialist modules." The methods differ in **where** learning is allowed — input, inserted layers, weight updates, activations, or biases.
+The overview figure uses the same idea: one general education, several PEFT specialist modules. The methods differ in **where** learning is allowed — input, inserted layers, weight updates, activations, or biases.
 
 ---
 
-## 2. Full Fine-Tuning = "Retrain the Entire Engineer"
+## 2. Full fine-tuning = update almost every weight
 
-Want your engineer to become a **medical imaging specialist**?
+Want the model to become a **medical imaging specialist**?
 
-One option: send them back to school and retrain *everything*. That is **full fine-tuning** — you update almost **all** of the model's parameters.
+One option: send it back through a full training run and update *everything*. That is **full fine-tuning** — you update almost **all** of the model's parameters.
 
 ```mermaid
 %%{init: {"theme": "base", "themeVariables": {"fontSize": "14px"}}}%%
@@ -156,7 +152,7 @@ flowchart TD
 
 ---
 
-## 3. PEFT = "Don't Retrain the Entire Engineer"
+## 3. PEFT = do not retrain the entire model
 
 **Parameter-Efficient Fine-Tuning (PEFT)** in one sentence:
 
@@ -170,7 +166,7 @@ Your engineer already knows programming, algorithms, and databases. You do not e
 
 ---
 
-## 4. The PEFT Family at a Glance
+## 4. The PEFT family at a glance
 
 ```mermaid
 %%{init: {"theme": "base", "themeVariables": {"fontSize": "13px"}, "flowchart": {"nodeSpacing": 15, "rankSpacing": 25}}}%%
@@ -224,7 +220,7 @@ You will also see names such as LoHa, LoKr, OFT/BOFT, and LayerNorm-only tuning.
 
 ---
 
-## 5. Adapter-Based Methods
+## 5. Adapter-based methods
 
 ### 5.1 LoRA — Low-Rank Adaptation
 
@@ -232,7 +228,7 @@ You will also see names such as LoHa, LoKr, OFT/BOFT, and LayerNorm-only tuning.
 
 #### What it does
 
-Imagine the model's brain is a massive spreadsheet of weights `W`. Full fine-tuning changes every cell. LoRA says: **don't touch the original spreadsheet. Create a tiny sticky note of changes and lay it on top.**
+The model's weights `W` are a massive spreadsheet. Full fine-tuning changes every cell. LoRA says: **don't touch the original spreadsheet. Create a small add-on of changes and lay it on top.**
 
 1. **Freeze** `W`.
 2. Train two thin matrices `A` and `B` only.
@@ -263,7 +259,7 @@ These are the names that show up in Hugging Face `LoraConfig`. Learn them before
 
 | Knob | What it means | Practical starting intuition |
 |---|---|---|
-| **`r` (rank)** | Thickness of the sticky note. Capacity of `A` and `B`. | Small `r` (8–16) for style/format; raise if the adapter underfits. Too large and you lose the efficiency win. |
+| **`r` (rank)** | Thickness of the add-on. Capacity of `A` and `B`. | Small `r` (8–16) for style/format; raise if the adapter underfits. Too large and you lose the efficiency win. |
 | **`lora_alpha`** | Scales the update. Commonly `alpha / r`. Rank-stabilised LoRA uses `alpha / sqrt(r)` instead. | Many configs start with `alpha = 2r` (for example `r=16`, `alpha=32`). Treat that as a convention, not a law. |
 | **`target_modules`** | Which layers get adapters. | Attention projections first (`q_proj`, `v_proj`, sometimes `k_proj` / `o_proj`). `all-linear` is more capacity and more VRAM. |
 | **`lora_dropout`** | Dropout on the adapter path. | A regulariser. Useful if the dataset is small and the adapter starts memorising. |
@@ -289,11 +285,11 @@ You still need a **dataset**, a **loss**, and an **eval set**. LoRA is cheaper t
 
 ---
 
-### 5.2 QLoRA — LoRA + Compression
+### 5.2 QLoRA — LoRA + compression
 
 LoRA is great until the **base model itself** will not load. QLoRA **compresses the frozen base first** (typically 16-bit → 4-bit), then trains LoRA on top.
 
-The engineer's reference library is 10,000 bookshelves. You reprint it as pocket editions (some fine print is gone, the knowledge is mostly there). **Then** you add the specialist module.
+Think of a huge reference library. You keep a compressed copy (some fine print is gone, the knowledge is mostly there). **Then** you add the specialist module.
 
 ```mermaid
 %%{init: {"theme": "base", "themeVariables": {"fontSize": "14px"}}}%%
@@ -341,7 +337,7 @@ Important implementation detail: **weights are stored in 4-bit; the actual matmu
 
 ---
 
-### 5.3 Adapters — Bolt-On Specialist Modules
+### 5.3 Adapters — bolt-on specialist modules
 
 Adapters **insert tiny trainable modules between existing layers**. The laptop stays the same; the USB accessory adds capability. This approach predates LoRA. The original adapter paper added a small fraction of parameters per NLP task while freezing the base. ([Google Research][4])
 
@@ -383,7 +379,7 @@ Today, **LoRA is the default** for LLM work. Hugging Face's PEFT overview treats
 
 ---
 
-### 5.4 LoRA Variants: AdaLoRA and DoRA
+### 5.4 LoRA variants: AdaLoRA and DoRA
 
 Once LoRA is solid, you will meet relatives:
 
@@ -409,9 +405,9 @@ Both are **LoRA family**. Learn standard LoRA, ship something, then A/B a varian
 
 ---
 
-## 6. Prompt-Based Methods
+## 6. Prompt-based methods
 
-### 6.1 Prompt Tuning — Learned Instruction Cards
+### 6.1 Prompt Tuning — learned instruction cards
 
 Two different things people mash together:
 
@@ -459,9 +455,9 @@ flowchart LR
 
 ---
 
-### 6.2 Prefix Tuning — Learned Context That Follows You
+### 6.2 Prefix Tuning — learned context that follows you
 
-Prompt tuning adds learned vectors **at the input**. Prefix tuning injects learned prefixes **into layers / attention**, so the "advisor" whispers at more than one step.
+Prompt tuning adds learned vectors **at the input**. Prefix tuning injects learned prefixes **into layers / attention**, so the extra context is present at more than one step.
 
 - Prompt Tuning = instruction card **once, at the start**
 - Prefix Tuning = specialist context **through the whole problem**
@@ -470,15 +466,15 @@ Prompt tuning adds learned vectors **at the input**. Prefix tuning injects learn
 
 ---
 
-### 6.3 P-Tuning — Smarter Soft Prompts
+### 6.3 P-Tuning — smarter soft prompts
 
 Same family: learned virtual tokens, but a small network **generates** those vectors instead of storing them as raw parameters. Try prompt tuning first; reach for P-Tuning if that underperforms and you are still committed to a prompt-based method.
 
 ---
 
-## 7. Layer and Parameter Tuning
+## 7. Layer and parameter tuning
 
-### 7.1 IA3 — Amplify What Matters
+### 7.1 IA3 — amplify what matters
 
 **IA3** = Infused Adapter by Inhibiting and Amplifying Inner Activations.
 
@@ -508,7 +504,7 @@ flowchart TD
 
 ---
 
-### 7.2 BitFit — Just Tweak the Defaults
+### 7.2 BitFit — just tweak the defaults
 
 Train **only the bias terms**. Everything else stays frozen. You are adjusting default tendencies, not installing a skill.
 
@@ -521,7 +517,7 @@ Train **only the bias terms**. Everything else stays frozen. You are adjusting d
 
 ---
 
-## 8. Which Method for Which Situation?
+## 8. Which method for which situation?
 
 ```mermaid
 %%{init: {"theme": "base", "themeVariables": {"fontSize": "12px"}, "flowchart": {"nodeSpacing": 12, "rankSpacing": 18}}}%%
@@ -590,7 +586,7 @@ Efficiency and quality rankings are **not universal**. Fewer trainable parameter
 
 ---
 
-## 9. The Simplest Way to Remember All Methods
+## 9. The simplest way to remember all methods
 
 Do not memorise names. Ask: **"Where is the model allowed to learn?"**
 
@@ -650,7 +646,7 @@ One distinction that saves weeks of confusion:
 
 ---
 
-## 10. What a Full-Stack Engineer Should Actually Learn
+## 10. What a full-stack engineer should actually learn
 
 ```mermaid
 %%{init: {"theme": "base", "themeVariables": {"fontSize": "14px"}}}%%
@@ -701,7 +697,7 @@ That is the same instinct as shipping a feature flag before a rewrite.
 
 ## 11. Takeaways
 
-> **A pretrained model is like an already-educated software engineer. PEFT specialises that engineer without making them relearn their entire education.**
+> **A pretrained model is like an already-trained software engineer. PEFT specialises that engineer without making them relearn everything they already know.**
 
 | Method | The question it answers |
 |---|---|

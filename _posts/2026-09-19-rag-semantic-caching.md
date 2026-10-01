@@ -53,18 +53,18 @@ You already cache `GET /users/42`. This post is what changes when the key is Eng
 
 ---
 
-## Jargon Buster
+## Terms
 
 | Term | Meaning | Developer analogy |
 |---|---|---|
-| **Cache / hit / miss** | Stash of finished work; found vs must recompute | Sticky note vs rereading the wiki |
+| **Cache / hit / miss** | Stash of finished work; found vs must recompute | Note on the desk vs rereading the wiki |
 | **Semantic** | About meaning, not spelling | `user_id` and `customer_id` can be the same person |
 | **Semantic cache** | Reuse an answer when a *new* question is close enough in meaning | Senior who hears three phrasings of "Wi-Fi died" |
 | **Exact-match cache** | Key = exact string | Terminal up-arrow |
 | **Normalisation** | Lowercase, trim, strip punctuation | Running Prettier before diff |
 | **Embedding / vector** | Numbers that locate a sentence in meaning-space | Coordinates on a map with hundreds of axes |
-| **Cosine similarity** | How aligned two vectors are (`1` same direction, `0` orthogonal) | Two fingers pointing at the same box on the diagram |
-| **Threshold** | Minimum score to count as a hit | Bouncer: how close is "close enough"? |
+| **Cosine similarity** | How aligned two vectors are (`1` same direction, `0` orthogonal) | Two arrows pointing at the same box on the diagram |
+| **Threshold** | Minimum score to count as a hit | How close is "close enough"? |
 | **Canonical form** | Official wording of an intent | One git command instead of ten aliases |
 | **RAG / LLM** | Retrieve docs then generate / the generator itself | Search the wiki, then the expensive senior writes |
 | **TTL / invalidation** | Expiry / actively dropping stale entries | Milk date / DevOps changed the staging IP |
@@ -116,7 +116,7 @@ flowchart TD
 
 Exact timings and dollar costs depend on model, prompt size, and vendor. What does **not** depend on a blog post's imagination: generation dominates latency and cost; a cache hit that skips retrieval + generation is usually **orders of magnitude** cheaper. Measure yours.
 
-**Junior vs senior:** the junior treats "clone the repo" and "download the code" as different tickets. The senior reuses `git clone …`. Semantic caching is that senior's pattern, automated.
+A junior treats "clone the repo" and "download the code" as different tickets. A senior reuses `git clone …`. Semantic caching is that senior's pattern, automated.
 
 ---
 
@@ -150,7 +150,7 @@ flowchart TD
     style L4 fill:#F3E5F5,stroke:#8E24AA,color:#333
 ```
 
-### Level 1 — Exact match ("terminal up-arrow")
+### Level 1 — Exact match (terminal up-arrow)
 
 ```text
 Key:   "How to reset my password?"
@@ -164,7 +164,7 @@ Value: "Go to Settings → Security → Reset Password…"
 
 Ship this first. It is free correctness.
 
-### Level 2 — Normalisation ("the linter")
+### Level 2 — Normalisation (the linter)
 
 Before lookup: lowercase, strip punctuation, collapse whitespace, maybe drop stopwords.
 
@@ -215,9 +215,9 @@ Use a **tiny** classifier, or only run this on misses / ambiguous neighbours. Fo
 
 An embedding model turns a sentence into a long list of numbers. Similar meanings land in similar directions.
 
-**Ice-cream version:** rate flavours on sweetness / fruit / chocolate. Double chocolate and brownie swirl sit next to each other; strawberry sorbet does not. Real models use hundreds or thousands of axes you do not name by hand.
+A simple picture: rate ice-cream flavours on sweetness, fruit, and chocolate. Double chocolate and brownie swirl sit next to each other; strawberry sorbet does not. Real models use hundreds or thousands of axes you do not name by hand.
 
-**Flashlight version:** treat each vector as an arrow from the origin.
+Another picture: treat each vector as an arrow from the origin.
 
 - Same meaning → arrows almost parallel → cosine near **1**
 - Unrelated → about **90°** → cosine near **0**
@@ -488,5 +488,3 @@ Stop when the next layer's complexity exceeds the measured miss cost.
 - Store **answer + citations + versions**. You cannot purge what you did not tag.
 - **Cache ≠ memory ≠ RAG ≠ PEFT.** Reused computation, remembered people, retrieved docs, changed weights.
 - Start simple, measure false hits, then get fancy.
-
----

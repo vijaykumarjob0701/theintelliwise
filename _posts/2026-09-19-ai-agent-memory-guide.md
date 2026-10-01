@@ -4,17 +4,12 @@ date: 2026-09-19 10:00:00 +0100
 tags: [agents, memory, rag]
 excerpt: "Agent memory is not one vector database. It is several stores with different lifetimes — context, profiles, episodes, and procedures — and you should ship two buckets before you ship seven."
 card_image: /assets/images/ai-agent-memory-guide/agent-memory-types.png
+math: true
 ---
 
-Ever wondered how AI agents **remember** things?
-
-You've probably used ChatGPT or similar tools and noticed:
+You have probably used ChatGPT or a similar tool and noticed this:
 
 > Sometimes it remembers your name. Sometimes it forgets everything. Sometimes it seems to "know" things it was never told.
-
-And thought:
-
-> **"How does an AI agent's memory actually work? Does it have one brain or many?"**
 
 There isn't one memory. There are several stores, each solving a different problem — the same way you do not keep the current stack frame, this morning's standup, last month's outage, and "HTTP 404 means not found" in the same place.
 
@@ -45,17 +40,17 @@ If you can ship a CRUD app, you can ship agent memory. The trap is treating "mem
 | Agent retries a task and should not repeat a failed fix | **Episodic** logs: what we tried, what happened. |
 | Same workflow every time (test → diff → PR) | **Procedural** memory: system prompt, tools, runbook — not a novel. |
 
-**Do not start with seven databases.** The seven types below are a *mental model*. A real v1 is usually: current context + one persistent store with a few record types (facts, events, skills).
+**Do not start with seven databases.** The seven types below are a mental model. A real v1 is usually: current context + one persistent store with a few record types (facts, events, skills).
 
 ---
 
-## Jargon Buster — Read This First
+## Terms first
 
 | Term | Plain English |
 |---|---|
 | **AI Agent** | A program that can plan and take actions (tools, APIs), not only complete one prompt. |
 | **Context window** | How much text the model can see *this call*. Measured in **tokens**, not pages. |
-| **Token** | A chunk of text the model reads — often a short word or part of a word. "Hello world" is a handful of tokens, not two mystical units. |
+| **Token** | A chunk of text the model reads — often a short word or part of a word. "Hello world" is a handful of tokens. |
 | **Vector / embedding** | A list of numbers that represents meaning. Similar ideas land near each other. |
 | **Vector store** | A database good at "find nearest neighbours in embedding space." A **mechanism**, not a memory type. |
 | **RAG** | Search first, then generate. External knowledge pulled into the prompt. |
@@ -99,7 +94,7 @@ Fine-tuning "our Python style" into weights is a product decision. Storing "Vija
 
 ---
 
-## The Big Picture
+## The big picture
 
 A developer already uses several memories:
 
@@ -130,7 +125,7 @@ Long-term then splits into **semantic / episodic / procedural** — facts, event
 
 ---
 
-## 1. Sensory Memory — "What just hit my screen?"
+## 1. Sensory memory — what just arrived
 
 **Duration:** milliseconds to seconds  
 **Question:** What am I receiving right now?
@@ -147,7 +142,7 @@ You do not archive every pixel. You tokenise text, encode images, turn the usefu
 
 ---
 
-## 2. Working Memory — "What am I thinking about right now?"
+## 2. Working memory — what I am using for this step
 
 **Duration:** seconds to minutes  
 **Question:** What am I using to finish *this* step?
@@ -169,11 +164,17 @@ Inside a single model call, the closest hardware analogue is **attention**: at e
 - **Key** — what does this past token advertise?
 - **Value** — what content do I actually pull?
 
-The formula `softmax(QKᵀ / √d) V` is "score, squash to a distribution, take a weighted mix." You do not need to implement it; you need to remember that **working memory is volatile and tiny**. Do not pretend the model is "holding the whole monorepo in working memory." You retrieve, then it attends.
+The formula is "score, squash to a distribution, take a weighted mix":
+
+\[
+\mathrm{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d}}\right)V
+\]
+
+You do not need to implement it. You need to remember that **working memory is volatile and tiny**. Do not pretend the model is "holding the whole monorepo in working memory." You retrieve, then it attends.
 
 ---
 
-## 3. Short-Term Memory — "What happened earlier in this conversation?"
+## 3. Short-term memory — what happened earlier in this conversation
 
 **Duration:** minutes to hours (this session)  
 **Question:** What just happened in *this* interaction?
@@ -198,7 +199,7 @@ When you overflow:
 
 ---
 
-## 4. Long-Term Memory — "What do I know about this user or project?"
+## 4. Long-term memory — what should still be true next session
 
 **Duration:** days to years, if *you* persist it  
 **Question:** What should still be true next session?
@@ -223,7 +224,7 @@ The product is the **policy** (what to save), not the database brand.
 
 ---
 
-## 5. Episodic Memory — "What happened that time when…?"
+## 5. Episodic memory — what happened that time
 
 **Duration:** persistent  
 **Question:** What happened, in what situation, with what outcome?
@@ -248,7 +249,7 @@ Psychology note: Tulving's episodic vs semantic split (1972) is the source of th
 
 ---
 
-## 6. Semantic Memory — "What do I know about the world?"
+## 6. Semantic memory — what is true in general
 
 **Duration:** persistent  
 **Question:** What is true in general — not tied to one Tuesday?
@@ -267,7 +268,7 @@ Do not store "HTTP 404 means not found" as an agent memory. The model already ha
 
 ---
 
-## 7. Procedural Memory — "How do I actually do this?"
+## 7. Procedural memory — how do I actually do this
 
 **Duration:** persistent  
 **Question:** What is the playbook?
@@ -293,7 +294,7 @@ Thought: enough to answer
 Action:  reply to user
 ```
 
-That loop is a procedure. Muscle memory for an agent is **weights + tools + your orchestration**, not a mystic seventh pinecone index.
+That loop is a procedure. Muscle memory for an agent is **weights + tools + your orchestration**, not a seventh vector index.
 
 ---
 
@@ -444,5 +445,3 @@ That is when memory stops being a slide and starts changing the decision.
 5. **Semantic / episodic / procedural** = what I know / what happened / how I do it. Keep those record types distinct even if they share Postgres.
 6. **A vector DB is plumbing.** RAG, episodes, and caches can all use it. Purpose first.
 7. **PEFT writes into weights. Memory writes into your systems.** Use the next post (semantic cache) when the problem is *repeat questions*, not *this user*.
-
----
