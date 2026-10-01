@@ -23,19 +23,18 @@ You want a **latent** — a small code you can sample from — plus a decoder th
 
 ## How the idea works
 
-1. **Encoder** q<sub>φ</sub>(z | x): map a picture x to a **cloud** — usually a mean and a variance per latent dimension, not one frozen point.
-2. **Sample** z from that cloud. The **reparameterisation trick** is:
+1. **Encoder** q<sub>φ</sub>(z given x): map a picture x to a **cloud** — usually a mean and a variance per latent dimension, not one frozen point.
+2. **Sample** z from that cloud with the **reparameterisation trick** (formula below).
+3. **Decoder** p<sub>θ</sub>(x given z): unpack z into a rebuilt picture.
+4. **Train with two pressures:**
+   - rebuild (reconstruction)
+   - keep each cloud close to the prior (KL to N(0, I)). That is the “don’t make a wild private language” tax.
 
 <div class="math-display">
 \[z = \mu + \sigma \odot \varepsilon,\quad \varepsilon \sim \mathcal{N}(0,I)\]
 </div>
 
 That rewrite is why gradients can flow through the sample with ordinary backprop.
-
-3. **Decoder** p<sub>θ</sub>(x | z): unpack z into a rebuilt picture.
-4. **Train with two pressures:**
-   - rebuild (reconstruction)
-   - keep each cloud close to the prior (KL to N(0, I)). That is the “don’t make a wild private language” tax.
 
 The paper’s name for the training deal is the **ELBO** (evidence lower bound). You do not need to recite the bound to steal the picture.
 

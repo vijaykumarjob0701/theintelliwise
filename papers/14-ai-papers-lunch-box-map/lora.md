@@ -28,13 +28,12 @@ Pick a big linear map inside the net — the paper’s favourite targets are **a
 1. Leave W<sub>0</sub> as it was at pretraining.
 2. Add a low-rank update ΔW = BA, where B is tall-and-thin, A is short-and-wide, and the inner size is **rank r** (often 4, 8, 16…).
 3. Scale the update (the paper’s α / r habit). That is the volume knob.
-4. Forward pass:
+4. Run the forward pass as a frozen path plus the small update (formula below).
+5. At deploy time, **fold** BA into W<sub>0</sub> if you want zero extra latency. Or keep adapters unmerged and hot-swap files.
 
 <div class="math-display">
 \[h = W_0 x + BA x\]
 </div>
-
-5. At deploy time, **fold** BA into W<sub>0</sub> if you want zero extra latency. Or keep adapters unmerged and hot-swap files.
 
 ```mermaid
 flowchart LR
