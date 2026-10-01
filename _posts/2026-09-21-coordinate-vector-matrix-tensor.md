@@ -2,17 +2,17 @@
 title: "Coordinate → Vector → Matrix → Tensor"
 date: 2026-09-21 21:00:00 +0000
 tags: [tensor, pytorch, numpy, linear-algebra, ml-basics]
-excerpt: "Grown-ups keep saying tensor. It is not a robot spell. One number on a map is a coordinate. Two numbers together are an arrow — a vector, not a table. Stack lists and you get a score sheet. Stack pages and you get a photo book."
+excerpt: "In NumPy and PyTorch, a tensor is a stack of numbers with a shape. One number, then a list, then a table, then a stack of tables."
 card_image: /assets/images/coordinate-vector-matrix-tensor/01-coordinate-vs-vector.gif
 ---
 
-Grown-ups keep saying **tensor**.
+People keep saying **tensor** in ML meetings.
 
-It sounds like a robot word. It is not.
+It sounds heavy. In NumPy and PyTorch, it is simpler.
 
 **A tensor is just stacking.**
 
-One number. Then a list. Then a table. Then a stack of tables — like pages in a book.
+One number. Then a list. Then a table. Then a stack of tables.
 
 ```mermaid
 flowchart LR
@@ -21,29 +21,23 @@ flowchart LR
   C --> D[A stack of tables]
 ```
 
-That is the whole trick. The rest of this post is a treasure map, some LEGO, school scores, and a photo album.
+That is the whole idea. The rest of this post walks through it with a map, a few score lists, and a batch of photos.
 
 ---
 
 ## One number on a map
 
-You find a treasure map.
+You have a map.
 
 It says: walk **3** steps across.
 
 That **3** is a **coordinate**.
 
-A coordinate is **one** number on **one** line. How far across. Or how far up. Not both.
+A coordinate is **one** number on **one** axis. How far across. Or how far up. Not both.
 
-It is like one slot on a lunch tray. The juice slot. Just that slot.
+It is **not** the whole trip. It is not an arrow. It is one value.
 
-It is **not** the whole trip. It is not an arrow. It is one clue.
-
-Say it out loud:
-
-> “Across equals 3.”
-
-That is a coordinate.
+In short: **across = 3**. That is a coordinate. When it is just a single value, people also call it a **scalar**.
 
 ---
 
@@ -53,7 +47,7 @@ The map is not done.
 
 It also says: walk **4** steps up.
 
-Now you have two clues:
+Now you have two values:
 
 - across = 3
 - up = 4
@@ -64,24 +58,22 @@ That list is a **vector**.
 
 A vector is an **arrow**. It says “go this way, this far.” Two numbers. Still **one** arrow.
 
-Say it out loud:
-
-> “The arrow is three across and four up.”
+The arrow is three across and four up.
 
 One number? Coordinate.  
 Two numbers together? Vector.
 
-![Treasure map: one number is a coordinate, two numbers together are a vector]({{ '/assets/images/coordinate-vector-matrix-tensor/01-coordinate-vs-vector.gif' | relative_url }})
+![One number is a coordinate. Two numbers together are a vector.]({{ '/assets/images/coordinate-vector-matrix-tensor/01-coordinate-vs-vector.gif' | relative_url }})
 
-A vector can have more numbers too. `(3, 4, 5)` is still one arrow — across, up, and maybe “into the cave.” It is still **one list**. Not a table.
+A vector can have more numbers too. `(3, 4, 5)` is still one arrow — across, up, and a third axis. It is still **one list**. Not a table.
 
-Think of LEGO bricks in a **row**. Two bricks. Or three. Still one row.
+Think of values in a **row**. Two values. Or three. Still one row.
 
 ---
 
 ## A short list is not a table
 
-Here is the mix-up grown-ups make too.
+Here is the mix-up I still see in reviews.
 
 `(3, 4)` has **two** numbers. People call that a “2D vector” because the map has two directions.
 
@@ -89,13 +81,11 @@ That does **not** make it a table.
 
 A table has **rows and columns**. Many lists, side by side or stacked.
 
-A 2D vector is still **one short list**. One lunch-tray row. One LEGO row.
+A 2D vector is still **one short list**. One row.
 
-![A short LEGO list is still one row. A table has rows and columns.]({{ '/assets/images/coordinate-vector-matrix-tensor/02-vector-vs-2d-array.gif' | relative_url }})
+![A short list is still one row. A table has rows and columns.]({{ '/assets/images/coordinate-vector-matrix-tensor/02-vector-vs-2d-array.gif' | relative_url }})
 
-Say it out loud:
-
-> “Two numbers in a row is still one list. A table is lots of rows.”
+Two numbers in a row is still one list. A table is lots of rows.
 
 If you only have Alex’s two scores, you have a vector.  
 If you have Alex **and** Sam **and** Jo, now you can make a table.
@@ -104,19 +94,19 @@ If you have Alex **and** Sam **and** Jo, now you can make a table.
 
 ## Stack the lists. Now you have a table.
 
-Monday at school.
+Monday scores:
 
 Alex: 3, 4  
 Sam: 1, 0  
 Jo: 5, 2  
 
-Each friend has **one list**. Slide those lists together. You get a **score table**.
+Each person has **one list**. Slide those lists together. You get a **score table**.
 
 That table is a **matrix**.
 
 A matrix is a rectangle of numbers. Rows **and** columns.
 
-| Friend | Game 1 | Game 2 |
+| Person | Game 1 | Game 2 |
 | --- | --- | --- |
 | Alex | 3 | 4 |
 | Sam | 1 | 0 |
@@ -124,7 +114,7 @@ A matrix is a rectangle of numbers. Rows **and** columns.
 
 Three lists stacked. That is all.
 
-![Friends’ score lists stack into one table]({{ '/assets/images/coordinate-vector-matrix-tensor/03-stack-vectors-to-matrix.gif' | relative_url }})
+![Score lists stack into one table]({{ '/assets/images/coordinate-vector-matrix-tensor/03-stack-vectors-to-matrix.gif' | relative_url }})
 
 ```mermaid
 flowchart TB
@@ -133,45 +123,45 @@ flowchart TB
   J["Jo: 5, 2"] --> T
 ```
 
-A picture made of gray squares is a table too. Each square is how dark that spot is. Still rows and columns. Still a matrix.
+A grayscale image is a table too. Each cell is how dark that pixel is. Still rows and columns. Still a matrix.
 
-Swap the rows and columns and you have a **different** table. Same numbers. Different meaning. Like swapping first names and last names on a class list.
+Swap the rows and columns and you have a **different** table. Same numbers. Different meaning. Like swapping first name and last name on a roster.
 
 ---
 
-## Stack the tables. Now you have a book.
+## Stack the tables. Now you have a batch.
 
-One photo is a table of tiny color squares.
+One photo is a table of tiny colour cells.
 
-A photo album has **many pages**.
+A photo set has **many pages**.
 
-Stack the pages. The book gets thicker.
+Stack the pages. The pile gets thicker.
 
-That thicker book is a **tensor**.
+That thicker pile is a **tensor**.
 
 A tensor is “keep stacking.” A list of tables. Or a stack of stacks.
 
-![Photo-album pages stack into a thicker book]({{ '/assets/images/coordinate-vector-matrix-tensor/04-batch-to-tensor.gif' | relative_url }})
+![Photo pages stack into a thicker batch]({{ '/assets/images/coordinate-vector-matrix-tensor/04-batch-to-tensor.gif' | relative_url }})
 
 ```mermaid
 flowchart TB
-  P1[Page 1] --> B[Thicker book]
+  P1[Page 1] --> B[Thicker stack]
   P2[Page 2] --> B
   P3[Page 3] --> B
 ```
 
-You already know this:
+Same idea in a training loop:
 
-| Kid thing | What you stacked | Grown-up name |
+| Everyday picture | What you stacked | Name |
 | --- | --- | --- |
 | One clue on the map | one number | coordinate |
 | One arrow | one list | vector |
 | Score sheet | lists stacked | matrix |
-| Photo album | tables stacked | tensor |
+| Photo batch | tables stacked | tensor |
 
-A computer does the same thing with a **batch** of photos. One photo is a page. Many photos is the book. That book is a tensor.
+A computer does the same thing with a **batch** of photos. One photo is a page. Many photos is the stack. That stack is a tensor.
 
-If each photo also has three color layers (red, green, blue), the book is even thicker. Still stacking. Still a tensor.
+If each photo also has three colour layers (red, green, blue), you add another axis. Still stacking. Still a tensor.
 
 ---
 
@@ -179,42 +169,42 @@ If each photo also has three color layers (red, green, blue), the book is even t
 
 Computers write the size as a **shape**.
 
-Shape means: how long is each stack?
+Shape means: how long is each axis?
 
-| What you have | Shape (kid words) |
+| What you have | Shape |
 | --- | --- |
 | Across = 3 | one number |
 | Arrow `(3, 4)` | a list of 2 |
-| Three friends, two games | 3 rows, 2 columns |
+| Three people, two games | 3 rows, 2 columns |
 | Four photos, each 2 by 2 | 4 pages, each a small table |
 
-Same pile of numbers can sit in different shapes.
+The same pile of numbers can sit in different shapes.
 
 `(3, 4)` is one arrow.  
 A tiny table with one row — `1` by `2` — can hold the same two numbers.  
 They are **not** the same job. One is an arrow. One is a one-row table.
 
-Before you argue about the “smart computer,” **look at the shape.** Count the stacks. Name them: number, list, table, book.
+Before you argue about the model, **look at the shape.** Count the axes. Name them: number, list, table, stack.
 
 ---
 
-## Grown-up names (tiny box)
+## Names you will see in code
 
-You do not need this to get the story. It is here so the robot talks make sense later.
+You do not need this to get the idea. It is here so the library docs make sense later.
 
-| Kid word | Grown-up name | Computer shape | ML example |
+| Plain name | Usual name | Computer shape | ML example |
 | --- | --- | --- | --- |
 | One number | **coordinate** (a scalar) | `()` | a single score, like a loss |
 | One list | **vector** | `(2,)` or `(768,)` | a map arrow, or a word turned into 768 numbers |
-| A table | **matrix** | `(3, 2)` | friends’ scores, or one gray photo |
-| A stack of tables | **tensor** | `(4, 2, 2)` or `(8, 3, 224, 224)` | a photo book; a batch of color pictures |
+| A table | **matrix** | `(3, 2)` | scores, or one gray photo |
+| A stack of tables | **tensor** | `(4, 2, 2)` or `(8, 3, 224, 224)` | a photo batch; a batch of colour pictures |
 
-In school math, “tensor” can mean extra rules. In the computer (PyTorch, NumPy), **tensor just means a stack of numbers with a shape.**
+In school maths, “tensor” can mean extra rules. In the computer (PyTorch, NumPy), **tensor just means a stack of numbers with a shape.**
 
 A 2D vector is still a list. Do not call it a table.
 
 ---
 
-## Say this back
+## Short recap
 
-**Start with one number. Make a list. Stack lists into a table. Stack tables into a book.**
+Start with one number. Make a list. Stack lists into a table. Stack tables into a batch.
