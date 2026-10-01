@@ -1,85 +1,81 @@
 ---
-title: "KV Cache: Why Chatbots Keep Sticky Notes"
+title: "KV Cache: Why Chatbots Keep Past Keys and Values"
 date: 2026-09-24 10:00:00 +0000
 tags: [kv-cache, llm, transformers, inference, attention]
-excerpt: "A chatbot answers one word at a time. It should not re-read the whole chat for every new word. The KV cache is the locker of past Keys and Values that makes that possible — and why long chats eat GPU memory."
+excerpt: "A chatbot answers one token at a time. It should not recompute the whole chat for every new token. The KV cache stores past Keys and Values — and that is why long chats eat GPU memory."
 card_image: /assets/images/kv-cache-sticky-notes/01-recompute-vs-locker.gif
 ---
 
-A chatbot answers **one word at a time**.
+A chatbot answers **one token at a time**.
 
-You type a long question. It starts typing back. Word. Word. Word.
+You type a long question. It starts typing back. Token. Token. Token.
 
-Here is the trick people miss:
+The model should **not** recompute your whole chat from scratch for every new token.
 
-> The model should **not** re-read your whole chat from scratch for every new word.
+That would mean redoing every old attention step just to add one new token.
 
-That would feel like erasing the blackboard and rewriting every old sentence just to add one new letter.
-
-The fix is a **locker of sticky notes**. Grown-ups call it the **KV cache**.
+The fix is a cache of past **Keys** and **Values**. That store is the **KV cache**.
 
 ```mermaid
 flowchart LR
-  A[Read the prompt once] --> B[Fill the locker]
-  B --> C[Add one new sticky]
-  C --> D[Ask the locker]
+  A[Read the prompt once] --> B[Fill the KV cache]
+  B --> C[Append new K and V]
+  C --> D[Query against cached K]
   D --> C
 ```
 
-That is the whole idea. The rest of this post is sticky notes, a growing locker, and why memory gets tight.
+That is the whole idea. The rest of this post is Q, K, V, a growing cache, and why memory gets tight.
 
 ---
 
-## Three sticky notes per word
+## Three vectors per token
 
-Inside a transformer, each word (a **token**) gets three sticky notes:
+Inside a transformer, each token gets three vectors:
 
-| Note | Kid name | Job |
+| Vector | Name | Job |
 | --- | --- | --- |
-| **Q** | Query | “What am I looking for?” |
-| **K** | Key | “What label do I wear?” |
-| **V** | Value | “What info do I carry?” |
+| **Q** | Query | What am I looking for? |
+| **K** | Key | What label do I wear? |
+| **V** | Value | What info do I carry? |
 
-Attention is a matching game:
+Attention is a matching step:
 
-1. The new word’s **Q** looks at every earlier word’s **K**.
+1. The new token’s **Q** looks at every earlier token’s **K**.
 2. Good matches get higher scores.
-3. Those scores mix the matching words’ **V** notes into one answer for “what should I say next?”
+3. Those scores mix the matching tokens’ **V** vectors into one result for “what should I say next?”
 
-Say it out loud:
-
-> “Q asks. K labels. V carries.”
+Q asks. K labels. V carries.
 
 ![Q asks, K labels, V carries]({{ '/assets/images/kv-cache-sticky-notes/02-qkv-stickies.gif' | relative_url }})
 
 ---
 
-## Two phases: fill, then drip
+## Two phases: prefill, then decode
 
 Generation has two phases.
 
-### Prefill — fill the locker
+### Prefill — fill the cache
 
 The model reads your **whole prompt** once.
 
-For every prompt word it makes K and V notes and **stores** them.
+For every prompt token it makes K and V vectors and **stores** them.
 
-Then it predicts the **first** output word.
+Then it predicts the **first** output token.
 
-Prefill is usually the big “wait before the first letter shows up” (time to first token).
+Prefill is usually the big “wait before the first token shows up” (time to first token).
 
-### Decode — drip one word
+### Decode — one token at a time
 
-For each new output word:
+For each new output token:
 
-1. Make **q, k, v** for **only that new word**.
-2. Put the new **k** and **v** into the locker.
+1. Make **q, k, v** for **only that new token**.
+2. Put the new **k** and **v** into the cache.
 3. Use the new **q** against **all** cached keys.
 4. Mix the cached values.
-5. Pick the next word.
+5. Pick the next token.
 6. Repeat.
 
-Those past notes sit in fast GPU memory (**VRAM**). Decode uses them like this:
+Those past vectors sit in fast GPU memory (**VRAM**). Decode uses them like this:
 
 ```mermaid
 flowchart LR
@@ -87,11 +83,11 @@ flowchart LR
   B --> C[Used]
 ```
 
-- **Stored** — old K and V sit in the locker.
+- **Stored** — old K and V sit in the cache.
 - **Fetched** — pull them out of VRAM.
 - **Used** — the new Q asks them.
 
-![Prefill fills the locker. Decode appends one sticky at a time.]({{ '/assets/images/kv-cache-sticky-notes/03-prefill-decode.gif' | relative_url }})
+![Prefill fills the cache. Decode appends one K/V pair at a time.]({{ '/assets/images/kv-cache-sticky-notes/03-prefill-decode.gif' | relative_url }})
 
 ---
 
@@ -99,32 +95,30 @@ flowchart LR
 
 This is the interview question.
 
-To pick the **next** word, the model only needs a fresh **Q** for the **newest** word.
+To pick the **next** token, the model only needs a fresh **Q** for the **newest** token.
 
 It still needs **every past K and V**, because the new Q must match against the whole history.
 
-Old Q notes already did their job when those older words were predicted. They are not needed again for *this* next word.
+Old Q vectors already did their job when those older tokens were predicted. They are not needed again for *this* next token.
 
-Past K and V for a finished position **do not change**. So recompute them every step would be silly.
+Past K and V for a finished position **do not change**. So recomputing them every step would be wasteful.
 
 ```mermaid
 flowchart TB
-  A[New word arrives] --> B[Make fresh Q, K, V]
-  B --> C[Throw away old Q ideas]
+  A[New token arrives] --> B[Make fresh Q, K, V]
+  B --> C[Drop old Q]
   B --> D[Keep all past K and V]
-  D --> E[New Q asks the full locker]
-  E --> F[Next word]
+  D --> E[New Q asks the full cache]
+  E --> F[Next token]
 ```
 
-Say it out loud:
+We cache Keys and Values. Not a QKV cache.
 
-> “We cache Keys and Values. Not a QKV cache.”
-
-![Old Q notes get tossed. K and V stay in the locker.]({{ '/assets/images/kv-cache-sticky-notes/04-why-not-q.gif' | relative_url }})
+![Old Q vectors are dropped. K and V stay in the cache.]({{ '/assets/images/kv-cache-sticky-notes/04-why-not-q.gif' | relative_url }})
 
 ---
 
-## Without the locker (the slow story)
+## Without the cache (the slow story)
 
 Imagine the prompt:
 
@@ -138,80 +132,76 @@ Then for `the`:
 
 `The` · `cat` · `sat` · `on` · `the`
 
-…and so on. The stack grows. The redo grows. Wasteful.
+…and so on. The sequence grows. The redo grows. Wasteful.
 
-Say it out loud:
-
-> “More words means more work. Without the locker, each new word remakes every old sticky — twice the chat is way more than twice the redo.”
+More tokens means more work. Without the cache, each new token remakes every old K and V — twice the chat is way more than twice the redo.
 
 With a cache:
 
 - Prefill already stored K/V for `The cat sat`.
 - For `on`, only make new k/v for `on` and **append**.
-- Ask the locker. Done.
+- Query the cache. Done.
 
-| Path | Kid cost |
+| Path | Cost |
 | --- | --- |
-| **RECOMPUTE** | Remake every old sticky. Lots of redo. |
-| **CACHE** | Keep old stickies. Pay locker space (VRAM) instead. |
+| **RECOMPUTE** | Remake every old K and V. Lots of redo. |
+| **CACHE** | Keep old K and V. Pay GPU memory (VRAM) instead. |
 
-Say it out loud:
+Cache trades GPU memory for less recompute. It is not free, and it is not magic zero-work.
 
-> “Cache trades locker space for less redo. It is not free, and it is not magic zero-work.”
+![Without cache: rebuild the whole stack. With cache: append one K/V pair.]({{ '/assets/images/kv-cache-sticky-notes/01-recompute-vs-locker.gif' | relative_url }})
 
-![Without cache: rebuild the whole stack. With cache: append one note.]({{ '/assets/images/kv-cache-sticky-notes/01-recompute-vs-locker.gif' | relative_url }})
-
-That is why streaming chat feels possible. Decode still has to **read** the growing locker, but it does not **rebuild** every old sticky from scratch.
+That is why streaming chat feels possible. Decode still has to **read** the growing cache, but it does not **rebuild** every old K and V from scratch.
 
 ---
 
-## The tradeoff: the locker eats space
+## The tradeoff: the cache eats space
 
-The locker lives in fast GPU memory (**VRAM** / HBM) while the answer is being written.
+The cache lives in fast GPU memory (**VRAM** / HBM) while the answer is being written.
 
 It grows with:
 
-- how many words so far (prompt + answer)
-- how many transformer layers (each layer has its own locker shelf)
+- how many tokens so far (prompt + answer)
+- how many transformer layers (each layer has its own cache)
 - how many KV heads
 - how many bytes per number (FP16, FP8, …)
 - how many chats share the same GPU at once
 
-Kid formula (rough shape):
+Rough shape:
 
 > tokens × layers × 2 (K + V) × size-of-each-vector × bytes
 
 Long context is often a **memory** problem before it is a math problem.
 
-During decode, each new word often means **reading the whole locker again**. That is why long chats can get slower even when the “thinking” per new word looks small: the bottleneck is moving sticky notes, not inventing them.
+During decode, each new token often means **reading the whole cache again**. That is why long chats can get slower even when the “thinking” per new token looks small: the bottleneck is moving K and V, not inventing them.
 
-![The locker grows with every new word. Memory gets tight.]({{ '/assets/images/kv-cache-sticky-notes/05-locker-grows.gif' | relative_url }})
+![The cache grows with every new token. Memory gets tight.]({{ '/assets/images/kv-cache-sticky-notes/05-locker-grows.gif' | relative_url }})
 
-Example sizes you will see in articles (not our stopwatch): for a big model at tens of thousands of tokens, the KV locker alone can be **many gigabytes per chat**. Batch many chats and the locker can rival the model weights.
+Example sizes you will see in articles (not our stopwatch): for a big model at tens of thousands of tokens, the KV cache alone can be **many gigabytes per chat**. Batch many chats and the cache can rival the model weights.
 
 We did **not** measure those figures on Intelliwise hardware. Treat them as teaching examples from public write-ups.
 
 ---
 
-## How grown-ups shrink the locker
+## How people shrink the cache
 
-| Kid idea | Grown-up name | What it does |
+| Idea | Name | What it does |
 | --- | --- | --- |
-| Many askers share one key label | **MQA** / **GQA** | Fewer KV heads → smaller locker (GQA is common in modern open models) |
-| Write smaller numbers on the stickies | **KV quantization** | FP8 / INT8 / INT4 cut bytes; tiny quality risk if done well |
-| Rent locker pages only when needed | **PagedAttention** (e.g. vLLM) | Like OS virtual memory — less wasted empty space |
-| Same opening paragraph for many users | **Prefix caching** | Reuse the locker for a shared system prompt / RAG prefix |
-| Spill cold pages to cheaper shelves | **Offloading** | Keep hot stickies on GPU; park cold ones on CPU / disk |
+| Many query heads share one key | **MQA** / **GQA** | Fewer KV heads → smaller cache (GQA is common in modern open models) |
+| Store smaller numbers | **KV quantization** | FP8 / INT8 / INT4 cut bytes; tiny quality risk if done well |
+| Allocate cache pages only when needed | **PagedAttention** (e.g. vLLM) | Like OS virtual memory — less wasted empty space |
+| Same opening tokens for many users | **Prefix caching** | Reuse the cache for a shared system prompt / RAG prefix |
+| Spill cold pages to cheaper memory | **Offloading** | Keep hot K/V on GPU; park cold ones on CPU / disk |
 
 ```mermaid
 flowchart LR
-  A[Big locker] --> B[Share KV heads]
+  A[Big cache] --> B[Share KV heads]
   A --> C[Smaller numbers]
   A --> D[Paged pages]
   A --> E[Reuse prefixes]
 ```
 
-![Sharing keys and renting pages keep the locker smaller.]({{ '/assets/images/kv-cache-sticky-notes/06-shrink-tricks.gif' | relative_url }})
+![Sharing KV heads and paging keep the cache smaller.]({{ '/assets/images/kv-cache-sticky-notes/06-shrink-tricks.gif' | relative_url }})
 
 ---
 
@@ -228,7 +218,7 @@ Prompt tokens:
 **Prefill**
 
 - Compute K and V for all three.
-- Store them in the locker.
+- Store them in the cache.
 - Predict first output, say `on`.
 
 **Decode step for `on`**
@@ -242,9 +232,9 @@ mix = softmax(scores) · V
 next_token = pick_from(mix)
 ```
 
-Then append again for the next word. Same dance until the answer ends.
+Then append again for the next token. Same dance until the answer ends.
 
-When the reply is finished, that chat’s locker can be **freed**. It is request memory, not a forever database.
+When the reply is finished, that chat’s cache can be **freed**. It is request memory, not a forever database.
 
 ---
 
@@ -252,29 +242,29 @@ When the reply is finished, that chat’s locker can be **freed**. It is request
 
 - KV cache is an **inference** trick. Training has a different story.
 - Caching K/V does **not** remove attention over history. It removes **recomputing** old K/V.
-- Longer context still costs more memory and more locker reads.
+- Longer context still costs more memory and more cache reads.
 - Prefix cache hits need **exact** matching token prefixes. One space change can miss.
 - Example GB figures in articles depend on model size, GQA, precision, and length. Do not treat them as a promise for your laptop.
 
 ---
 
-## Grown-up names (tiny box)
+## Terms used in this post
 
-| Kid word | Grown-up name |
+| Term | Meaning |
 | --- | --- |
-| Word piece | **token** |
-| Looking-for sticky | **query (Q)** |
-| Label sticky | **key (K)** |
-| Info sticky | **value (V)** |
-| Locker of past K/V | **KV cache** |
-| Fast GPU shelf | **VRAM** / **HBM** |
-| Read the prompt once | **prefill** |
-| Drip one output word | **decode** |
-| Wait before first letter | **TTFT** (time to first token) |
-| Gap between letters | **ITL** / inter-token latency |
-| Share KV across query heads | **MQA / GQA** |
-| Rent locker pages | **PagedAttention** |
-| Reuse shared openings | **prefix caching** |
+| **token** | Word piece the model reads or writes |
+| **query (Q)** | “What am I looking for?” |
+| **key (K)** | “What label do I wear?” |
+| **value (V)** | “What info do I carry?” |
+| **KV cache** | Stored past K and V |
+| **VRAM** / **HBM** | Fast GPU memory |
+| **prefill** | Read the prompt once and fill the cache |
+| **decode** | Emit one output token at a time |
+| **TTFT** | Time to first token |
+| **ITL** | Inter-token latency — gap between tokens |
+| **MQA / GQA** | Share KV across query heads |
+| **PagedAttention** | Allocate cache pages on demand |
+| **prefix caching** | Reuse a shared prompt prefix |
 
 ---
 
@@ -288,6 +278,6 @@ Public explainers we used while writing (mechanics, not our measurements):
 
 ---
 
-## Say this back
+## In short
 
-**A chatbot answers one word at a time. It keeps past Keys and Values in a locker so it does not rebuild every old sticky for every new word. Fresh Queries still ask the whole locker. That makes streaming fast — and makes long chats hungry for GPU memory.**
+**A chatbot answers one token at a time. It keeps past Keys and Values in a cache so it does not rebuild every old K and V for every new token. Fresh Queries still ask the whole cache. That makes streaming fast — and makes long chats hungry for GPU memory.**
