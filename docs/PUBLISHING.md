@@ -50,6 +50,13 @@ you copy.
 
 Do not copy unused screenshots from the private draft folder.
 
+**Writing voice**
+
+Follow [`.cursor/rules/vijay-writing-style.mdc`](../.cursor/rules/vijay-writing-style.mdc).
+Simple, clear, experienced-developer English (not childish). Keep GIFs,
+bullets, tables, and structure. Never cite Instagram, LinkedIn, or similar
+social posts as sources.
+
 ## Workflow
 
 1. Draft and revise in private `vj-blogs`. Iterate there until the piece is
@@ -83,7 +90,7 @@ A post is approved when you can tick every box:
 - [ ] No secrets, tokens, private URLs, or unpublished credentials
 - [ ] No names, metrics, or incidents that should stay internal
 - [ ] Images that ship with the post are the only images copied
-- [ ] Tone is engineer-to-engineer: specific, useful, not a dump of notes
+- [ ] Tone matches Vijay's writing voice: simple, clear, experienced-developer English (not childish); GIFs/structure kept; no Instagram/LinkedIn citations. See [`.cursor/rules/vijay-writing-style.mdc`](../.cursor/rules/vijay-writing-style.mdc)
 - [ ] This is a single post (plus its assets), not a folder of related drafts
 
 ## Template
