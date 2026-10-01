@@ -7,56 +7,52 @@ excerpt: "Ask Postgres for its plan. Read the tree from the inside. JOINs, Index
 card_image: /assets/images/postgres-explain/01-ask-for-the-plan.gif
 ---
 
-Your question to the database feels **slow**.
+Your query feels **slow**.
 
-Maybe it is looking for one kid’s lunch order. Maybe it is counting every order in the school.
+Maybe it is looking up one order. Maybe it is scanning a large table.
 
 Do **not** guess.
 
-Do not add a sticky note on every shelf “just in case.”
+Do not add an index on every column “just in case.”
 
 **Ask Postgres for its plan.**
 
 ```mermaid
 flowchart LR
-  A[Question feels slow] --> B[Ask for the plan]
+  A[Query feels slow] --> B[Ask for the plan]
   B --> C[Read the tree]
   C --> D[Watch the times]
 ```
 
-That is the whole trick. The rest of this post is a homework plan, two piles that glue together, a library, a table of contents, and some sticky notes.
+That is the whole idea. The rest of this post is EXPLAIN vs ANALYZE, how JOINs work, how to read a plan tree, scan types, and a few numbers that actually matter.
 
 ---
 
 ## Show me your plan
 
-Postgres is like a kid with a big homework packet.
-
 You can say:
 
-> “Show me your plan **before** you start.”
+> Show me your plan **before** you start.
 
 That is **EXPLAIN**.
 
-Postgres writes the steps. It does **not** do the homework yet.
+Postgres writes the steps. It does **not** run the query yet.
 
 You can also say:
 
-> “Do the homework. Then write how long each step took.”
+> Run the query. Then write how long each step took.
 
 That is **EXPLAIN ANALYZE**.
 
-Now Postgres **really runs** the question. Then it writes the real times.
+Now Postgres **really runs** the query. Then it writes the real times.
 
 ![Ask Postgres for the plan instead of guessing]({{ '/assets/images/postgres-explain/01-ask-for-the-plan.gif' | relative_url }})
 
-Say it out loud:
-
-> “EXPLAIN is the plan. EXPLAIN ANALYZE is the plan **plus** the stopwatch.”
+EXPLAIN is the plan. EXPLAIN ANALYZE is the plan **plus** the stopwatch.
 
 There is a third ask.
 
-> “Do the homework. Write the times. And tell me which library pages were **already on the desk**, and which ones you fetched from the **back room**.”
+> Run the query. Write the times. And tell me which pages were **already in memory**, and which ones you fetched from **disk**.
 
 That is **EXPLAIN (ANALYZE, BUFFERS)**.
 
@@ -64,11 +60,11 @@ You get the plan, the stopwatch, **and** the page-fetch story.
 
 **Careful.** ANALYZE does the work.
 
-If the question only **reads**, it still has to walk the library. That can be slow. It can also lock some shelves for a bit.
+If the query only **reads**, it still has to walk the table. That can be slow. It can also take locks for a bit.
 
-If the question **changes** things — “throw away these orders” — ANALYZE will **really throw them away**.
+If the query **changes** things — `DELETE`, `UPDATE` — ANALYZE will **really change the rows**.
 
-For this post, we only **look**. We do not throw things away.
+For this post, we only **look**. We do not change data.
 
 ```sql
 EXPLAIN
@@ -91,19 +87,19 @@ FROM orders
 WHERE user_id = 42;
 ```
 
-The first one is the treasure map.  
-The second one is walking the map **and** writing the times.  
-The third one also counts pages already on the desk versus pages fetched from the back room.
+The first one is the plan.  
+The second one is walking the plan **and** writing the times.  
+The third one also counts pages already in memory versus pages fetched from disk.
 
 ---
 
-## How two piles meet
+## How two tables meet
 
-Sometimes the question needs **two** shelves.
+Sometimes the query needs **two** tables.
 
 `shops` on the left. `orders` on the right. They match on `shop_id`.
 
-A **JOIN** is the glue.
+A **JOIN** is how they combine.
 
 When you JOIN, the plan tree grows a **join node**. Often **Nested Loop**, **Hash Join**, or **Merge Join**. That node combines the two child scans.
 
@@ -116,12 +112,10 @@ LEFT-ONLY   shops with no order
 RIGHT       all orders + matches
 RIGHT-ONLY  orders with no shop
 FULL        everyone
-FULL-ONLY   lonely piles only
+FULL-ONLY   unmatched rows only
 ```
 
-Say it out loud:
-
-> “Pink is who stays in the answer.”
+In the GIF, pink is the set of rows you keep.
 
 ### Inner — only matching keys
 
@@ -131,7 +125,7 @@ FROM shops AS s
 INNER JOIN orders AS o ON o.shop_id = s.id;
 ```
 
-Keep a pair only when both piles share a key. Lonely shops and lonely orders stay home.
+Keep a pair only when both tables share a key. Unmatched shops and unmatched orders stay out.
 
 ### Left — every shop
 
@@ -141,7 +135,7 @@ FROM shops AS s
 LEFT JOIN orders AS o ON o.shop_id = s.id;
 ```
 
-Keep every shop. A matching order glues on. No order? The shop still sits there with an empty seat.
+Keep every shop. A matching order joins on. No order? The shop still sits there with NULLs on the order side.
 
 ### Left-only — shops with no order
 
@@ -152,7 +146,7 @@ LEFT JOIN orders AS o ON o.shop_id = s.id
 WHERE o.id IS NULL;
 ```
 
-Keep shops whose order seat is empty. The empty seat **is** the point.
+Keep shops whose order side is NULL. The empty side **is** the point.
 
 ### Right — every order
 
@@ -162,7 +156,7 @@ FROM shops AS s
 RIGHT JOIN orders AS o ON o.shop_id = s.id;
 ```
 
-Keep every order. A matching shop glues on. No shop? The order still sits there with an empty shop seat.
+Keep every order. A matching shop joins on. No shop? The order still sits there with NULLs on the shop side.
 
 ### Right-only — orders with no shop
 
@@ -173,7 +167,7 @@ RIGHT JOIN orders AS o ON o.shop_id = s.id
 WHERE s.id IS NULL;
 ```
 
-Keep orders whose shop seat is empty. Lost tickets. No shop card.
+Keep orders whose shop side is NULL. Orphan orders. No matching shop.
 
 ### Full — everyone
 
@@ -183,9 +177,9 @@ FROM shops AS s
 FULL OUTER JOIN orders AS o ON o.shop_id = s.id;
 ```
 
-Keep every shop and every order. Matches glue. Lonely ones still sit with empty seats.
+Keep every shop and every order. Matches join. Unmatched rows still sit with NULLs.
 
-### Full-only — lonely piles
+### Full-only — unmatched rows
 
 ```sql
 SELECT s.name, o.id
@@ -194,9 +188,9 @@ FULL OUTER JOIN orders AS o ON o.shop_id = s.id
 WHERE s.id IS NULL OR o.id IS NULL;
 ```
 
-Throw the glued pairs away. Keep only the lonely shops and the lonely orders.
+Drop the matched pairs. Keep only the unmatched shops and the unmatched orders.
 
-The join **shape** is your question. The join **node** is how Postgres does the glue. Look at that node in the tree next.
+The join **shape** is your question. The join **node** is how Postgres does the work. Look at that node in the tree next.
 
 ---
 
@@ -208,11 +202,11 @@ It is a **tree**.
 
 Big step on top. Little steps tucked under it.
 
-The little steps fetch the books. The big step puts the books together.
+The little steps fetch the rows. The big step combines them.
 
 **Start from the inside.** Start from the **bottom**.
 
-That is where Postgres first touches the shelves.
+That is where Postgres first touches the tables.
 
 ![Read the plan tree from the inner, bottom steps]({{ '/assets/images/postgres-explain/03-read-the-tree-bottom-up.gif' | relative_url }})
 
@@ -220,16 +214,16 @@ That is where Postgres first touches the shelves.
 
 ```mermaid
 flowchart TB
-  L[Look up orders] --> J[Put the piles together]
+  L[Look up orders] --> J[Join]
   U[Look up users] --> J
-  J --> T[Hand back the answer]
+  J --> T[Return rows]
 ```
 
 Read it like this:
 
 1. What did it do on `orders`?
 2. What did it do on `users`?
-3. How did it join those piles? That middle box is the **join node**.
+3. How did it join those tables? That middle box is the **join node**.
 4. Then look at the top. A **Limit** can sit there: “stop when you have one yes.”
 
 Each box is a **node**. A node is one job.
@@ -240,45 +234,45 @@ Look at the **name** of the job first. Then look at the numbers.
 
 ## How it looks things up
 
-A table is a library shelf. Each page is a chunk of the book.
+A table is stored in pages. Each page is a chunk of rows.
 
 ### Read every page
 
-**Seq Scan** means: walk the **whole** shelf.
+**Seq Scan** means: walk the **whole** table.
 
-Every page. Every order. Then keep the ones that match.
+Every page. Every row. Then keep the ones that match.
 
-That is fine for a tiny class list.
+That is fine for a small table.
 
-That is a long walk for a huge library when you only want **one** kid.
+That is a long walk for a huge table when you only want **one** row.
 
-### Use the table of contents
+### Use an index
 
-An **index** is the table of contents.
+An **index** is a lookup structure.
 
 “`user_id` 42 lives on these pages.”
 
-**Index Scan** means: check the table of contents. Then walk to those pages.
+**Index Scan** means: check the index. Then fetch those heap pages.
 
-**Index Only Scan** is even shorter. The answer is already on the card. You do not walk to the shelf.
+**Index Only Scan** is even shorter. The answer is already in the index. You do not visit the heap.
 
-![Read every page versus using the table of contents]({{ '/assets/images/postgres-explain/02-read-every-page-vs-index.gif' | relative_url }})
+![Read every page versus using an index]({{ '/assets/images/postgres-explain/02-read-every-page-vs-index.gif' | relative_url }})
 
-### Sticky notes, then one trip
+### Collect page numbers, then one trip
 
-Sometimes many kids match. The table of contents lists lots of page numbers.
+Sometimes many rows match. The index lists lots of page numbers.
 
-**Bitmap Heap Scan** means: write the page numbers on sticky notes. Sort the notes. Then visit each page **once**.
+**Bitmap Heap Scan** means: collect the page numbers. Sort them. Then visit each page **once**.
 
-You do not run back to the same aisle ten times.
+You do not run back to the same page ten times.
 
-Sticky notes first. Then one trip.
+Bitmap first. Then one pass over the heap.
 
-| Kid thing | What Postgres did |
+| What you see | What Postgres did |
 | --- | --- |
-| Walk every shelf | **Seq Scan** |
-| Table of contents, then the page | **Index Scan** |
-| Answer already on the card | **Index Only Scan** |
+| Walk every page | **Seq Scan** |
+| Index, then the heap | **Index Scan** |
+| Answer already in the index | **Index Only Scan** |
 | Collect page numbers, then fetch | **Bitmap Heap Scan** |
 
 ---
@@ -306,13 +300,13 @@ After ANALYZE, `rows=3` on the **actual** line is the **truth**.
 
 If the guess said 3 and the truth was 30,000, raise a flag.
 
-The treasure map was wrong. The walk may be the wrong walk.
+The estimate was wrong. The plan may be the wrong plan.
 
 ### Cost
 
 **Cost** is “how hard it looks on paper.”
 
-It is not seconds. It is Postgres comparing two homework plans.
+It is not seconds. It is Postgres comparing two plans.
 
 The first number is **startup** cost. Work before the first answer row.
 
@@ -334,21 +328,19 @@ If you only needed the first ten answers, startup matters a lot.
 
 **Loops** means: “I did this step again and again.”
 
-Like the same homework page, once for every friend in the group.
+Same inner scan, once for every outer row.
 
 The time on the line is **per loop**.
 
 So 2 ms × 10,000 loops is a long day.
 
-Say it out loud:
-
-> “Guessed rows. Real rows. Paper cost. Real time. How many times.”
+Guessed rows. Real rows. Paper cost. Real time. How many times.
 
 ---
 
-## Sticky notes that help
+## Indexes that help
 
-An index is a useful sticky note.
+An index is useful when the plan actually uses it.
 
 You can tell it was used when the node says **Index Scan**, **Index Only Scan**, or **Bitmap Index Scan**.
 
@@ -357,17 +349,17 @@ You can often see the name: `orders_user_id_idx`.
 This is the missing-index flag:
 
 - big table
-- you wanted **one** kid, or a few kids
+- you wanted **one** row, or a few rows
 - the plan says **Seq Scan**
 - then a **Filter** throws almost everyone away
 
-That is “read the whole library, then keep one book.”
+That is “read the whole table, then keep one row.”
 
-Do **not** put a sticky note on every word in every book.
+Do **not** put an index on every column.
 
-Every new order must update those notes. Writes get slower. Unused notes waste space.
+Every new write must update those indexes. Writes get slower. Unused indexes waste space.
 
-Add an index when a real plan shows a long walk you can skip. Then ask for the plan **again**.
+Add an index when a real plan shows a long scan you can skip. Then ask for the plan **again**.
 
 ```sql
 CREATE INDEX orders_user_id_idx ON orders (user_id);
@@ -386,19 +378,19 @@ Do not only look at the last line.
 
 Find the node with the big **actual time**.
 
-That is the slow aisle.
+That is the slow step.
 
-**Startup** is “time until the first paper lands on your desk.”
+**Startup** is time until the first row comes out.
 
-**Total** is “time until the whole packet is done.”
+**Total** is time until the whole job is done.
 
-A sort can sit there a long time before the first row comes out. The pile has to be lined up first.
+A sort can sit there a long time before the first row comes out. The pile has to be ordered first.
 
-A scan can drip rows out early. Startup is small. Total still grows if the shelf is long.
+A scan can drip rows out early. Startup is small. Total still grows if the table is long.
 
 Ask:
 
-> “Which box ate the clock? Was it waiting to start, or working the whole time?”
+> Which node ate the clock? Was it waiting to start, or working the whole time?
 
 ---
 
@@ -409,15 +401,15 @@ Ask:
 Check this list. One flag is a clue. Two flags is a loud clue.
 
 - **Seq Scan on a large table** when you expected a lookup. “Find user 42” should not read every page.
-- **Huge gap** between guessed rows and real rows. The map was wrong, so the walk may be wrong.
+- **Huge gap** between guessed rows and real rows. The estimate was wrong, so the plan may be wrong.
 - **Many loops** on a node that is already slow. Same hard step, thousands of times.
-- **Sort or Hash ran out of memory desk space.** The pile did not fit on the desk. Postgres stacked boxes on the floor. That extra shuffle is slow.
-- **Filter** that throws away almost every row **after** a wide scan. It already walked the whole shelf. Then it said “nope” to nearly everyone.
-- **Many Rows Removed by Filter** after an **Index Scan** already found candidates. The table of contents did its job. Then a later rule threw the books away. The walk already happened. Try to push that rule into **Index Cond** — a better index, or a simpler question.
+- **Sort or Hash ran out of work_mem.** The working set did not fit in memory. Postgres spilled to disk. That extra shuffle is slow.
+- **Filter** that throws away almost every row **after** a wide scan. It already walked the whole table. Then it said no to nearly everyone.
+- **Many Rows Removed by Filter** after an **Index Scan** already found candidates. The index did its job. Then a later rule threw the rows away. The fetch already happened. Try to push that rule into **Index Cond** — a better index, or a simpler query.
 
 A Seq Scan is **not** always bad. A tiny table? Read the whole thing. That can be the smart plan.
 
-The flag is when the shelf is huge and you only wanted a few books.
+The flag is when the table is huge and you only wanted a few rows.
 
 ---
 
@@ -435,7 +427,7 @@ JOIN orders AS o ON o.user_id = u.id
 WHERE u.id = 42;
 ```
 
-Same question, now with the stopwatch:
+Same query, now with the stopwatch:
 
 ```sql
 EXPLAIN ANALYZE
@@ -447,7 +439,7 @@ WHERE u.id = 42;
 
 Read the tree from the inside.
 
-Did `users` use the table of contents for `id = 42`?
+Did `users` use an index for `id = 42`?
 
 Did `orders` use an index on `user_id`?
 
@@ -461,13 +453,13 @@ Then look at guessed rows vs real rows. Then look at the times.
 
 The tiny example asked for names.
 
-This one only asks: **may this kid see this one order?**
+This one only asks: **may this shopper see this one order?**
 
 Yes or no. One row. Or no row.
 
-It looks like a small hall pass. The plan can still be a tall tree.
+It looks like a small check. The plan can still be a tall tree.
 
-Pretend a **toy shop**. Orders. Shops. Shoppers. Clubs. Shop helpers.
+Pretend a shop. Fake tables: orders, shops, shoppers, clubs, shop admins.
 
 Fake IDs. We only **look**.
 
@@ -501,11 +493,11 @@ WHERE o.id = 1001
 LIMIT 1;
 ```
 
-That question has three hall-pass rules. **Any one** yes is enough.
+That query has three permission rules. **Any one** yes is enough.
 
-1. The shop card says `open_late`.
+1. The shop settings say `open_late`.
 2. Or this shopper is in a club for that shop.
-3. Or shopper `7` is a helper at that shop.
+3. Or shopper `7` is an admin at that shop.
 
 `LIMIT 1` and `SELECT 1` mean: “I only need a yes.”
 
@@ -558,94 +550,94 @@ Execution Time: 0.468 ms
 
 ```mermaid
 flowchart TB
-  O[Find the order card] --> S[Find the shop card]
-  S --> F{Hall pass rules}
-  F -->|nope| X[Zero rows. Stop.]
-  F -->|yes| C[Then look up the shopper]
+  O[Find the order] --> S[Find the shop]
+  S --> F{Permission rules}
+  F -->|fail| X[Zero rows. Stop.]
+  F -->|pass| C[Then look up the shopper]
 ```
 
 Read it from the **inside**.
 
-### The table of contents vs the later rule
+### Index Cond vs the later Filter
 
-**Index Cond** is the jump in the table of contents.
+**Index Cond** is the lookup in the index.
 
-On `orders`, it jumped to id `1001`. That is the primary key. One card.
+On `orders`, it jumped to id `1001`. That is the primary key. One row.
 
 On `shops`, it jumped with **two** clues: shop id **and** region `42`.
 
 Look at the index name: `shops_id_region_deleted_at`.
 
-That is one sticky note with more than one word. A **composite** index. It helped the join **and** the region rule.
+That is one index with more than one column. A **composite** index. It helped the join **and** the region rule.
 
-**Filter** is the later rule. It runs **after** the table of contents already found a candidate.
+**Filter** is the later rule. It runs **after** the index already found a candidate.
 
-Here the Filter is the hall pass: `open_late` **or** club **or** helper.
+Here the Filter is the permission check: `open_late` **or** club **or** admin.
 
-`Rows Removed by Filter: 1` means: the index **did** find a shop. Then the hall pass said **no**.
+`Rows Removed by Filter: 1` means: the index **did** find a shop. Then the permission check said **no**.
 
-The walk to that shop already happened. Then the book went back on the shelf.
+The fetch of that shop already happened. Then the row was dropped.
 
-If you see **lots** of rows removed this way, the expensive work happened **before** the Filter. Try to push that rule into **Index Cond** — a better index, or a simpler question.
+If you see **lots** of rows removed this way, the expensive work happened **before** the Filter. Try to push that rule into **Index Cond** — a better index, or a simpler query.
 
-### Side quests under the Filter
+### Side queries under the Filter
 
 Those `EXISTS` checks show up as **SubPlan 1** and **SubPlan 3**.
 
-A SubPlan is a side quest. “Quick. Check the club shelf. Check the helper shelf.”
+A SubPlan is a nested query. “Check the club table. Check the admin table.”
 
-Because the rules are joined with **OR**, Postgres may run those side quests for **each** shop card that reaches the Filter.
+Because the rules are joined with **OR**, Postgres may run those SubPlans for **each** shop row that reaches the Filter.
 
-SubPlan 1 is a **Hash Join**. It takes an **Index Scan** on `club_members` and an **Index Only Scan** on `clubs`. Two little piles. Then it matches club ids.
+SubPlan 1 is a **Hash Join**. It takes an **Index Scan** on `club_members` and an **Index Only Scan** on `clubs`. Two small inputs. Then it matches club ids.
 
-SubPlan 3 is shorter. One **Index Only Scan** on `shop_admins`. The helper list used a two-word table of contents: shop id plus shopper `7`.
+SubPlan 3 is shorter. One **Index Only Scan** on `shop_admins`. The admin lookup used a two-column index: shop id plus shopper `7`.
 
-**Index Only Scan** means the answer was already on the card.
+**Index Only Scan** means the answer was already in the index.
 
-`Heap Fetches: 0` means: it did **not** walk to the book. Zero trips to the shelf. That is the good kind of lazy.
+`Heap Fetches: 0` means: it did **not** visit the heap. Zero heap trips. That is the cheap kind.
 
-### For each outer row, knock on the inner door
+### For each outer row, probe the inner side
 
 See the two **Nested Loop** boxes stacked up?
 
-That is the **join node** from the two-piles section. A Nested Loop means: **for each** row from the outer step, probe the inner step.
+That is the **join node** from the two-tables section. A Nested Loop means: **for each** row from the outer step, probe the inner step.
 
 1. Outer: find order `1001`. One row.
 2. Inner: use that order’s shop id. Probe `shops`.
 3. That Nested Loop feeds another Nested Loop. The next probe would be `shoppers`.
 
-One kid. Then that kid’s shop. Then that shop’s shopper.
+One order. Then that order’s shop. Then that shop’s shopper.
 
-It is not “dump both shelves on the floor and mix.” It is knock, knock, knock.
+It is not “dump both tables and mix.” It is probe, probe, probe.
 
-### A door it never knocked on
+### A join it never ran
 
 The last line says **Index Scan** on `shoppers`… `(never executed)`.
 
 Do **not** panic.
 
-The shop step already returned **zero** rows. The hall pass failed. So Postgres skipped the shopper door.
+The shop step already returned **zero** rows. The permission check failed. So Postgres skipped the shopper lookup.
 
-That is a short-circuit. Like the teacher saying “no” on page one, so you do not open page two.
+That is a short-circuit. An earlier step already finished the story, so the later join never ran.
 
-A node that never ran is often a clue that an earlier step already finished the story.
+A node that never ran is often a clue that an earlier step already decided.
 
-### Pages on the desk vs the back room
+### Pages in memory vs disk
 
 `Buffers: shared hit=18 read=4` is the page-fetch story.
 
-- **shared hit** = that library page was **already on the desk** (in memory).
-- **shared read** = Postgres had to walk to the **back room** (disk).
+- **shared hit** = that page was **already in memory** (shared buffers).
+- **shared read** = Postgres had to fetch it from **disk**.
 
-`I/O Timings: shared read=0.186` is how long the back-room trip took.
+`I/O Timings: shared read=0.186` is how long the disk reads took.
 
-Hits are cheap. Reads can be slow. A tiny question can still wait on the back room.
+Hits are cheap. Reads can be slow. A tiny query can still wait on disk.
 
-### Zero books, but you still learned
+### Zero rows, but you still learned
 
 The plan guessed `rows=1`. “Maybe a yes.”
 
-The truth was `actual rows=0`. The hall pass failed.
+The truth was `actual rows=0`. The permission check failed.
 
 You can still see **where** the row died: **Rows Removed by Filter: 1** on `shops`.
 
@@ -656,49 +648,47 @@ Now look at the last two lines.
 **Planning Time: 1.842 ms.**  
 **Execution Time: 0.468 ms.**
 
-Thinking up the homework plan took **longer** than doing it.
+Planning the query took **longer** than running it.
 
-That can happen on a tiny question. The walk was short. Writing the treasure map was the slow part. Do not only stare at Execution Time.
+That can happen on a tiny query. The walk was short. Building the plan was the slow part. Do not only stare at Execution Time.
 
-Say it out loud:
-
-> “The table of contents found the shop. A later rule said no. Then Postgres stopped knocking on other doors.”
+The index found the shop. A later Filter said no. Then Postgres stopped probing other tables.
 
 ---
 
-## Grown-up names (tiny box)
+## Terms used in this post
 
-You do not need this to get the story. It is here so the robot talks make sense later.
+You do not need this table to follow the examples. It is only a quick lookup.
 
-| Kid word | Grown-up name |
+| Term | Meaning |
 | --- | --- |
-| Homework plan, no work yet | **EXPLAIN** |
-| Do the work and time it | **EXPLAIN ANALYZE** |
-| Plan, stopwatch, and page-fetch story | **EXPLAIN (ANALYZE, BUFFERS)** |
-| One job in the tree | **plan node** |
-| Walk every page | **Seq Scan** |
-| Table of contents, then the heap | **Index Scan** |
-| Answer already in the index | **Index Only Scan** |
-| Collect page numbers, then fetch | **Bitmap Index Scan** + **Bitmap Heap Scan** |
-| Jump in the table of contents | **Index Cond** |
-| Later rule, after a candidate is found | **Filter** |
-| Books the later rule threw away | **Rows Removed by Filter** |
-| Side quest (often an `EXISTS`) | **SubPlan** |
-| Page already on the desk / fetched from the back room | **Buffers** (`shared hit` / `shared read`) |
-| This door was skipped | **never executed** |
-| Glue two shelves | **JOIN** (inner / left / right / full) |
-| Empty-seat trick | **anti** (`WHERE` the other key `IS NULL`) |
-| Join node: knock per outer row | **Nested Loop** |
-| Join node: make a lookup pile | **Hash Join** |
-| Join node: walk two sorted piles | **Merge Join** |
-| Paper difficulty | **cost** (startup `..` total) |
-| Guessed pile size | **rows** (estimate) |
-| Stopwatch | **actual time** (ms, per loop) |
-| Repeat the same step | **loops** |
-| Desk overflow on a sort or hash | **external merge** / hash **batches** (work_mem) |
+| **EXPLAIN** | The plan, no work yet |
+| **EXPLAIN ANALYZE** | Run the query and time it |
+| **EXPLAIN (ANALYZE, BUFFERS)** | Plan, stopwatch, and page-fetch story |
+| **plan node** | One job in the tree |
+| **Seq Scan** | Read every page |
+| **Index Scan** | Index lookup, then the heap |
+| **Index Only Scan** | Answer already in the index |
+| **Bitmap Index Scan** + **Bitmap Heap Scan** | Collect page numbers, then fetch once |
+| **Index Cond** | Lookup condition used by the index |
+| **Filter** | Later rule, after a candidate is found |
+| **Rows Removed by Filter** | Rows the later rule threw away |
+| **SubPlan** | Nested query (often an `EXISTS`) |
+| **Buffers** | `shared hit` = in memory; `shared read` = from disk |
+| **never executed** | This node was skipped |
+| **JOIN** | Combine two tables (inner / left / right / full) |
+| **anti** | `WHERE` the other key `IS NULL` |
+| **Nested Loop** | For each outer row, probe the inner side |
+| **Hash Join** | Build a hash table, then probe it |
+| **Merge Join** | Walk two sorted inputs |
+| **cost** | Paper difficulty (startup `..` total) |
+| **rows** | Estimated row count |
+| **actual time** | Stopwatch (ms, per loop) |
+| **loops** | How many times this node ran |
+| **external merge** / hash **batches** | Disk spill when work_mem is too small |
 
 ---
 
-## Say this back
+## In short
 
-**Don't guess why it is slow. Ask for the plan. Read the tree from the inside. If two piles glue together, look at the join node. Check the table of contents. Watch the times. If a Filter throws a row away, look at Index Cond versus the later rule.**
+**Don't guess why it is slow. Ask for the plan. Read the tree from the inside. If two tables join, look at the join node. Check whether an index was used. Watch the times. If a Filter throws a row away, look at Index Cond versus the later rule.**
