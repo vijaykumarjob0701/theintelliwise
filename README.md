@@ -72,6 +72,14 @@ blank or shows a configuration error, an admin still needs to install
 the [giscus GitHub App](https://github.com/apps/giscus) on
 `vijaykumarjob0701/theintelliwise` and grant it access to Discussions.
 
+## Writing voice
+
+Agents editing posts or site copy should follow
+[`.cursor/rules/vijay-writing-style.mdc`](.cursor/rules/vijay-writing-style.mdc).
+Use simple, clear, experienced-developer English (not childish). Keep the
+usual GIFs, bullets, tables, and structure. Never cite Instagram, LinkedIn,
+or similar social posts as sources.
+
 ## Publish workflow (private → public)
 
 Full checklist: [`docs/PUBLISHING.md`](docs/PUBLISHING.md).
@@ -89,6 +97,7 @@ Short version:
 ## Repository layout
 
 ```text
+.cursor/rules/       Cursor agent rules (writing voice always on)
 _config.yml          Site title (The Intelliwise), author, baseurl
 _layouts/            Home, post, page, default
 _includes/           Head, header, footer, giscus, author links
