@@ -869,6 +869,20 @@ a:focus-visible,
   padding: 1rem 0;
 }
 
+.prose .math-display {
+  margin: 1.25rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.prose .katex {
+  font-size: 1.05em;
+}
+
+.prose .katex-display {
+  margin: 0.75rem 0;
+}
+
 .prose table {
   width: 100%;
   border-collapse: collapse;

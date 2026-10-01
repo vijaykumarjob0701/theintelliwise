@@ -11,9 +11,9 @@ This is the **open language recipe** box on the [lunch-box map]({{ '/posts/14-ai
 
 ## What problem it solves
 
-**Kid line:** a public cookbook for “big text brains,” not a magic spell.
+A published cookbook for large language models, not a magic spell.
 
-**Adult line:** by early 2023, the strongest language models lived behind APIs. Touvron et al. (Meta) showed a family of **decoder** Transformers — 7B, 13B, 33B, 65B in the first paper — trained mostly on **publicly available** text, competitive with much larger closed models on many academic tests. The point was *efficiency of the recipe*, not a new attention formula.
+By early 2023, the strongest language models lived behind APIs. Touvron et al. (Meta) showed a family of **decoder** Transformers — 7B, 13B, 33B, 65B in the first paper — trained mostly on **publicly available** text, competitive with much larger closed models on many academic tests. The point was *efficiency of the recipe*, not a new attention formula.
 
 | What LLaMA is | What LLaMA is not |
 | --- | --- |
@@ -40,7 +40,7 @@ flowchart TB
   W --> S[other kitchens copy the loaf]
 ```
 
-**Tiny picture:** flour, water, oven time. Other kitchens copy the loaf shape and change the toppings ([InstructGPT]({{ '/posts/14-ai-papers-lunch-box-map/instructgpt/' | relative_url }})-style listening, [LoRA]({{ '/posts/14-ai-papers-lunch-box-map/lora/' | relative_url }}) sticky notes, [RAG]({{ '/posts/14-ai-papers-lunch-box-map/rag/' | relative_url }}) binders).
+**Simple picture:** flour, water, oven time. Other kitchens copy the loaf shape and change the toppings ([InstructGPT]({{ '/posts/14-ai-papers-lunch-box-map/instructgpt/' | relative_url }})-style listening, [LoRA]({{ '/posts/14-ai-papers-lunch-box-map/lora/' | relative_url }}) adapters, [RAG]({{ '/posts/14-ai-papers-lunch-box-map/rag/' | relative_url }}) binders).
 
 ## Why it mattered / what it unlocked
 

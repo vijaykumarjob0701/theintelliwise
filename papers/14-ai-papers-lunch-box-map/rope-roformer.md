@@ -1,7 +1,7 @@
 ---
 layout: paper-note
 title: "RoPE / RoFormer — longer guide"
-lede: "How a transformer learns seat numbers by rotating number arrows, not by stapling on a separate tag."
+lede: "How a transformer learns position by rotating query and key vectors, not by stapling on a separate tag."
 permalink: /posts/14-ai-papers-lunch-box-map/rope-roformer/
 sitemap: false
 robots: noindex
@@ -11,9 +11,9 @@ This is the **“where am I in the line?”** box on the [lunch-box map]({{ '/po
 
 ## What problem it solves
 
-**Kid line:** the engine can see *who* is in the room, but not *who sat where*, unless you tell it.
+The engine can see *who* is in the room, but not *who sat where*, unless you tell it.
 
-**Adult line:** self-attention is permutation-sensitive only if you inject position. Absolute “add a seat vector” works, but relative distance (“token *i* vs token *j*”) is what language and code actually need. **RoPE** (Rotary Position Embedding), from Su et al.’s **RoFormer** paper, bakes *relative* position into the Q/K product by rotating pairs of dimensions as a function of index.
+Self-attention is permutation-sensitive only if you inject position. Absolute “add a seat vector” works, but relative distance (token *i* vs token *j*) is what language and code actually need. **RoPE** (Rotary Position Embedding), from Su et al.’s **RoFormer** paper, bakes *relative* position into the Q/K product by rotating pairs of dimensions as a function of index.
 
 | Habit | What it does | Felt limit |
 | --- | --- | --- |
@@ -39,9 +39,9 @@ flowchart LR
 
 You do not attach a sticker that says “I am seat 7.” The rotation *is* the seat.
 
-**Tiny picture:** two kids on a spinning playground. How much one has spun relative to the other *is* how far apart they sit.
+**Simple picture:** two people on a spinning ride. How much one has turned relative to the other *is* how far apart they sit.
 
-No extra GIF on the tray is RoPE-specific. The attention classroom GIF still holds: this page is only about *seat numbers* inside those looks.
+No extra GIF on the tray is RoPE-specific. The attention GIF still holds: this page is only about *seat numbers* inside those looks.
 
 ## Why it mattered / what it unlocked
 

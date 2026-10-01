@@ -47,6 +47,7 @@ kramdown:
   input: GFM
   hard_wrap: false
   syntax_highlighter: rouge
+  math_engine: mathjax
 
 highlighter: rouge
 sass:
@@ -96,3 +97,4 @@ defaults:
       sitemap: false
       robots: noindex
       author: Vijay Kumar
+      math: true

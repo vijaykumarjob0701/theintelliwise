@@ -11,9 +11,9 @@ This is the **look it up first** box on the [lunch-box map]({{ '/posts/14-ai-pap
 
 ## What problem it solves
 
-**Kid line:** open the binder before you raise your hand.
+Open the binder before you answer.
 
-**Adult line:** a closed-book LM must store facts in weights. Facts go stale. The model invents a confident policy. **Retrieval-Augmented Generation** keeps a **non-parametric** memory (an index of passages you can update) and a **parametric** memory (the generator). At question time you fetch, then condition generation on what you fetched.
+A closed-book LM must store facts in weights. Facts go stale. The model invents a confident policy. **Retrieval-Augmented Generation** keeps a **non-parametric** memory (an index of passages you can update) and a **parametric** memory (the generator). At question time you fetch, then condition generation on what you fetched.
 
 | Closed book | RAG |
 | --- | --- |
@@ -41,7 +41,7 @@ flowchart LR
 
 ![Fetch notes, then answer]({{ '/assets/images/14-ai-papers-lunch-box-map/06-rag.gif' | relative_url }})
 
-**Tiny picture:** open-book test. Grab three photocopies from the binder, then write. Closed-book is hoping you memorised the binder.
+**Simple picture:** open-book test. Grab three photocopies from the binder, then write. Closed-book is hoping you memorised the binder.
 
 **What “RAG” means in a shipping app (same sandwich, different bread):**
 

@@ -11,9 +11,9 @@ This is half of the **“teach it to listen”** box on the [lunch-box map]({{ '
 
 ## What problem it solves
 
-**Kid line:** a raw model can babble. People want it to **do what they asked**, politely.
+A raw model can ramble. People want it to **do what they asked**, in a useful way.
 
-**Adult line:** a pretrained LM is a next-token engine. It will complete “how to build a bomb” or a rude rant if that looks likely. Ouyang et al. (2022) start from GPT-3 and add a three-step alignment loop so the model **follows instructions** on a held-out prompt set — often so well that a **1.3B InstructGPT beats 175B GPT-3** in human preference. Size is not the same as “does what I asked.”
+A pretrained LM is a next-token engine. It will complete “how to build a bomb” or a rude rant if that looks likely. Ouyang et al. (2022) start from GPT-3 and add a three-step alignment loop so the model **follows instructions** on a held-out prompt set — often so well that a **1.3B InstructGPT beats 175B GPT-3** in human preference. Size is not the same as “does what I asked.”
 
 | Symptom of a raw LM | What this paper aims at |
 | --- | --- |
@@ -37,13 +37,13 @@ flowchart LR
 
 ![Humans score answers; the model learns taste]({{ '/assets/images/14-ai-papers-lunch-box-map/04-instruct-rlhf.gif' | relative_url }})
 
-**Tiny picture:** a student first copies marked homework. Then a teacher points at two essays: “this one, not that one.” The student practises toward the finger, not toward a written rulebook.
+**Simple picture:** a junior first copies marked homework. Then a reviewer points at two answers: “this one, not that one.” The junior practises toward the finger, not toward a written rulebook.
 
-**What they measured.** Labelers preferred InstructGPT to GPT-3 on their prompt distribution. The paper also talks about truthfulness and toxicity — better, not solved. Public NLP benchmarks were **not** the main trophy; some even moved a little the wrong way. That is a feature of the story: the objective was *human preference on instructions*, not GLUE.
+**What they measured.** Labelers preferred InstructGPT to GPT-3 on their prompt distribution. The paper also talks about truthfulness and toxicity — better, not solved. Public NLP benchmarks were **not** the main trophy; some even moved a little the wrong way. That is part of the story: the objective was *human preference on instructions*, not GLUE.
 
 ## Why it mattered / what it unlocked
 
-- **This is why chat UIs feel like products.** “Write a polite email” is an instruction. Raw completion is a different sport.
+- **This is why chat UIs feel like products.** “Write a polite email” is an instruction. Raw completion is a different job.
 - **The three-step skeleton leaked.** Later “helpful assistant” models reuse SFT → preference → RL (or a simpler preference loss). Extra tricks change; the skeleton stays.
 - **Preference is someone’s taste.** Labelers were contractors following a guide. “Aligned” here means *aligned to that guide and those ranks*, not to a universal moral law.
 - **Honesty about data.** The preference ranks and demo answers are **not** a public dump. Do not chase an “InstructGPT dataset.zip.” The paper is the artefact.

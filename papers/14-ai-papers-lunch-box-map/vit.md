@@ -1,7 +1,7 @@
 ---
 layout: paper-note
 title: "ViT — longer guide"
-lede: "Cut a photo into stamp tiles, treat each tile like a word, run a transformer."
+lede: "Cut a photo into patches, treat each patch like a word, run a transformer."
 permalink: /posts/14-ai-papers-lunch-box-map/vit/
 sitemap: false
 robots: noindex
@@ -11,9 +11,9 @@ This is the **eyes** box on the [lunch-box map]({{ '/posts/14-ai-papers-lunch-bo
 
 ## What problem it solves
 
-**Kid line:** a photo becomes a comic strip of tiles, then attention reads the strip.
+A photo becomes a strip of tiles, then attention reads the strip.
 
-**Adult line:** computer vision spent a decade on convolutional backbones (local filters, hand-built inductive bias). Dosovitskiy et al. asked: if you have **enough labelled photos and compute**, can a nearly-plain Transformer match or beat those CNNs on image classification? **ViT** (Vision Transformer) says yes — especially when you pretrain big, then transfer.
+Computer vision spent a decade on convolutional backbones (local filters, hand-built inductive bias). Dosovitskiy et al. asked: if you have **enough labelled photos and compute**, can a nearly-plain Transformer match or beat those CNNs on image classification? **ViT** (Vision Transformer) says yes — especially when you pretrain big, then transfer.
 
 | Old habit | ViT habit |
 | --- | --- |
@@ -46,7 +46,7 @@ The tray GIF that sits on BERT also sits here: left-and-right looks, but the “
 
 ## Why it mattered / what it unlocked
 
-- **One primitive for pixels and words.** Multimodal stacks later mix patch tokens and text tokens in the same attention soup.
+- **One building block for pixels and words.** Multimodal stacks later mix patch tokens and text tokens in the same attention soup.
 - **“Eyes” without a CNN religion.** You can still use convolutions (many hybrids do). ViT made “maybe we don’t have to” a serious option.
 - **Transfer as the product move.** Same as BERT: heavy pretrain, thin specialise.
 - **It did not delete CNNs overnight.** Efficiency, small-data, and dense prediction (segmentation) kept convs and later hybrids in the race. Learn the box, then check the year.

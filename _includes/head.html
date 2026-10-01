@@ -9,6 +9,9 @@
   <meta name="robots" content="{{ page.robots }}">
   {% endif %}
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  {% if page.layout == 'paper-note' or page.math %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" crossorigin="anonymous">
+  {% endif %}
   <link rel="alternate" type="application/atom+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
   <link rel="icon" href="{{ '/assets/favicon.svg' | relative_url }}" type="image/svg+xml">
   <link rel="icon" href="{{ '/assets/favicon.png' | relative_url }}" type="image/png" sizes="32x32">

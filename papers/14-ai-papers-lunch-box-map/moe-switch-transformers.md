@@ -1,7 +1,7 @@
 ---
 layout: paper-note
 title: "MoE / Switch Transformers — longer guide"
-lede: "Many expert feed-forward brains; a router wakes only one (or a few) per token."
+lede: "Many expert feed-forward blocks; a router wakes only one (or a few) per token."
 permalink: /posts/14-ai-papers-lunch-box-map/moe-switch-transformers/
 sitemap: false
 robots: noindex
@@ -11,9 +11,9 @@ This is the **sparse giants** box on the [lunch-box map]({{ '/posts/14-ai-papers
 
 ## What problem it solves
 
-**Kid line:** a school with many teachers; only the right ones stand up.
+Many specialists; only the right ones stand up.
 
-**Adult line:** a dense Transformer uses **every** feed-forward weight for **every** token. That is quality, and it is expensive. An **MoE** replaces some dense MLPs with a roster of expert MLPs plus a **router**. You grow *parameter count* (capacity) faster than you grow *compute per token* — if routing stays healthy.
+A dense Transformer uses **every** feed-forward weight for **every** token. That is quality, and it is expensive. An **MoE** replaces some dense MLPs with a roster of expert MLPs plus a **router**. You grow *parameter count* (capacity) faster than you grow *compute per token* — if routing stays healthy.
 
 | Dense stack | MoE stack |
 | --- | --- |
@@ -38,7 +38,7 @@ flowchart LR
   R --> En[expert N]
 ```
 
-**Tiny picture:** a hospital with many specialists. The triage nurse sends you to *one* doctor. You do not convene the whole staff for a sore throat.
+**Simple picture:** a hospital with many specialists. The triage nurse sends you to *one* doctor. You do not call the whole staff for a sore throat.
 
 **Why Switch simplified the 2017 idea.** Shazeer et al. showed sparsely-gated experts can scale translation / LM quality. Top-*k* (k>1) means more communication between devices: each token may fly to two experts. Switch’s slogan is **route to one**, keep the quality, cut the comms. They train very large parameter counts on **C4** (the Colossal Clean Crawled Corpus defined in the T5 paper).
 
@@ -79,7 +79,7 @@ Open **Switch** when you want:
 
 Open **Shazeer 2017** when you want the original sparsely-gated MoE (noisy top-k, the first big “experts as a layer” picture).
 
-Skip both PDFs if you only needed “many teachers, few stand up.”
+Skip both PDFs if you only needed “many specialists, few wake up.”
 
 ## Links
 

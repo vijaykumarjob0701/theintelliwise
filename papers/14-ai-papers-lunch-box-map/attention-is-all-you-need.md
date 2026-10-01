@@ -7,23 +7,23 @@ sitemap: false
 robots: noindex
 ---
 
-This is the **engine room** on the [lunch-box map]({{ '/posts/14-ai-papers-lunch-box-map/' | relative_url }}). The map’s Quick easy read is the gist. This page is the next layer: enough idea that a busy engineer can *get* the Transformer without grinding the PDF.
+This is the **engine room** on the [lunch-box map]({{ '/posts/14-ai-papers-lunch-box-map/' | relative_url }}). The map’s Quick easy read is the gist. This page is the next layer: enough detail that a busy engineer can get the Transformer without grinding the PDF.
 
 ## What problem it solves
 
-**Kid line:** old models read words in a single-file line. This one lets every word glance at every other word at the same time.
+Old models read words in a single-file line. This one lets every word look at every other word at the same time.
 
-**Adult line:** recurrent nets (and the “one step, then the next” habit) were hard to train on long sentences and wasted GPU parallelism. Vaswani et al. (2017) showed a stack of **self-attention** plus small feed-forward layers could beat those pipelines on translation — and the same stack later became the default for chat, code, and pictures.
+Recurrent nets (and the “one step, then the next” habit) were hard to train on long sentences and wasted GPU parallelism. Vaswani et al. (2017) showed a stack of **self-attention** plus small feed-forward layers could beat those pipelines on translation. The same stack later became the default for chat, code, and pictures.
 
 | Before | After this paper |
 | --- | --- |
 | Hidden state walks left → right | Every token attends to every token in one shot |
-| Hard to parallelise across the sentence | GPUs love the big matrix multiplies |
+| Hard to parallelise across the sentence | GPUs like the big matrix multiplies |
 | Separate tricks for “who is who” | Attention *is* the alignment |
 
 ## How the idea works
 
-Think of each word as a kid in a classroom who can look around.
+Think of each word as a person in a meeting who can look around.
 
 1. **Turn words into numbers.** Each token becomes a vector (a short list of numbers).
 2. **Ask, look, answer.** For each token, the model builds three views of that vector:
@@ -34,6 +34,14 @@ Think of each word as a kid in a classroom who can look around.
 4. **Mix the values.** The token’s new meaning is a weighted mix of the values it listened to.
 5. **Many heads.** Several of these looks run in parallel (grammar vs topic vs punctuation). Then a small feed-forward net cleans the mix.
 6. **Stack.** Repeat. Early layers catch local glue. Later layers catch “this whole sentence is about a loan.”
+
+Put all of that into one line and you get **scaled dot-product attention**:
+
+<div class="math-display">
+\[\mathrm{Attention}(Q,K,V)=\mathrm{softmax}\left(\frac{QK^{T}}{\sqrt{d_k}}\right)V\]
+</div>
+
+**Why divide by √d<sub>k</sub>?** A key vector has d<sub>k</sub> dimensions. The raw dot product QKᵀ grows as that number grows. If you leave the scores raw, softmax gets too sharp — one token takes almost all the weight, the rest get ~0. Dividing by √d<sub>k</sub> keeps the scores in a friendlier range, so attention can still listen to more than one neighbour.
 
 ```mermaid
 flowchart LR
@@ -54,10 +62,10 @@ Two other pieces you will meet in every later paper:
 
 ## Why it mattered / what it unlocked
 
-- **Parallel training.** You can chew a whole sentence (or a whole batch) without waiting for token 17 before token 18.
+- **Parallel training.** You can process a whole sentence (or a whole batch) without waiting for token 17 before token 18.
 - **One engine, many jobs.** [BERT]({{ '/posts/14-ai-papers-lunch-box-map/bert/' | relative_url }}) reads both ways. GPT-style stacks write. [ViT]({{ '/posts/14-ai-papers-lunch-box-map/vit/' | relative_url }}) treats image patches as tokens. Same lunch box.
 - **The “if you only open one paper” paper.** Most of this tray is “Transformer + a new habit” (position, retrieval, adapters, experts).
-- **The cost you now feel.** Attention is \(O(n^2)\) in sequence length. That is why later work cares about context windows, [RoPE]({{ '/posts/14-ai-papers-lunch-box-map/rope-roformer/' | relative_url }}), and sparse tricks.
+- **The cost you now feel.** Attention is O(n²) in sequence length. That is why later work cares about context windows, [RoPE]({{ '/posts/14-ai-papers-lunch-box-map/rope-roformer/' | relative_url }}), and sparse tricks.
 
 The paper’s own test was **machine translation** on **WMT 2014** English–German and English–French news, not a chatbot. The chatbot era borrowed the engine.
 
@@ -65,7 +73,8 @@ The paper’s own test was **machine translation** on **WMT 2014** English–Ger
 
 - Self-attention = every token asks “who matters for me *right now*?” and mixes those answers.
 - Multi-head = several of those questions at once.
-- The stack + residuals is the Transformer; attention is the new primitive, not a side gadget.
+- Divide the scores by √d<sub>k</sub> so softmax does not collapse onto one token.
+- The stack + residuals is the Transformer; attention is the new building block, not a side gadget.
 - Position must be added somehow. The 2017 recipe is not the only recipe.
 - If a later paper feels mysterious, ask: “what did they change *around* this engine?”
 
@@ -73,7 +82,6 @@ The paper’s own test was **machine translation** on **WMT 2014** English–Ger
 
 Open the PDF when you want:
 
-- the exact Q/K/V scaled-dot-product formula and the “why divide by \(\sqrt{d_k}\)” note
 - encoder–decoder attention vs self-attention
 - the WMT setup, BLEU numbers, and the ablation table (how many heads, how deep)
 - the original sinusoidal position formula
