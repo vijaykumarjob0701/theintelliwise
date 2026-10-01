@@ -11,24 +11,30 @@ This is the **zip-and-unzip** half of the classic picture-makers box on the [lun
 
 ## What problem it solves
 
-**Kid line:** stuff a poster into a tiny envelope of numbers, then unpack it.
+Stuff a poster into a tiny envelope of numbers, then unpack it.
 
-**Adult line:** you want a **latent** — a small code you can sample from — plus a decoder that turns a code back into data. A plain autoencoder can reconstruct, but its code space may have holes (a random code unpacks to garbage). Kingma & Welling (2013/14), **Auto-Encoding Variational Bayes**, force the encoder to talk in a simple language (usually “looks like a standard bell curve”) so you can **draw new codes** and decode them.
+You want a **latent** — a small code you can sample from — plus a decoder that turns a code back into data. A plain autoencoder can reconstruct, but its code space may have holes (a random code unpacks to garbage). Kingma & Welling (2013/14), **Auto-Encoding Variational Bayes**, force the encoder to talk in a simple language (usually “looks like a standard bell curve”) so you can **draw new codes** and decode them.
 
 | Plain autoencoder | VAE |
 | --- | --- |
 | Encode → decode, rebuild well | Rebuild well **and** keep the code distribution simple |
-| Latent holes are common | You can sample \(z \sim \mathcal{N}(0,I)\) and decode |
+| Latent holes are common | You can sample z ~ N(0, I) and decode |
 | No official “how to sample” | A generative model with an ELBO objective |
 
 ## How the idea works
 
-1. **Encoder** \(q_\phi(z \mid x)\): map a picture \(x\) to a **cloud** — usually a mean and a variance per latent dimension, not one frozen point.
-2. **Sample** \(z\) from that cloud (the **reparameterisation trick**: \(z = \mu + \sigma \odot \varepsilon\), \(\varepsilon\) from a standard normal — so gradients flow through the sample).
-3. **Decoder** \(p_\theta(x \mid z)\): unpack \(z\) into a rebuilt picture.
+1. **Encoder** q<sub>φ</sub>(z given x): map a picture x to a **cloud** — usually a mean and a variance per latent dimension, not one frozen point.
+2. **Sample** z from that cloud with the **reparameterisation trick** (formula below).
+3. **Decoder** p<sub>θ</sub>(x given z): unpack z into a rebuilt picture.
 4. **Train with two pressures:**
    - rebuild (reconstruction)
-   - keep each cloud close to the prior (KL to \(\mathcal{N}(0,I)\)). That is the “don’t make a wild private language” tax.
+   - keep each cloud close to the prior (KL to N(0, I)). That is the “don’t make a wild private language” tax.
+
+<div class="math-display">
+\[z = \mu + \sigma \odot \varepsilon,\quad \varepsilon \sim \mathcal{N}(0,I)\]
+</div>
+
+That rewrite is why gradients can flow through the sample with ordinary backprop.
 
 The paper’s name for the training deal is the **ELBO** (evidence lower bound). You do not need to recite the bound to steal the picture.
 
@@ -42,7 +48,7 @@ flowchart LR
 
 ![Forger vs detective, and zip-unzip codes]({{ '/assets/images/14-ai-papers-lunch-box-map/07-gan-vae.gif' | relative_url }})
 
-**Tiny picture:** nearby envelopes unpack into similar posters. Walk from one envelope toward another and the posters morph. That neighbourhood is the latent space.
+**Simple picture:** nearby envelopes unpack into similar posters. Walk from one envelope toward another and the posters morph. That neighbourhood is the latent space.
 
 **Blur vs sharpness (honest).** Classic VAEs are often a bit blurry next to a well-trained GAN or a modern diffusion sample. Their gift is the **smooth code**, not the 2022 art contest. That is exactly why latent diffusion *keeps* a VAE-like autoencoder and does the fancy denoising in the small grid.
 

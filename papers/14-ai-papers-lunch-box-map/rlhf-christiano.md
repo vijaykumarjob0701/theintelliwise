@@ -11,9 +11,9 @@ This is the other half of the **“teach it to listen”** box on the [lunch-box
 
 ## What problem it solves
 
-**Kid line:** you cannot write a perfect rule for “that was a nice backflip.” You can point at the better video.
+You cannot write a perfect rule for “that was a nice backflip.” You can point at the better video.
 
-**Adult line:** RL needs a **reward**. For Atari you can use the game score. For “looks like a real backflip” or “be a helpful assistant,” a hand-written reward is either missing or a cheat the agent will game. Christiano et al. replace the written reward with a **learned** one, fit to humans choosing the winner of two short clips.
+RL needs a **reward**. For Atari you can use the game score. For “looks like a real backflip” or “be a helpful assistant,” a hand-written reward is either missing or a cheat the agent will game. Christiano et al. replace the written reward with a **learned** one, fit to humans choosing the winner of two short clips.
 
 | If you can… | Then use… |
 | --- | --- |
@@ -25,8 +25,8 @@ This is the other half of the **“teach it to listen”** box on the [lunch-box
 
 1. The agent acts in an environment (here: Atari, and a simulated robot). You record short trajectory snippets.
 2. A human sees **two** snippets and picks a winner (or a rare “can’t tell”).
-3. Fit a **reward model** \(r_\theta\) so that preferred snippets get higher return than the losers (a Bradley–Terry-style ranking loss).
-4. Train the **policy** with RL on \(r_\theta\) (they use an A2C / PPO-family setup in the paper’s stack).
+3. Fit a **reward model** r<sub>θ</sub> so that preferred snippets get higher return than the losers (a Bradley–Terry-style ranking loss).
+4. Train the **policy** with RL on r<sub>θ</sub> (they use an A2C / PPO-family setup in the paper’s stack).
 5. Keep collecting comparisons on the *current* policy, or the reward model goes stale.
 
 ```mermaid
@@ -39,7 +39,7 @@ flowchart TB
 
 ![Humans score answers; the model learns taste]({{ '/assets/images/14-ai-papers-lunch-box-map/04-instruct-rlhf.gif' | relative_url }})
 
-**Tiny picture:** two robot dance videos. You tap the less-awkward one. You never write the physics of dancing. The robot still gets better at dancing.
+**Simple picture:** two robot dance videos. You tap the less-awkward one. You never write the physics of dancing. The robot still gets better at dancing.
 
 **What they showed.** With surprisingly few comparison hours, agents learned Atari games and a backflip from preference, sometimes matching or beating reward-from-the-game baselines. The paper is **not** about GPT. It is about *preference as a reward interface*.
 
@@ -64,7 +64,7 @@ Open Christiano et al. when you want:
 
 - the exact preference loss and how they query humans
 - Atari / robot results and how many comparison hours they spent
-- the “reward hacking” discussion — the agent will exploit a sloppy \(r_\theta\)
+- the “reward hacking” discussion — the agent will exploit a sloppy r<sub>θ</sub>
 - the original figures (clip UI, learning curves)
 
 Skip the grind if you only needed “humans compare, the model climbs,” then go to [InstructGPT]({{ '/posts/14-ai-papers-lunch-box-map/instructgpt/' | relative_url }}) for the chat version.

@@ -11,9 +11,9 @@ This is the **family** page in the cheap-tuning box on the [lunch-box map]({{ '/
 
 ## What problem it solves
 
-**Kid line:** the library building stays put. Each new subject gets a thin pamphlet, not a second building.
+The library building stays put. Each new subject gets a thin pamphlet, not a second building.
 
-**Adult line:** you have a strong pretrained model and a real task set. Full fine-tuning works and is wasteful: you store and train *all* weights, once per skill. PEFT methods specialise the model by training a **small** add-on (or a small slice of weights) so one frozen backbone can wear many skills.
+You have a strong pretrained model and a real task set. Full fine-tuning works and is wasteful: you store and train *all* weights, once per skill. PEFT methods specialise the model by training a **small** add-on (or a small slice of weights) so one frozen backbone can wear many skills.
 
 | Use PEFT when | Do not start with PEFT when |
 | --- | --- |
@@ -47,7 +47,7 @@ flowchart TB
 
 ![Tiny sticky notes instead of rewriting the whole book]({{ '/assets/images/14-ai-papers-lunch-box-map/05-lora-peft.gif' | relative_url }})
 
-**Tiny picture:** plugins. The app binary stays. You drop in a small module per customer.
+**Simple picture:** plugins. The app binary stays. You drop in a small module per customer.
 
 ## Why it mattered / what it unlocked
 

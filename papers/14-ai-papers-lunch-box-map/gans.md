@@ -11,22 +11,30 @@ This is the **art contest** half of the classic picture-makers box on the [lunch
 
 ## What problem it solves
 
-**Kid line:** artist vs critic, fighting until the fakes look real.
+Artist vs critic, fighting until the fakes look real.
 
-**Adult line:** you want a machine that **samples** new photos from the same “looks like the training set” distribution. Maximum-likelihood density models were blurry or painful. Goodfellow et al. (2014) set up a **two-player game**: a generator \(G\) maps noise to a fake; a discriminator \(D\) says real vs fake. The equilibrium they aim at is “\(D\) is 50/50 and \(G\)’s fakes match the data.”
+You want a machine that **samples** new photos from the same “looks like the training set” distribution. Maximum-likelihood density models were blurry or painful. Goodfellow et al. (2014) set up a **two-player game**: a generator G maps noise to a fake; a discriminator D says real vs fake. The equilibrium they aim at is “D is 50/50 and G’s fakes match the data.”
 
 | Player | Job | Signal |
 | --- | --- | --- |
-| Generator | Turn random noise into a picture | Fool \(D\) |
-| Discriminator | Label real vs fake | Catch \(G\) |
+| Generator | Turn random noise into a picture | Fool D |
+| Discriminator | Label real vs fake | Catch G |
 
 ## How the idea works
 
-1. Draw a noise vector \(z\) (the “random scribble”).
-2. \(G(z)\) paints a fake.
-3. \(D\) sees either a real training image or a fake, and outputs “probability this is real.”
-4. Update \(D\) to be a better detective. Update \(G\) so \(D(G(z))\) looks real.
-5. Repeat. Neither player is allowed to win forever; if \(D\) is perfect too early, \(G\) gets no useful gradient.
+1. Draw a noise vector z (the “random scribble”).
+2. G(z) paints a fake.
+3. D sees either a real training image or a fake, and outputs “probability this is real.”
+4. Update D to be a better detective. Update G so D(G(z)) looks real.
+5. Repeat. Neither player is allowed to win forever; if D is perfect too early, G gets no useful gradient.
+
+The paper writes that fight as a minimax game:
+
+<div class="math-display">
+\[\min_G \max_D \; V(D,G)=\mathbb{E}_{x\sim p_{\mathrm{data}}}[\log D(x)]+\mathbb{E}_{z\sim p_z}[\log(1-D(G(z)))]\]
+</div>
+
+In plain words: D tries to give real photos a high score and fakes a low score. G tries to make D(G(z)) look like a real photo.
 
 ```mermaid
 flowchart LR
@@ -38,7 +46,7 @@ flowchart LR
 
 ![Forger vs detective, and zip-unzip codes]({{ '/assets/images/14-ai-papers-lunch-box-map/07-gan-vae.gif' | relative_url }})
 
-**Tiny picture:** art forger vs museum detective. Every week the forger studies what got caught. Nobody wrote “draw a cat” as a loss; the fight was enough.
+**Simple picture:** art forger vs museum detective. Every week the forger studies what got caught. Nobody wrote “draw a cat” as a loss; the fight was enough.
 
 **What they trained on.** The landmark paper shows MNIST, the TFD face set, and **CIFAR-10**. CIFAR-10 is the honest public dataset link on this tray. Later GAN papers (Progressive GAN, StyleGAN, …) are other years and other photos. Do not paste those citations onto 1406.2661.
 
@@ -62,7 +70,7 @@ For “understand the 2014 idea,” CIFAR-10 + the forger picture is enough. For
 
 ## What to remember
 
-- \(G\) paints from noise. \(D\) referees real vs fake. The fight *is* the training.
+- G paints from noise. D referees real vs fake. The fight *is* the training.
 - 2014 paper + CIFAR-10 / MNIST demos, not Stable Diffusion.
 - Collapse and unstable training are part of the folklore for a reason.
 - A later “StyleGAN” headline is a descendant, not this PDF.
@@ -72,7 +80,7 @@ For “understand the 2014 idea,” CIFAR-10 + the forger picture is enough. For
 
 Open Goodfellow et al. when you want:
 
-- the minimax value function and the “optimal \(D\)” derivation
+- the “optimal D” derivation behind the minimax above
 - the early figures (the ones that look modest next to 2022 models)
 - the CIFAR-10 / MNIST experimental setup
 - the original “this is a new framework” framing, before the zoo

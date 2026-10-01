@@ -11,9 +11,9 @@ This is the **picture makers (now)** box on the [lunch-box map]({{ '/posts/14-ai
 
 ## What problem it solves
 
-**Kid line:** messy chalk → wipe carefully → drawing.
+Messy chalk → wipe carefully → drawing.
 
-**Adult line:** you want high-quality image samples without a GAN’s two-player mood. Diffusion models learn to **reverse a noise process**. Add Gaussian noise to real photos until they are static; train a net to predict the noise (or the clean image) at each step; at generate-time, start from static and **undo** step by step. Latent diffusion does that undo in a **compressed** grid so high-res images fit a single GPU story.
+You want high-quality image samples without a GAN’s two-player mood. Diffusion models learn to **reverse a noise process**. Add Gaussian noise to real photos until they are static; train a net to predict the noise (or the clean image) at each step; at generate-time, start from static and **undo** step by step. Latent diffusion does that undo in a **compressed** grid so high-res images fit a single GPU story.
 
 | DDPM (2020) | Latent Diffusion (2021) |
 | --- | --- |
@@ -23,9 +23,9 @@ This is the **picture makers (now)** box on the [lunch-box map]({{ '/posts/14-ai
 
 ## How the idea works
 
-**Forward (destroy):** for timestep \(t = 1 \ldots T\), mix the photo with a little more noise. At large \(T\) you have TV static. This process is fixed; you do not learn it.
+**Forward (destroy):** for timestep t = 1 … T, mix the photo with a little more noise. At large T you have TV static. This process is fixed; you do not learn it.
 
-**Reverse (clean):** a neural net (U-Net in both landmark papers) sees a noisy canvas plus \(t\), and guesses the noise that was added. Subtract a bit. Repeat.
+**Reverse (clean):** a neural net (U-Net in both landmark papers) sees a noisy canvas plus t, and guesses the noise that was added. Subtract a bit. Repeat.
 
 **Latent twist:**
 
@@ -45,7 +45,7 @@ flowchart LR
 
 ![Noise becomes a picture step by step]({{ '/assets/images/14-ai-papers-lunch-box-map/08-diffusion.gif' | relative_url }})
 
-**Tiny picture:** a dusty chalkboard. You do not draw the cat in one stroke. You wipe a little dust, then a little more. Start from a blank dusty board (pure noise) and wipe toward the prompt.
+**Simple picture:** a dusty chalkboard. You do not draw the cat in one stroke. You wipe a little dust, then a little more. Start from a blank dusty board (pure noise) and wipe toward the prompt.
 
 **Why so many steps?** Each undo is easy. A hundred easy undos beat one impossible “paint a cat from scratch” shot. Distillation later *reduces* steps for products. The landmark papers are the many-step story.
 
