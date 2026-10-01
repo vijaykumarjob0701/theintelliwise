@@ -68,7 +68,7 @@ It survives new sessions, server restarts, and days or weeks between chats.
 
 ### 6) Not all memory is the same
 
-This is the part many teams miss.
+Episodic, semantic, and procedural memory are not the same store.
 
 - **Episodic** stores past events.
 - **Semantic** stores stable facts.
