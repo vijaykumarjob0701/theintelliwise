@@ -138,7 +138,7 @@ The picture below plots only the first two numbers, so you can see the arrows. `
 
 The query is "what am I looking for, right now?"
 
-You do not invent that question by hand. You multiply the embedding by a learned matrix \(W_Q\). Same matrix for every token.
+You do not invent that question by hand. You multiply the embedding by a learned matrix $W_Q$. Same matrix for every token.
 
 In NumPy the tokens are rows, so the line is `Q = X @ W_Q`. Same multiply, just a row layout.
 
@@ -215,7 +215,7 @@ V
  [0.06 0.48 0.   0.6 ]]
 ```
 
-Three jobs, three lists: \(q\), \(k\), \(v\). Still shape `(4, 4)`.
+Three jobs, three lists: $q$, $k$, $v$. Still shape `(4, 4)`.
 
 ---
 
@@ -225,7 +225,7 @@ Three jobs, three lists: \(q\), \(k\), \(v\). Still shape `(4, 4)`.
 <strong>If you compare one token's query with every key, you get attention scores.</strong>
 </div>
 
-Take the query for `late`. Dot it with each key. Divide by \(\sqrt{d}\) so the numbers do not grow with the width of the list.
+Take the query for `late`. Dot it with each key. Divide by $\sqrt{d}$ so the numbers do not grow with the width of the list.
 
 A bigger score means a better match.
 
@@ -324,7 +324,7 @@ $$
 = \mathrm{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d}} + M\right)V
 $$
 
-\(M\) is \(0\) on and below the diagonal, and \(-\infty\) above it. After softmax, the future weights become \(0\).
+$M$ is $0$ on and below the diagonal, and $-\infty$ above it. After softmax, the future weights become $0$.
 
 ```python
 raw = Q @ K.T / SCALE
@@ -372,7 +372,7 @@ Row 0 is `The`. It can only see itself, so its weights are `[1, 0, 0, 0]`. Row 3
 
 Attention is the talk step. Each token still needs a private think step. That is a tiny MLP, applied at every position with the same weights.
 
-A residual connection adds the input back: \(x + \text{layer}(x)\). The original signal still has a path through the stack. Layer norm rescales each token's numbers so they do not blow up as you go deeper.
+A residual connection adds the input back: $x + \text{layer}(x)$. The original signal still has a path through the stack. Layer norm rescales each token's numbers so they do not blow up as you go deeper.
 
 $$
 h = x + \mathrm{Attn}(x),\qquad
@@ -536,14 +536,14 @@ That is the whole machine, seen from one short line of English.
 | Step | You get | Shape of the data |
 | --- | --- | --- |
 | 1. Tokens | pieces + toy IDs | 4 ids |
-| 2. Embeddings | \(x_i \in \mathbb{R}^{4}\) | `(4, 4)` |
-| 3. Query | \(q = W_Q x\) | `(4, 4)` |
-| 4. Key and value | \(k = W_K x\), \(v = W_V x\) | `(4, 4)` each |
-| 5. Scores | \(s_j = q \cdot k_j / \sqrt{d}\) | `(4,)` for one query |
+| 2. Embeddings | $x_i \in \mathbb{R}^{4}$ | `(4, 4)` |
+| 3. Query | $q = W_Q x$ | `(4, 4)` |
+| 4. Key and value | $k = W_K x$, $v = W_V x$ | `(4, 4)` each |
+| 5. Scores | $s_j = q \cdot k_j / \sqrt{d}$ | `(4,)` for one query |
 | 6. Weights | softmax of the scores | `(4,)`, sums to 1 |
-| 7. Context | \(c = \sum a_j v_j\) | `(4,)` |
-| 8. Self-attention | \(\mathrm{softmax}(QK^{\top}/\sqrt{d}+M)V\) | `(4, 4)` |
-| 9. Transformer block | \(h = x + \mathrm{Attn}(x)\), \(y = h + \mathrm{MLP}(h)\) | `(4, 4)` |
+| 7. Context | $c = \sum a_j v_j$ | `(4,)` |
+| 8. Self-attention | $\mathrm{softmax}(QK^{\top}/\sqrt{d}+M)V$ | `(4, 4)` |
+| 9. Transformer block | $h = x + \mathrm{Attn}(x)$, $y = h + \mathrm{MLP}(h)$ | `(4, 4)` |
 | 10. Transformer | 12 stacked blocks (GPT-2 small) | still `(4, 4)` in this toy |
 | 11. Chat assistant | next-word bar, then SFT + preference | `(4,)` over the toy vocab |
 | 12. Rewind | the original sentence | text |
