@@ -7,11 +7,18 @@ card_image: /assets/images/rag-five-knobs-recall-precision-topk-topp-cost/01-top
 permalink: /posts/rag-five-knobs-recall-precision-topk-topp-cost/
 ---
 
-You built an internal HR chatbot. An employee types: **Can I take part-time parental leave?**
+A short working session. Riya is wiring an internal HR chatbot. Arjun has shipped this kind of retrieve-then-generate setup before. Same parental-leave question the whole way.
 
-The bot should look up the policy, then answer. That is RAG. Retrieve first. Generate second.
-
-Five numbers show up on every serious RAG project. Two of them are **settings you tune**. Three of them are **scores you measure** after a run.
+<div class="chat">
+<div class="chat-a">
+<p class="chat-who">Riya</p>
+<p>I built an HR bot. Someone types: <strong>Can I take part-time parental leave?</strong> It should look up the policy, then answer. That is RAG, right? Retrieve first. Generate second.</p>
+</div>
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>Yes. Five numbers show up on every serious RAG project. Two are settings you tune. Three are scores you measure after a run. People mix them. That is how the bot starts quoting vacation pages.</p>
+</div>
+</div>
 
 | You tune | You measure |
 | --- | --- |
@@ -19,11 +26,18 @@ Five numbers show up on every serious RAG project. Two of them are **settings yo
 | **Top P** — how freely the model picks the next word | **Precision@K** — how many of the fetched chunks were useful |
 | Temperature sits next to Top P | **Cost per request** — search compute + LLM tokens |
 
-I keep that split on the table because people mix them. Top K is not a quality score. Recall@K is. Top P is not a retrieval metric. It only changes how the model writes.
+<div class="chat">
+<div class="chat-a">
+<p class="chat-who">Riya</p>
+<p>So Top K is not a quality score.</p>
+</div>
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>Correct. Top K is how many paragraphs you send. Recall@K is whether the right ones came back. Top P is not a retrieval metric. It only changes how the model writes. Same four colours as <a href="{{ '/posts/precision-recall-color-coded/' | relative_url }}">Precision and Recall, in Colours You Will Remember</a>. Green, orange, purple, grey. Same marks.</p>
+</div>
+</div>
 
-The rest of this post uses that one parental-leave question. Same store. Same four colours as [Precision and Recall, in Colours You Will Remember]({{ '/posts/precision-recall-color-coded/' | relative_url }}). Green, orange, purple, grey. Same marks.
-
-**Colour legend** (retrieved chunks, used the same way in the text, the tables, and the GIFs):
+**Colour legend** (retrieved chunks):
 
 <span style="background:#d4f0e4;color:#0d7a45;font-weight:600;padding:2px 8px;border-radius:4px">✓ relevant retrieved</span>
 useful hit &nbsp;
@@ -47,32 +61,48 @@ flowchart LR
 
 ## The policy store
 
-The HR wiki is split into chunks. For this question I treat **10** of them as relevant. They actually talk about part-time parental leave: eligibility, how to apply, how pay is calculated, notice, manager steps, benefits, duration, return-to-work, partner leave, and how it mixes with annual leave.
-
-Plenty of other chunks sit nearby in the ranking. Vacation days. Sick leave. Public holidays. Those are the usual false friends.
-
-I will use two teaching snapshots. Same store. Different retrieval quality.
-
-- **Recall picture:** K = 5 pulls **4** of those 10 relevant paragraphs. Recall@5 = 4/10 = **40%**.
-- **Precision picture:** of the 5 chunks in the prompt, **2** are vacation / sick leave. Precision@5 = 3/5 = **60%**.
-
-Those two pictures do not have to be the same run. A better ranker can keep recall at 40% and lift precision to 4/5 = 80%. I will use that cleaner run when I compare K = 5 with K = 20.
+<div class="chat">
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>The HR wiki is split into chunks. For this question I treat <strong>10</strong> of them as relevant. Eligibility, how to apply, how pay is calculated, notice, manager steps, benefits, duration, return-to-work, partner leave, and how it mixes with annual leave.</p>
+</div>
+<div class="chat-a">
+<p class="chat-who">Riya</p>
+<p>And vacation days sit right next to them in the ranking. Sick leave. Public holidays. Those are the usual false friends.</p>
+</div>
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>Two teaching snapshots. Same store. Different retrieval quality.</p>
+<p>Recall picture: K = 5 pulls <strong>4</strong> of those 10 relevant paragraphs. Recall@5 = 4/10 = <strong>40%</strong>.</p>
+<p>Precision picture: of the 5 chunks in the prompt, <strong>2</strong> are vacation / sick leave. Precision@5 = 3/5 = <strong>60%</strong>.</p>
+<p>Those two pictures do not have to be the same run. A better ranker can keep recall at 40% and lift precision to 4/5 = 80%. I use that cleaner run when I compare K = 5 with K = 20.</p>
+</div>
+</div>
 
 ---
 
 ## 1. Top K — how many chunks go to the LLM
 
-**Top K** is a setting. You pick it before the search runs.
-
-The retriever scores every chunk against the question. Then it keeps the **K** nearest ones and pastes them into the prompt.
-
-- K = 1: only the single closest paragraph.
-- K = 5: the five closest paragraphs. This is a common starting point.
-- K = 20: a wide net. More chance you caught the rule. More tokens for the model to read.
+<div class="chat">
+<div class="chat-a">
+<p class="chat-who">Riya</p>
+<p>Where do I start with K?</p>
+</div>
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>You pick it before search runs. The retriever scores every chunk against the question. Then it keeps the <strong>K</strong> nearest ones and pastes them into the prompt.</p>
+<p>K = 1: only the single closest paragraph. K = 5: a common starting point. K = 20: a wide net. More chance you caught the rule. More tokens for the model to read.</p>
+</div>
+</div>
 
 ![Top K copies the K nearest chunks into the prompt]({{ '/assets/images/rag-five-knobs-recall-precision-topk-topp-cost/01-topk-retrieval.gif' | relative_url }})
 
-K does not tell you if those chunks are good. It only tells you **how many** you sent.
+<div class="chat">
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>K does not tell you if those chunks are good. It only tells you how many you sent.</p>
+</div>
+</div>
 
 ```mermaid
 flowchart LR
@@ -84,7 +114,12 @@ flowchart LR
 
 ## 2. Recall@K — did we miss a fact?
 
-**Recall@K** is a measurement. You need labels. You cannot read it from the retriever score alone.
+<div class="chat">
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>Recall@K is a measurement. You need labels. You cannot read it from the retriever score alone.</p>
+</div>
+</div>
 
 <p style="font-size:1.2em;line-height:1.8">
   <strong>Recall@K</strong> =
@@ -97,9 +132,16 @@ flowchart LR
 - **This picture:** 10 relevant paragraphs exist. K = 5 pulls 4 of them. 4 / 10 = **40%**.
 - **What the other 6 are:** <span style="background:#ddd6fe;color:#4c1d95;font-weight:600;padding:1px 7px;border-radius:4px">✗ misses</span>. The duration cap, the return-to-work plan, partner leave. Still in the store. Not in the prompt.
 
-High recall means fewer missed facts. For an HR bot that is the scary one. If the model never sees "you must apply 8 weeks ahead", it cannot tell the employee that.
-
-Same idea as recall in the [colour-coded precision and recall post]({{ '/posts/precision-recall-color-coded/' | relative_url }}). There it was the actually-positive row. Here the "positives" are the relevant chunks.
+<div class="chat">
+<div class="chat-a">
+<p class="chat-who">Riya</p>
+<p>If the model never sees “you must apply 8 weeks ahead”, it cannot tell the employee that.</p>
+</div>
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>That is the scary one for HR. High recall means fewer missed facts. Same idea as recall in the <a href="{{ '/posts/precision-recall-color-coded/' | relative_url }}">colour-coded precision and recall post</a>. There it was the actually-positive row. Here the “positives” are the relevant chunks.</p>
+</div>
+</div>
 
 ![4 of 10 relevant paragraphs come back at K = 5]({{ '/assets/images/rag-five-knobs-recall-precision-topk-topp-cost/02-recall-at-k.gif' | relative_url }})
 
@@ -107,7 +149,12 @@ Same idea as recall in the [colour-coded precision and recall post]({{ '/posts/p
 
 ## 3. Precision@K — how much of the prompt is noise?
 
-**Precision@K** is also a measurement.
+<div class="chat">
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>Precision@K is also a measurement. Of the chunks we actually sent, how many were useful for this question?</p>
+</div>
+</div>
 
 <p style="font-size:1.2em;line-height:1.8">
   <strong>Precision@K</strong> =
@@ -116,13 +163,19 @@ Same idea as recall in the [colour-coded precision and recall post]({{ '/posts/p
   <span style="background:#d4f0e4;color:#0d7a45;font-weight:600;padding:2px 8px;border-radius:4px">K chunks retrieved</span>
 </p>
 
-- **Sentence:** of the chunks we actually sent, how many were useful for this question?
 - **This picture:** of 5, 2 are about normal vacation days or sick leave. 3 / 5 = **60%**.
 - **What the 2 are:** <span style="background:#fde6d0;color:#9a3b0a;font-weight:600;padding:1px 7px;border-radius:4px">⚠ retrieved noise</span>. Close in wording ("leave", "days", "apply"). Wrong policy.
 
-Low precision means the right answer is sitting next to the wrong one. The model has to ignore the vacation paragraph. Sometimes it does not.
-
-Same idea as precision in the earlier post. There it was the flagged column. Here the "flags" are the K chunks in the prompt.
+<div class="chat">
+<div class="chat-a">
+<p class="chat-who">Riya</p>
+<p>So the right answer is sitting next to the wrong one. The model has to ignore the vacation paragraph. Sometimes it does not.</p>
+</div>
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>Same idea as precision in the earlier post. There it was the flagged column. Here the “flags” are the K chunks in the prompt.</p>
+</div>
+</div>
 
 ![3 useful chunks and 2 noise chunks in a K = 5 prompt]({{ '/assets/images/rag-five-knobs-recall-precision-topk-topp-cost/03-precision-at-k.gif' | relative_url }})
 
@@ -140,46 +193,50 @@ flowchart TB
   class R fn
 ```
 
-A memory trick that stays accurate:
-
-- **R**ecall looks at what is **R**eally in the store.
-- **P**recision looks at what you **P**asted into the prompt.
-
-Both start with <span style="background:#d4f0e4;color:#0d7a45;font-weight:600;padding:1px 7px;border-radius:4px">✓ relevant retrieved</span>. They divide by a different partner.
+<div class="chat">
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>A memory trick that stays accurate. <strong>R</strong>ecall looks at what is <strong>R</strong>eally in the store. <strong>P</strong>recision looks at what you <strong>P</strong>asted into the prompt. Both start with <span style="background:#d4f0e4;color:#0d7a45;font-weight:600;padding:1px 7px;border-radius:4px">✓ relevant retrieved</span>. They divide by a different partner.</p>
+</div>
+</div>
 
 ---
 
 ## 4. Top P — how freely the model picks the next word
 
-Retrieval is done. The K chunks are in the prompt. Now the model writes.
-
-**Top P** (nucleus sampling) is a generation setting. It is not a retrieval metric.
-
-At each next-word step the model has a list of possible tokens with probabilities. Top P keeps the **smallest set** whose probabilities add up to P. Then it samples from that set.
-
-- **Low top_p** (0.1 to 0.3): only the most likely next words stay in. Answers stay focused and closer to the retrieved policy.
-- **High top_p** (0.9 to 1.0): weaker tokens join the nucleus. More variety. More chance of a confident wrong sentence.
-
-**Temperature** sits next to it. Temperature stretches or sharpens the same probability list before Top P cuts it. Low temperature makes the top token even more likely. High temperature flattens the list. For a factual HR answer I keep both low. I do not want the bot inventing "full pay, always" because that phrase sounded natural.
+<div class="chat">
+<div class="chat-a">
+<p class="chat-who">Riya</p>
+<p>Retrieval is done. The K chunks are in the prompt. Now the model writes. What is Top P doing here?</p>
+</div>
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>Nucleus sampling. It is a generation setting. Not a retrieval metric. At each next-word step the model has a list of possible tokens with probabilities. Top P keeps the <strong>smallest set</strong> whose probabilities add up to P. Then it samples from that set.</p>
+<p>Low top_p, 0.1 to 0.3: only the most likely next words stay in. Answers stay focused and closer to the retrieved policy. High top_p, 0.9 to 1.0: weaker tokens join the nucleus. More variety. More chance of a confident wrong sentence.</p>
+<p>Temperature sits next to it. It stretches or sharpens the same probability list before Top P cuts it. For a factual HR answer I keep both low. I do not want the bot inventing “full pay, always” because that phrase sounded natural.</p>
+</div>
+</div>
 
 ![A low top_p keeps only the safest next words]({{ '/assets/images/rag-five-knobs-recall-precision-topk-topp-cost/04-topp-slider.gif' | relative_url }})
 
-Top P does not fix a bad retriever. If the vacation chunk is in the prompt, a low top_p can still quote it. It only reduces how often the model wanders off the tokens that are already likely.
-
-Official note on the sampling idea: [Hugging Face generation strategies](https://huggingface.co/docs/transformers/generation_strategies) (nucleus / top-p).
+<div class="chat">
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>Top P does not fix a bad retriever. If the vacation chunk is in the prompt, a low top_p can still quote it. It only reduces how often the model wanders off the tokens that are already likely. Official note on the sampling idea: <a href="https://huggingface.co/docs/transformers/generation_strategies">Hugging Face generation strategies</a> (nucleus / top-p).</p>
+</div>
+</div>
 
 ---
 
 ## 5. Cost per request
 
-Cost is a measurement. You add two bills.
-
-1. **Retrieval / search compute** — embedding the question, scanning the index, maybe reranking.
-2. **LLM token price** — **input tokens** the model reads (system prompt + question + K chunks) plus **output tokens** it writes.
-
-Raising K mostly hits the input-token line. The model has to read every extra chunk.
-
-The prices below are **made-up teaching numbers**. They are not a vendor quote. I picked round figures so the arithmetic stays in your head.
+<div class="chat">
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>Cost is a measurement. You add two bills. Retrieval / search compute: embedding the question, scanning the index, maybe reranking. LLM token price: input tokens the model reads (system prompt + question + K chunks) plus output tokens it writes. Raising K mostly hits the input-token line.</p>
+<p>The prices below are <strong>made-up teaching numbers</strong>. They are not a vendor quote. Round figures so the arithmetic stays in your head.</p>
+</div>
+</div>
 
 | Line | Example price (made up) | What I count on this question |
 | --- | --- | --- |
@@ -205,15 +262,27 @@ The prices below are **made-up teaching numbers**. They are not a vendor quote. 
 
 ![Search plus input tokens plus output tokens]({{ '/assets/images/rag-five-knobs-recall-precision-topk-topp-cost/05-cost-formula.gif' | relative_url }})
 
-On a quiet team this looks like nothing. At 20,000 questions a week, the K = 20 setting is the one you feel.
+<div class="chat">
+<div class="chat-a">
+<p class="chat-who">Riya</p>
+<p>On a quiet team this looks like nothing.</p>
+</div>
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>At 20,000 questions a week, the K = 20 setting is the one you feel.</p>
+</div>
+</div>
 
 ---
 
 ## The trade-off: raising K from 5 to 20
 
-This is the decision I see most often.
-
-Same parental-leave question. Cleaner ranking this time: at K = 5 the top five are 4 relevant + 1 vacation chunk.
+<div class="chat">
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>This is the decision I see most often. Same parental-leave question. Cleaner ranking this time: at K = 5 the top five are 4 relevant + 1 vacation chunk.</p>
+</div>
+</div>
 
 | | K = 5 | K = 20 |
 | --- | --- | --- |
@@ -225,9 +294,16 @@ Same parental-leave question. Cleaner ranking this time: at K = 5 the top five a
 | Cost / request (example) | ~$0.0031 | ~$0.0066 |
 | p95 latency | **1.0×** | about **1.8×** |
 
-Raising K from 5 to 20 usually **lifts recall**. The duration cap and the return-to-work plan can finally enter the prompt.
-
-It also **adds input tokens**. That raises cost and latency. And it often **hurts precision**, because the extra 15 chunks are not all about part-time parental leave. The model now has more vacation pages to trip over.
+<div class="chat">
+<div class="chat-a">
+<p class="chat-who">Riya</p>
+<p>So I lift recall, and I pay with tokens, cost, latency, and more vacation pages in the prompt.</p>
+</div>
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>Raising K from 5 to 20 usually lifts recall. The duration cap and the return-to-work plan can finally enter the prompt. It also adds input tokens. That raises cost and latency. And it often hurts precision, because the extra 15 chunks are not all about part-time parental leave.</p>
+</div>
+</div>
 
 ![K = 20 lifts recall and also lifts cost and latency]({{ '/assets/images/rag-five-knobs-recall-precision-topk-topp-cost/06-k-vs-cost.gif' | relative_url }})
 
@@ -240,13 +316,23 @@ flowchart LR
   D --> F[Latency up]
 ```
 
-There is no universal winner. If a missed rule can send someone on the wrong leave, pay for a higher K or, better, retrieve wide and then cut.
+<div class="chat">
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>There is no universal winner. If a missed rule can send someone on the wrong leave, pay for a higher K or, better, retrieve wide and then cut.</p>
+</div>
+</div>
 
 ---
 
 ## What I actually do
 
-These are the habits I use on a working RAG service. Not a research checklist.
+<div class="chat">
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>Habits on a working RAG service. Not a research checklist.</p>
+</div>
+</div>
 
 - **Build a small labelled eval set.** 30 to 50 real questions is enough to start. For each question, mark the chunk ids that should come back. Use the parental-leave style: one clear ask, a known gold set.
 - **Measure Recall@K and Precision@K across K.** I usually try 1, 3, 5, 10, 20 on the same set. Plot both. Pick the K where recall is high enough and precision has not fallen off.
@@ -266,7 +352,12 @@ flowchart LR
 
 ## A tiny check on the toy numbers
 
-Same idea as a unit test. Two labelled runs. I ran this. The printout below is the real output.
+<div class="chat">
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>Same idea as a unit test. Two labelled runs. I ran this. The printout below is the real output.</p>
+</div>
+</div>
 
 ```python
 def recall_precision_at_k(relevant, retrieved):
@@ -314,9 +405,19 @@ noisy  Recall@5 = 3/10 = 30%
 noisy  Precision@5 = 3/5 = 60%
 ```
 
-The clean run is the K = 5 column in the trade-off table. The noisy run is the precision GIF.
+<div class="chat">
+<div class="chat-b">
+<p class="chat-who">Arjun</p>
+<p>The clean run is the K = 5 column in the trade-off table. The noisy run is the precision GIF.</p>
+</div>
+</div>
 
 ---
+
+<div class="show-notes">
+<strong>Show notes</strong>
+<p>RAG is retrieve, then generate. Top K and Top P are settings you turn. Recall@K, Precision@K, and cost per request are what you measure after the run. One HR question: part-time parental leave. 10 relevant chunks. Clean K = 5: Recall 40%, Precision 80%. Noisy K = 5: Recall 30%, Precision 60%. K = 20: Recall 80%, Precision 40%, about 2.1× the example bill, p95 about 1.8×. A reranker (retrieve 20, keep 5) is the usual way out. For a factual answer, keep top_p and temperature low. Label 30 to 50 questions, sweep K at 1, 3, 5, 10, 20, and watch cost and p95 per request. Colours match the <a href="{{ '/posts/precision-recall-color-coded/' | relative_url }}">precision and recall post</a>.</p>
+</div>
 
 ## Cheat sheet
 
@@ -335,13 +436,3 @@ The clean run is the K = 5 column in the trade-off table. The noisy run is the p
 | Retrieved noise | orange `#d46a2e` | ⚠ | Vacation / sick-leave chunk that also made the prompt |
 | Relevant missed | purple `#5b4cc4` | ✗ | Parental-leave chunk still sitting in the store |
 | Irrelevant not retrieved | grey `#6b7280` | · | A payroll chunk nobody asked for |
-
-Clean K = 5 toy: Recall 40%, Precision 80%.
-Noisy K = 5 toy: Recall 30%, Precision 60%.
-K = 20 toy: Recall 80%, Precision 40%, about 2.1× the example bill.
-
----
-
-## In short
-
-RAG is retrieve, then generate. Top K and Top P are settings you turn. Recall@K, Precision@K, and cost per request are what you measure after the run. I keep one HR question in my head: part-time parental leave. Recall@K asks how many of the real policy paragraphs came back. Precision@K asks how much of the prompt is vacation-page noise. The colours are the same as the [precision and recall post]({{ '/posts/precision-recall-color-coded/' | relative_url }}): <span style="background:#d4f0e4;color:#0d7a45;font-weight:600;padding:1px 7px;border-radius:4px">✓ hit</span>, <span style="background:#fde6d0;color:#9a3b0a;font-weight:600;padding:1px 7px;border-radius:4px">⚠ noise</span>, <span style="background:#ddd6fe;color:#4c1d95;font-weight:600;padding:1px 7px;border-radius:4px">✗ miss</span>, <span style="background:#e5e7eb;color:#4b5563;font-weight:600;padding:1px 7px;border-radius:4px">· ignore</span>. Raising K from 5 to 20 usually lifts recall, adds input tokens, raises cost and latency, and can hurt precision. A reranker (retrieve 20, keep 5) is the usual way out. For a factual answer, keep top_p and temperature low. Label a small eval set, sweep K, and watch cost and p95 per request.
