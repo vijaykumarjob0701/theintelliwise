@@ -46,51 +46,68 @@ flowchart LR
   class TN tn
 ```
 
----
-
-## High precision: a music recommendation feed
-
-A music app shows you ten songs.
-
-If eight or nine of them are good, you keep listening. That is high <span style="background:#d4f0e4;color:#0d7a45;font-weight:600;padding:1px 7px;border-radius:4px">precision</span>: when the feed speaks, it is usually right.
-
-If you scroll through twenty songs and like none, you leave. The misses do not hurt as much here. A good track that never appeared is a quiet loss. A feed full of <span style="background:#fde6d0;color:#9a3b0a;font-weight:600;padding:1px 7px;border-radius:4px">⚠ false alarms</span> is the thing that closes the app.
-
-For discovery, being selective beats being exhaustive.
-
-![A picky music feed keeps the user. A junk feed does not.]({{ '/assets/images/precision-vs-recall-product-decision/01-music-feed-precision.gif' | relative_url }})
+Seven myths I hear in reviews. Each one has a cost attached.
 
 ---
 
-## High recall: a kitchen smoke detector
+## 1. Higher accuracy means a better model
 
-Burnt toast sets the alarm off. That is a <span style="background:#fde6d0;color:#9a3b0a;font-weight:600;padding:1px 7px;border-radius:4px">⚠ false alarm</span>. People wave a towel and put up with it.
-
-The reason is the other mistake. A real fire at night that the detector misses is <span style="background:#ddd6fe;color:#4c1d95;font-weight:600;padding:1px 7px;border-radius:4px">✗ fatal</span>.
-
-So the detector accepts false alarms so it never misses the real event. That is high <span style="background:#ddd6fe;color:#4c1d95;font-weight:600;padding:1px 7px;border-radius:4px">recall</span>: out of the real fires, it must catch all of them.
-
-![A smoke detector accepts burnt toast so it never misses a real fire.]({{ '/assets/images/precision-vs-recall-product-decision/02-smoke-detector-recall.gif' | relative_url }})
+<div class="myth-block">
+<div class="myth-row myth-row--myth">
+<span class="myth-label">⚠ Myth</span>
+<p>Higher accuracy means a better model. Ship the 99% one.</p>
+</div>
+<div class="myth-row myth-row--believe">
+<span class="myth-label">· Why people believe it</span>
+<p>Accuracy is one number. Dashboards love one number. A 99% score looks like the job is done.</p>
+</div>
+<div class="myth-row myth-row--fact">
+<span class="myth-label">✓ Fact</span>
+<p>Accuracy can look great when the thing you care about is rare. A spam filter that never flags anything is right on almost every mail. Recall is 0. Precision and recall split the story into two questions. See the <a href="{{ '/posts/precision-recall-color-coded/' | relative_url }}">colour-coded post</a> for the inbox arithmetic.</p>
+</div>
+</div>
 
 ---
 
-## You cannot max both
+## 2. You can max both precision and recall
 
-The same score, two knobs that pull against each other.
-
-Lower the threshold and you catch more real events. Recall goes up. Users drown in <span style="background:#fde6d0;color:#9a3b0a;font-weight:600;padding:1px 7px;border-radius:4px">⚠ false alarms</span>.
-
-Raise the threshold and you only speak when you are almost sure. Precision goes up. Real problems slip by as <span style="background:#ddd6fe;color:#4c1d95;font-weight:600;padding:1px 7px;border-radius:4px">✗ misses</span>.
-
-Picking that cut is the product decision. The model gives you a score. The product picks who gets bothered.
+<div class="myth-block">
+<div class="myth-row myth-row--myth">
+<span class="myth-label">⚠ Myth</span>
+<p>We can max both. Just train a bit more.</p>
+</div>
+<div class="myth-row myth-row--believe">
+<span class="myth-label">· Why people believe it</span>
+<p>The two names sit next to each other on the model card. It feels like two scores you can push up together.</p>
+</div>
+<div class="myth-row myth-row--fact">
+<span class="myth-label">✓ Fact</span>
+<p>The same score, two knobs that pull against each other. Lower the threshold and you catch more real events. Recall goes up. Users drown in <span style="background:#fde6d0;color:#9a3b0a;font-weight:600;padding:1px 7px;border-radius:4px">⚠ false alarms</span>. Raise the threshold and you only speak when you are almost sure. Precision goes up. Real problems slip by as <span style="background:#ddd6fe;color:#4c1d95;font-weight:600;padding:1px 7px;border-radius:4px">✗ misses</span>.</p>
+</div>
+</div>
 
 ![Slide the threshold: catch more, or stay quieter.]({{ '/assets/images/precision-vs-recall-product-decision/03-threshold-slider.gif' | relative_url }})
 
+Picking that cut is the product decision. The model gives you a score. The product picks who gets bothered.
+
 ---
 
-## Ask what a false alarm costs vs what a miss costs
+## 3. 0.5 is the right threshold
 
-Write the two costs down before you argue about 0.87 vs 0.91.
+<div class="myth-block">
+<div class="myth-row myth-row--myth">
+<span class="myth-label">⚠ Myth</span>
+<p>Leave the threshold at 0.5. That is the default. Defaults are safe.</p>
+</div>
+<div class="myth-row myth-row--believe">
+<span class="myth-label">· Why people believe it</span>
+<p>The library defaulted there. Half sounds fair. Nobody has to defend a number they picked.</p>
+</div>
+<div class="myth-row myth-row--fact">
+<span class="myth-label">✓ Fact</span>
+<p>Set the threshold from the costs, not from 0.5. Write the two costs down before you argue about 0.87 vs 0.91.</p>
+</div>
+</div>
 
 1. **What does a <span style="background:#fde6d0;color:#9a3b0a;font-weight:600;padding:1px 7px;border-radius:4px">⚠ false alarm</span> cost?** Time, trust, a hidden invoice, a wasted page, a user who leaves.
 2. **What does a <span style="background:#ddd6fe;color:#4c1d95;font-weight:600;padding:1px 7px;border-radius:4px">✗ miss</span> cost?** Fraud that already left, a fire, a sick person sent home, a chunk the LLM never saw.
@@ -98,6 +115,68 @@ Write the two costs down before you argue about 0.87 vs 0.91.
 4. **Does a human review the output?** If yes, you can raise recall and let a person throw away the extra flags. If no, a false alarm goes straight to the user.
 
 Favour the side whose mistake you cannot afford.
+
+---
+
+## 4. Precision always matters more
+
+<div class="myth-block">
+<div class="myth-row myth-row--myth">
+<span class="myth-label">⚠ Myth</span>
+<p>Precision always matters more. Users hate false alarms. Tune for that.</p>
+</div>
+<div class="myth-row myth-row--believe">
+<span class="myth-label">· Why people believe it</span>
+<p>A music feed full of junk songs is what people remember. False alarms are visible. Misses are quiet.</p>
+</div>
+<div class="myth-row myth-row--fact">
+<span class="myth-label">✓ Fact</span>
+<p>A music app shows you ten songs. If eight or nine of them are good, you keep listening. That is high <span style="background:#d4f0e4;color:#0d7a45;font-weight:600;padding:1px 7px;border-radius:4px">precision</span>: when the feed speaks, it is usually right. A good track that never appeared is a quiet loss. For discovery, being selective beats being exhaustive. That is one product. It is not every product.</p>
+</div>
+</div>
+
+![A picky music feed keeps the user. A junk feed does not.]({{ '/assets/images/precision-vs-recall-product-decision/01-music-feed-precision.gif' | relative_url }})
+
+---
+
+## 5. False alarms are harmless
+
+<div class="myth-block">
+<div class="myth-row myth-row--myth">
+<span class="myth-label">⚠ Myth</span>
+<p>False alarms are harmless. Misses are the only expensive ones.</p>
+</div>
+<div class="myth-row myth-row--believe">
+<span class="myth-label">· Why people believe it</span>
+<p>A kitchen smoke detector that goes off on burnt toast is the picture people keep. People wave a towel and put up with it. So every <span style="background:#fde6d0;color:#9a3b0a;font-weight:600;padding:1px 7px;border-radius:4px">⚠ FP</span> looks cheap.</p>
+</div>
+<div class="myth-row myth-row--fact">
+<span class="myth-label">✓ Fact</span>
+<p>For the detector, that is the right bias. A real fire at night that the detector misses is <span style="background:#ddd6fe;color:#4c1d95;font-weight:600;padding:1px 7px;border-radius:4px">✗ fatal</span>. The detector accepts false alarms so it never misses the real event. That is high <span style="background:#ddd6fe;color:#4c1d95;font-weight:600;padding:1px 7px;border-radius:4px">recall</span>.</p>
+<p>False alarms are not always cheap. A spam filter that hides an invoice is a <span style="background:#fde6d0;color:#9a3b0a;font-weight:600;padding:1px 7px;border-radius:4px">⚠ false alarm</span> the user pays for. A code review bot that nags on every PR gets muted. Write the cost for <em>your</em> screen.</p>
+</div>
+</div>
+
+![A smoke detector accepts burnt toast so it never misses a real fire.]({{ '/assets/images/precision-vs-recall-product-decision/02-smoke-detector-recall.gif' | relative_url }})
+
+---
+
+## 6. This is just a data science decision
+
+<div class="myth-block">
+<div class="myth-row myth-row--myth">
+<span class="myth-label">⚠ Myth</span>
+<p>This is a data science decision. Product can wait for the notebook.</p>
+</div>
+<div class="myth-row myth-row--believe">
+<span class="myth-label">· Why people believe it</span>
+<p>The numbers live in a notebook. Threshold, F1, a PR curve. It looks like model work.</p>
+</div>
+<div class="myth-row myth-row--fact">
+<span class="myth-label">✓ Fact</span>
+<p>The model gives you a score. The product picks who gets bothered. Same product, different user, different cost. A recruiter search wants recall. A candidate feed wants precision. That sentence belongs in the spec, not only in a notebook.</p>
+</div>
+</div>
 
 | Product | Favour | Why |
 | --- | --- | --- |
@@ -112,16 +191,28 @@ Favour the side whose mistake you cannot afford.
 | Recommendations | Precision | Ten songs, eight or nine should be good. A long junk feed and the user leaves. |
 | Job matching | Precision on the candidate feed | A bad match wastes a click. Recruiter search can lean the other way, so a good hire is not skipped. |
 
-The table is a starting bias, not a law. Same product, different user, different cost. A recruiter search wants recall. A candidate feed wants precision. Write the two costs for *your* screen.
+The table is a starting bias, not a law. Write the two costs for *your* screen.
 
 ---
 
-## Practical tips
+## 7. One metric is enough
 
-- **Set the threshold from the costs**, not from 0.5 because the library defaulted there.
-- **Use two stages** when you can. A high-recall first pass gathers candidates. A high-precision filter, or a human, decides what the user sees.
-- **Track both numbers over time.** A precision win that quietly drops recall is a product change, not a free upgrade.
-- **Agree a floor on one metric, then push the other.** Example: recall at least 95%, then maximise precision. That sentence belongs in the spec, not only in a notebook.
+<div class="myth-block">
+<div class="myth-row myth-row--myth">
+<span class="myth-label">⚠ Myth</span>
+<p>Pick one metric. Track that. The other one will follow.</p>
+</div>
+<div class="myth-row myth-row--believe">
+<span class="myth-label">· Why people believe it</span>
+<p>One KPI is easy to put on a slide. A precision win looks like progress.</p>
+</div>
+<div class="myth-row myth-row--fact">
+<span class="myth-label">✓ Fact</span>
+<p>A precision win that quietly drops recall is a product change, not a free upgrade. Track both numbers over time. Agree a floor on one metric, then push the other. Example: recall at least 95%, then maximise precision.</p>
+</div>
+</div>
+
+Use two stages when you can. A high-recall first pass gathers candidates. A high-precision filter, or a human, decides what the user sees.
 
 ![Wide first pass, picky second pass.]({{ '/assets/images/precision-vs-recall-product-decision/04-two-stage-pipeline.gif' | relative_url }})
 
@@ -133,7 +224,12 @@ flowchart LR
 
 ---
 
-## Cheat sheet
+## Practical tips
+
+- **Set the threshold from the costs**, not from 0.5 because the library defaulted there.
+- **Use two stages** when you can. Wide first pass, picky second pass.
+- **Track both numbers over time.** A precision win that quietly drops recall is a product change.
+- **Agree a floor on one metric, then push the other.** That sentence belongs in the spec.
 
 | If this is true | Favour |
 | --- | --- |
@@ -151,9 +247,3 @@ flowchart LR
 | True Negative | grey `#6b7280` | · | correct ignore |
 
 Precision = when it speaks, how often is it right. Recall = of the real events, how many did it catch. Formulas and a worked inbox are in the [colour-coded post]({{ '/posts/precision-recall-color-coded/' | relative_url }}).
-
----
-
-## In short
-
-Precision and recall are product knobs, not only model scores. Precision asks, when the system speaks up, how often is it right. Recall asks, of the real events, how many did it catch. A music feed wants precision, because junk songs close the app. A smoke detector wants recall, because a missed fire at night is fatal. You cannot max both. The threshold is the product decision. Write down what a <span style="background:#fde6d0;color:#9a3b0a;font-weight:600;padding:1px 7px;border-radius:4px">⚠ false alarm</span> costs, what a <span style="background:#ddd6fe;color:#4c1d95;font-weight:600;padding:1px 7px;border-radius:4px">✗ miss</span> costs, who pays, and whether a human reviews the output. Set the cut from those costs, not from 0.5. Two stages help: catch widely first, then be picky. Track both numbers. Put a floor on one and push the other.

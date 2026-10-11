@@ -3,38 +3,27 @@ title: "AI Agent Evals: Golden Examples and the Grader"
 date: 2026-10-11 12:00:00 +0000
 tags: [evals, ai-agents, golden-examples, llm, testing]
 excerpt: "You would not hire someone after one good answer. You would give a work sample and a clear bar. One good demo is one good answer. Golden examples are the work sample. The grader is the bar the agent must clear every time."
-card_image: /assets/images/ai-agent-evals-golden-examples-grader/01-deterministic-vs-nondeterministic.gif
+card_image: /assets/images/ai-agent-evals-golden-examples-grader/00-comic-interview.gif
 permalink: /posts/ai-agent-evals-golden-examples-grader/
 ---
 
-You would not hire someone after one good interview answer.
+A mock job interview for an AI agent. The interviewer wants a hire. The robot has one good demo. That is not enough.
 
-You would give them a work sample. You would also tell them the bar they have to clear.
+You would not hire someone after one good interview answer. You would give them a work sample. You would also tell them the bar they have to clear.
 
-A one-off demo of an AI agent is the same as that one good answer. It looks fine in the room. It does not tell you what happens on Tuesday, after a prompt tweak, or after a model swap.
+**Golden examples** are the work sample. The **grader** is the bar. The agent has to clear that bar every time, not once.
 
-**Golden examples** are the work sample.
-
-The **grader** is the bar. The agent has to clear that bar every time, not once.
-
-```mermaid
-flowchart LR
-  A[One good answer] --> B[Not a hire]
-  C[Work sample] --> D[Golden examples]
-  E[Clear bar] --> F[Grader]
-  D --> G[Eval]
-  F --> G
-```
+![Six interview panels: demo, work sample, bar, re-test, five runs, guardrails]({{ '/assets/images/ai-agent-evals-golden-examples-grader/00-comic-interview.gif' | relative_url }})
 
 ---
 
-## The problem: `assertEqual` stops working
+## Panel 1. One good answer is not a hire
+
+![The interviewer hires after one demo. That is the mistake.]({{ '/assets/images/ai-agent-evals-golden-examples-grader/07-comic-demo-not-enough.png' | relative_url }})
 
 Normal software is deterministic. Same input, same output.
 
-A ROAS report is a simple example. **ROAS** means return on ad spend. You pass in ad spend `$100` and sales `$400`. The report returns `4.0x`.
-
-Run it again. Still `4.0x`. A unit test with `assertEqual` is enough.
+A ROAS report is a simple example. **ROAS** means return on ad spend. You pass in ad spend `$100` and sales `$400`. The report returns `4.0x`. Run it again. Still `4.0x`. A unit test with `assertEqual` is enough.
 
 | Run | Spend | Sales | ROAS |
 | --- | ---: | ---: | ---: |
@@ -54,27 +43,14 @@ An LLM agent is not like that. Ask it five times to write ad copy for a protein 
 
 None of those is a character-for-character match. An exact-match test fails even when the line is fine. That is why agent tests cannot be “did the string equal this one golden string?”
 
-![Same spend and sales always give ROAS 4.0x. The same ad-copy brief gives five different lines.]({{ '/assets/images/ai-agent-evals-golden-examples-grader/01-deterministic-vs-nondeterministic.gif' | relative_url }})
-
----
-
-## The common mistake: Demo → Deploy
-
-The usual skip looks like this:
-
-1. Someone runs a demo.
-2. The demo goes well once.
-3. The agent goes to production.
-4. Nobody wrote the work sample. Nobody wrote the bar.
+The usual skip looks like this: someone runs a demo, the demo goes well once, the agent goes to production. Nobody wrote the work sample. Nobody wrote the bar.
 
 ```mermaid
 flowchart LR
   A[Demo] -->|skip evals| B[Deploy]
 ```
 
-A demo that went well once proves very little. It is one good answer in one room, on one day, with one model version.
-
-The path you want is:
+The path you want is Demo → Evals → Deploy.
 
 ```mermaid
 flowchart LR
@@ -82,35 +58,13 @@ flowchart LR
   B --> C[Deploy]
 ```
 
-Demo to see if the idea is worth building. Evals to see if it still holds after you change a prompt, a skill file, or the model. Then deploy.
-
 ![A demo that skips evals and jumps to deploy proves very little. Put the grader in the path.]({{ '/assets/images/ai-agent-evals-golden-examples-grader/02-demo-deploy-skip-evals.gif' | relative_url }})
 
 ---
 
-## Evals have two parts
+## Panel 2. The work sample: golden examples
 
-An eval has two pieces you can write down.
-
-| Piece | Job | Hiring picture |
-| --- | --- | --- |
-| **Golden examples** | For a given input, what good and bad look like, plus the rubric | The work sample |
-| **Grader** | Runs on every change and checks new outputs against those rules | The bar |
-
-```mermaid
-flowchart TB
-  I[Input] --> G[Golden example]
-  G --> Good[Good output]
-  G --> Bad[Bad output]
-  G --> R[Rubric]
-  I --> A[Agent]
-  A --> O[New output]
-  O --> GR[Grader]
-  R --> GR
-  GR --> P[PASS or FAIL]
-```
-
-### Golden examples
+![Good line vs bad line for the same protein brief]({{ '/assets/images/ai-agent-evals-golden-examples-grader/08-comic-golden-examples.png' | relative_url }})
 
 For one input, write three things:
 
@@ -118,11 +72,7 @@ For one input, write three things:
 - a **bad** output
 - the **rubric** — the rules that separate the two
 
-Protein brand, one ad line. Rules:
-
-- under 80 characters
-- factually correct
-- follows brand guidelines (no weight-loss claims, no extra facts you did not give)
+Protein brand, one ad line. Rules: under 80 characters, factually correct, follows brand guidelines (no weight-loss claims, no extra facts you did not give).
 
 | | Line | Result |
 | --- | --- | --- |
@@ -139,23 +89,26 @@ Store these as **JSONL** — one JSON object per line. Easy to append. Easy to l
 {"id":"protein-sachet","input":"Write one ad line. Facts: 20g protein per sachet. Do not claim weight loss.","good":"20g protein in every sachet.","bad":"Weight loss guaranteed!","max_chars":80,"must_include":["protein"],"banned":["guaranteed","weight loss"]}
 ```
 
-### The grader
+---
 
-The grader is a script. It runs when you change:
+## Panel 3. The bar: grader rules
 
-- a **prompt**
-- a **skill / instruction file**
-- the **model**
+![Three rules on the wall: length, facts, brand]({{ '/assets/images/ai-agent-evals-golden-examples-grader/09-comic-grader-bar.png' | relative_url }})
 
-It takes the new outputs and checks them against the same rules. Same work sample. Same bar.
+The grader is a script. It runs when you change a **prompt**, a **skill / instruction file**, or the **model**. It takes the new outputs and checks them against the same rules. Same work sample. Same bar.
 
-| Change | New output | Result |
-| --- | --- | --- |
-| Prompt change | "20g protein in every sachet." | PASS |
-| Skill file change | "Fuel your day with protein." | PASS |
-| Model change | "Weight loss guaranteed!" | FAIL |
-
-![The grader passes a prompt change and a skill-file change, then fails a model swap that invents a weight-loss claim.]({{ '/assets/images/ai-agent-evals-golden-examples-grader/04-grader-on-changes.gif' | relative_url }})
+```mermaid
+flowchart TB
+  I[Input] --> G[Golden example]
+  G --> Good[Good output]
+  G --> Bad[Bad output]
+  G --> R[Rubric]
+  I --> A[Agent]
+  A --> O[New output]
+  O --> GR[Grader]
+  R --> GR
+  GR --> P[PASS or FAIL]
+```
 
 ### Three kinds of graders
 
@@ -181,7 +134,25 @@ flowchart LR
 
 ---
 
-## Run each case more than once
+## Panel 4. Re-test after a change. One FAIL
+
+![Prompt and skill pass. Model swap fails with a weight-loss claim.]({{ '/assets/images/ai-agent-evals-golden-examples-grader/10-comic-retest-fail.png' | relative_url }})
+
+| Change | New output | Result |
+| --- | --- | --- |
+| Prompt change | "20g protein in every sachet." | PASS |
+| Skill file change | "Fuel your day with protein." | PASS |
+| Model change | "Weight loss guaranteed!" | FAIL |
+
+Same suite. The model swap invented a claim. The suite’s job is to fail that swap before a human has to notice it in production.
+
+![The grader passes a prompt change and a skill-file change, then fails a model swap that invents a weight-loss claim.]({{ '/assets/images/ai-agent-evals-golden-examples-grader/04-grader-on-changes.gif' | relative_url }})
+
+---
+
+## Panel 5. Ask it five times
+
+![Four passes and one fail. pass@5 is happy. pass^5 is not.]({{ '/assets/images/ai-agent-evals-golden-examples-grader/11-comic-pass-at-k.png' | relative_url }})
 
 Outputs vary. One pass is not a habit.
 
@@ -207,7 +178,9 @@ For a coding puzzle, “it got it on try three” can still be useful. For an ag
 
 ---
 
-## Stakes go up when the agent has tools
+## Panel 6. Risky tools need brakes
+
+![Bad ad, mail tool, live DELETE. Human approval before the write.]({{ '/assets/images/ai-agent-evals-golden-examples-grader/12-comic-guardrails.png' | relative_url }})
 
 A bad ad line is one bad ad. You turn it off. You write a better one.
 
@@ -259,8 +232,6 @@ flowchart LR
 ### A toy you can run
 
 The script below is a fake protein-brand agent. No API calls. Three golden cases. Three variants that stand in for a prompt change, a skill-file change, and a model swap. Code checks only. Then the same case five times, so you can see pass@k vs pass^k.
-
-It lives at `eval_example.py` next to this draft. The cases are also in `golden_cases.jsonl`.
 
 ```python
 #!/usr/bin/env python3
@@ -384,7 +355,7 @@ if __name__ == "__main__":
     main()
 ```
 
-I ran this on the draft machine. This is the real output:
+I ran this. This is the real output:
 
 ```
 Toy eval suite. Fake agent. Code checks only. No API calls.
@@ -457,25 +428,7 @@ overall pass rate: 6/9 (67%)
   pass^5  (works every time):    FAIL
 ```
 
-The prompt change and the skill-file change stay on-brief. The model swap invents claims. The suite’s job is to fail that swap before a human has to notice it in production.
-
-The 4/5 block is the other lesson. **pass@5** is happy because it worked at least once. **pass^5** is not, because it failed once. If this agent ships ads, you care about the second one.
-
----
-
-## Cheat sheet
-
-| Thing | Plain meaning | Hiring picture |
-| --- | --- | --- |
-| Demo | One good run in a room | One good answer |
-| Golden example | Input + good + bad + rubric | Work sample |
-| Grader | Script that checks new outputs against the rubric | The bar |
-| Code check | Length, regex, schema, banned words | A checklist |
-| LLM-as-judge | A model scores with your rubric | An interviewer with a scorecard |
-| Human review | You label a sample | Hiring manager spot-check |
-| pass@k | Worked at least once in *k* tries | Got lucky once |
-| pass^k | Worked every time in *k* tries | Consistent |
-| Guardrail | Approval, least privilege, dry run | Do not hand over the production keys on day one |
+The prompt change and the skill-file change stay on-brief. The model swap invents claims. The 4/5 block is the other lesson. **pass@5** is happy because it worked at least once. **pass^5** is not, because it failed once. If this agent ships ads, you care about the second one.
 
 ---
 
