@@ -1291,6 +1291,31 @@ a:focus-visible,
   text-transform: uppercase;
 }
 
+/* Supervisor diary / approval-log entries */
+.diary-log {
+  margin: 1.35rem 0 0.55rem;
+}
+
+.prose .diary-log pre,
+.prose .diary-log .highlight {
+  background: #f4efe4;
+  color: #2c2618;
+  border: 1px solid #d8cdb6;
+  border-left: 5px solid #8a6a32;
+  border-radius: 0.4rem;
+}
+
+.prose .diary-log pre {
+  padding: 0.85rem 1rem;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.prose .diary-log .highlight {
+  margin: 0;
+}
+
 @media (prefers-color-scheme: dark) {
   .chat-a {
     background: #24332a;
@@ -1323,5 +1348,13 @@ a:focus-visible,
   .myth-row--fact {
     background: #1c3328;
     color: #a8d8bc;
+  }
+
+  .prose .diary-log pre,
+  .prose .diary-log .highlight {
+    background: #2b261c;
+    color: #ece3d0;
+    border-color: #5a4d34;
+    border-left-color: #c4a36a;
   }
 }
