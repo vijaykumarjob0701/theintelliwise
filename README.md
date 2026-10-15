@@ -3,9 +3,9 @@
 Public GitHub Pages site for **approved** technical posts by
 [Vijay Kumar](https://github.com/vijayliebe) (Dublin).
 
-Live URL after Pages is enabled:
+Live URL after Pages and DNS are enabled:
 
-**https://vijaykumarjob0701.github.io/theintelliwise/**
+**https://theintelliwise.com**
 
 This repository is the public shelf. It starts with **zero** posts on
 purpose. Drafts, outlines, and rough notes stay in the private
@@ -19,9 +19,8 @@ not be cloned, pulled, or synced into this tree.
 (`github-pages` gem 232 / Jekyll 3.10). No custom plugins, no extra build
 pipeline.
 
-Project-pages `baseurl` is `/theintelliwise`. Layouts use `relative_url` /
-`absolute_url` so assets resolve on
-`https://vijaykumarjob0701.github.io/theintelliwise/`.
+Custom-domain `baseurl` is empty. Layouts use `relative_url` /
+`absolute_url` so assets resolve on `https://theintelliwise.com`.
 
 ## Enable GitHub Pages
 
@@ -33,8 +32,9 @@ An admin has to flip this in the GitHub UI. An agent cannot do it.
 4. Branch: **`main`**. Folder: **`/` (root)**.
 5. Click **Save**.
 6. Wait for the Pages build (Actions tab, or the Pages settings status).
-7. Confirm **https://vijaykumarjob0701.github.io/theintelliwise/** loads the
-   home page, and `/theintelliwise/about/` loads About.
+7. Confirm **https://theintelliwise.com** loads the home page, and
+   `/about/` loads About. GitHub Pages should also redirect
+   `www.theintelliwise.com` to the apex domain.
 
 If the site 404s after a green build, the usual cause is a missing
 `baseurl` on a hard-coded `/` asset path. All theme links already go
@@ -52,8 +52,7 @@ bundle install
 bundle exec jekyll serve
 ```
 
-Open http://localhost:4000/theintelliwise/ — keep the `/theintelliwise` prefix so paths
-match production.
+Open http://localhost:4000/ — there is no path prefix because `baseurl` is empty.
 
 ```bash
 bundle exec jekyll build
@@ -98,7 +97,8 @@ Short version:
 
 ```text
 .cursor/rules/       Cursor agent rules (writing voice always on)
-_config.yml          Site title (The Intelliwise), author, baseurl
+CNAME                Custom domain (theintelliwise.com)
+_config.yml          Site title (The Intelliwise), author, url, baseurl
 _layouts/            Home, post, page, default
 _includes/           Head, header, footer, giscus, author links
 _posts/              Approved posts only

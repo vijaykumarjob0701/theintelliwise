@@ -33,7 +33,7 @@ function createDoc(links) {
 test("citation and in-post links open in a new tab with safe rel", function () {
   const doc = createDoc([
     { href: "https://arxiv.org/abs/1706.03762" },
-    { href: "/theintelliwise/posts/rag-semantic-caching/" },
+    { href: "/posts/rag-semantic-caching/" },
     { href: "https://www.buymeacoffee.com/vijay07", target: "_blank", rel: "noopener noreferrer" }
   ]);
 
@@ -79,8 +79,8 @@ test("default layout loads the rewriter on every page", function () {
 
 test("applies to primary nav and footer links", function () {
   const doc = createDoc([
-    { href: "/theintelliwise/" },
-    { href: "/theintelliwise/about/" },
+    { href: "/" },
+    { href: "/about/" },
     { href: "https://github.com/vijaykumarjob0701/theintelliwise" }
   ]);
 
