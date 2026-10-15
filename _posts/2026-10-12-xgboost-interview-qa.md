@@ -26,7 +26,7 @@ flowchart LR
 
 ## 1. What is XGBoost, in one line?
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.4em 0 0.8em">
+<div class="callout">
 <strong>Interviewer:</strong> What is XGBoost, in one line?
 </div>
 
@@ -44,7 +44,7 @@ For the 80 m² city flat, the first guess is €1,900. The leftover error is +�
 
 ## 2. How is it different from a random forest?
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.4em 0 0.8em">
+<div class="callout">
 <strong>Interviewer:</strong> How is XGBoost different from a random forest?
 </div>
 
@@ -68,7 +68,7 @@ If five forest trees guess €2,100, €2,400, €1,750, €2,300, €1,950 for 
 
 ## 3. Walk me through the first round.
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.4em 0 0.8em">
+<div class="callout">
 <strong>Interviewer:</strong> Walk me through the first round, with numbers.
 </div>
 
@@ -117,7 +117,7 @@ With eta 0.1, the same city flat climbs in small steps instead of taking the ful
 
 ## 4. Why is it called gradient boosting?
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.4em 0 0.8em">
+<div class="callout">
 <strong>Interviewer:</strong> Why is it called gradient boosting?
 </div>
 
@@ -133,7 +133,7 @@ If the loss were log loss for a classification problem, the gradient would not b
 
 ## 5. What does XGBoost add over plain gradient boosting?
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.4em 0 0.8em">
+<div class="callout">
 <strong>Interviewer:</strong> What does XGBoost add over plain gradient boosting?
 </div>
 
@@ -172,7 +172,7 @@ The rest of the “extreme” in the name is engineering:
 
 ## 6. What is the learning rate (eta) and why keep it small?
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.4em 0 0.8em">
+<div class="callout">
 <strong>Interviewer:</strong> What is the learning rate — eta — and why do people keep it small?
 </div>
 
@@ -194,7 +194,7 @@ A start I actually use: `learning_rate=0.05` or `0.1`, then let early stopping c
 
 ## 7. Which hyperparameters do you tune first?
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.4em 0 0.8em">
+<div class="callout">
 <strong>Interviewer:</strong> Which hyperparameters do you tune first?
 </div>
 
@@ -221,7 +221,7 @@ I do not start with a 40-point grid. I get a decent depth and eta first. Then I 
 
 ## 8. How do you stop it overfitting?
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.4em 0 0.8em">
+<div class="callout">
 <strong>Interviewer:</strong> How do you stop XGBoost overfitting?
 </div>
 
@@ -245,7 +245,7 @@ Do not report the best validation score as the final score. It has been peeked a
 
 ## 9. Which metric would you report?
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.4em 0 0.8em">
+<div class="callout">
 <strong>Interviewer:</strong> Which metric would you report for this rent model?
 </div>
 
@@ -267,7 +267,7 @@ Do not report train MAE. Do not report the early-stopping validation MAE as the 
 
 ## 10. How do you explain a prediction to a stakeholder?
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.4em 0 0.8em">
+<div class="callout">
 <strong>Interviewer:</strong> A product manager asks why this one flat came out at €2,365. What do you show them?
 </div>
 
@@ -297,7 +297,7 @@ I would also say what I will not say: “If you add 10 m² you will get €X mor
 
 ## 11. When would you *not* use XGBoost?
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.4em 0 0.8em">
+<div class="callout">
 <strong>Interviewer:</strong> When would you not use XGBoost?
 </div>
 
@@ -319,7 +319,7 @@ Concrete cases:
 
 ## 12. Quick-fire round
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.4em 0 0.8em">
+<div class="callout">
 <strong>Interviewer:</strong> One-line answers. Go.
 </div>
 

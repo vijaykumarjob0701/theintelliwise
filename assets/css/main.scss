@@ -851,7 +851,35 @@ a:focus-visible,
   max-width: 100%;
   height: auto;
   margin-inline: auto;
-  background: var(--bg-elev);
+}
+
+/* Painted boxes with no content: do not leave a coloured empty row. */
+.prose p:empty,
+.prose blockquote:empty,
+.prose pre:empty,
+.prose .highlight:empty,
+.prose .mermaid:empty,
+.prose .callout:empty,
+.prose .chat-a:empty,
+.prose .chat-b:empty,
+.prose .show-notes:empty,
+.prose .myth-block:empty,
+.prose .myth-row:empty,
+.prose .diary-log:empty,
+.prose figure:empty,
+.prose figcaption:empty,
+.prose img:not([src]),
+.prose img[src=""],
+.prose p:has(> img:only-child):has(img:not([src])),
+.prose p:has(> img:only-child):has(img[src=""]) {
+  display: none;
+}
+
+.prose .highlight:not(:has(pre, code, table, svg, img)) {
+  display: none;
+  background: none;
+  margin: 0;
+  padding: 0;
 }
 
 .prose .series {
@@ -863,10 +891,22 @@ a:focus-visible,
 }
 
 .prose .mermaid {
-  margin: 2rem 0;
+  margin: 0;
+  padding: 0;
   overflow-x: auto;
-  background: var(--bg-elev);
+  background: none;
+}
+
+.prose .mermaid:has(svg) {
+  margin: 2rem 0;
   padding: 1rem 0;
+  background: var(--bg-elev);
+}
+
+.prose .mermaid svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 .prose .math-display {
@@ -1186,12 +1226,24 @@ a:focus-visible,
   margin: 1.5rem 0;
 }
 
+/* Interviewer / prompt callouts. Never rely on inline cream + inherited ink. */
+.callout {
+  background: #fff6e8;
+  border: 1px solid #f0d2a8;
+  border-left: 6px solid #d46a2e;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 1.3em 0 0.85em;
+  color: #3d2a12;
+}
+
 .chat-a,
 .chat-b {
   max-width: min(38rem, 94%);
   padding: 0.72rem 0.95rem 0.8rem;
   border: 1px solid var(--rule);
   border-radius: 0.95rem;
+  color: #1d2a22;
 }
 
 .chat-a {
@@ -1239,7 +1291,8 @@ a:focus-visible,
   padding: 1rem 1.15rem 1.15rem;
   border: 1px solid var(--rule);
   border-radius: 0.75rem;
-  background: var(--bg-band);
+  background: var(--bg-elev);
+  color: var(--ink);
 }
 
 .show-notes > strong:first-child {
@@ -1317,14 +1370,25 @@ a:focus-visible,
 }
 
 @media (prefers-color-scheme: dark) {
+  .callout,
+  .prose div[style*="background:#fff6e8"],
+  .prose div[style*="background: #fff6e8"] {
+    background: #3a2a1a !important;
+    border-color: #8a6238 !important;
+    border-left-color: #e08a4a !important;
+    color: #f3e4cc !important;
+  }
+
   .chat-a {
     background: #24332a;
     border-color: #3d5a46;
+    color: #e8f3ec;
   }
 
   .chat-b {
     background: #332c22;
     border-color: #6a4e2a;
+    color: #f3eadc;
   }
 
   .chat-who {

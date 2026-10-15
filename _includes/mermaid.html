@@ -4,25 +4,40 @@
   if (!blocks.length) {
     // no mermaid on this page
   } else {
-    const { default: mermaid } = await import(
-      "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"
-    );
-    const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: dark ? "dark" : "neutral",
-      securityLevel: "strict",
-    });
-    const targets = [];
-    blocks.forEach((block) => {
-      const host = block.closest("pre") || block;
-      const diagram = document.createElement("div");
-      diagram.className = "mermaid";
-      diagram.textContent = block.textContent;
-      host.replaceWith(diagram);
-      targets.push(diagram);
-    });
-    await mermaid.run({ nodes: targets });
+    try {
+      const { default: mermaid } = await Promise.race([
+        import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Mermaid CDN timeout")), 8000)
+        ),
+      ]);
+      const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: dark ? "dark" : "neutral",
+        securityLevel: "strict",
+      });
+      const targets = [];
+      blocks.forEach((block) => {
+        const host = block.closest(".highlight") || block.closest("pre") || block;
+        const diagram = document.createElement("div");
+        diagram.className = "mermaid";
+        // Keep labels readable under securityLevel: "strict" (HTML is stripped).
+        diagram.textContent = block.textContent.replace(/<br\s*\/?>/gi, "\n");
+        host.replaceWith(diagram);
+        targets.push(diagram);
+      });
+      await mermaid.run({ nodes: targets });
+      targets.forEach((node) => {
+        const svg = node.querySelector("svg");
+        const hasInk = svg && (svg.getBoundingClientRect().height > 8 || svg.childElementCount > 0);
+        if (!hasInk && !node.textContent.trim()) {
+          node.remove();
+        }
+      });
+    } catch (err) {
+      console.warn("Mermaid render failed", err);
+    }
   }
 </script>
 {% endif %}

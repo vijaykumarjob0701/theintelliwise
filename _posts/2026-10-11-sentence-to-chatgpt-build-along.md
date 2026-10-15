@@ -58,7 +58,7 @@ SCALE = np.sqrt(D)
 
 ## 1. Break a sentence into pieces
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.2em 0">
+<div class="callout">
 <strong>If you break a sentence into pieces, you get tokens (with IDs).</strong>
 </div>
 
@@ -89,7 +89,7 @@ Those four IDs are invented. Do not look them up in a real vocab.
 
 ## 2. Turn each token into a list of numbers
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.2em 0">
+<div class="callout">
 <strong>If you turn each token into a list of numbers, you get embeddings.</strong>
 </div>
 
@@ -132,7 +132,7 @@ The picture below plots only the first two numbers, so you can see the arrows. `
 
 ## 3. Let every token ask a question
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.2em 0">
+<div class="callout">
 <strong>If you let every token ask a question, you get a query.</strong>
 </div>
 
@@ -172,7 +172,7 @@ Row 3 is the query for `late`: `[0.19  0.73  0.08  0.90]`. We will use that row 
 
 ## 4. Give every token a way to answer
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.2em 0">
+<div class="callout">
 <strong>If you give every token a way to answer, you get a key and a value.</strong>
 </div>
 
@@ -221,7 +221,7 @@ Three jobs, three lists: $q$, $k$, $v$. Still shape `(4, 4)`.
 
 ## 5. Compare one token's query with every key
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.2em 0">
+<div class="callout">
 <strong>If you compare one token's query with every key, you get attention scores.</strong>
 </div>
 
@@ -251,7 +251,7 @@ scores: [0.23 0.49 0.22 0.66]
 
 ## 6. Turn scores into percentages
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.2em 0">
+<div class="callout">
 <strong>If you turn scores into percentages, you get attention weights.</strong>
 </div>
 
@@ -282,7 +282,7 @@ So `late` takes 32% from itself, 27% from `bus`, 21% from `The`, 20% from `is`.
 
 ## 7. Mix the values using those weights
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.2em 0">
+<div class="callout">
 <strong>If you mix the values using those weights, you get a context vector.</strong>
 </div>
 
@@ -311,7 +311,7 @@ That is the view `late` now has of the whole sentence.
 
 ## 8. Do it for every token at once
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.2em 0">
+<div class="callout">
 <strong>If you do it for every token at once, you get self-attention.</strong>
 </div>
 
@@ -366,7 +366,7 @@ Row 0 is `The`. It can only see itself, so its weights are `[1, 0, 0, 0]`. Row 3
 
 ## 9. Add a small neural network and residual connections
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.2em 0">
+<div class="callout">
 <strong>If you add a small neural network and residual connections, you get a transformer block.</strong>
 </div>
 
@@ -424,7 +424,7 @@ Still shape `(4, 4)`. Same four tokens, richer lists.
 
 ## 10. Stack the blocks
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.2em 0">
+<div class="callout">
 <strong>If you stack the blocks, you get a transformer.</strong>
 </div>
 
@@ -454,7 +454,7 @@ We do not run 12 toy blocks here. The idea is the repeat, not a new formula.
 
 ## 11. Train it to predict the next word
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.2em 0">
+<div class="callout">
 <strong>If you train it to predict the next word, then fine-tune with instructions and human feedback, you get a chat assistant like ChatGPT.</strong>
 </div>
 
@@ -513,7 +513,7 @@ These percentages are from the tiny matrices above. They are not a real ChatGPT 
 
 ## 12. Rewind everything
 
-<div style="background:#fff6e8;border:1px solid #f0d2a8;border-left:6px solid #d46a2e;padding:12px 16px;border-radius:8px;margin:1.2em 0">
+<div class="callout">
 <strong>If you rewind everything, you are back to a plain sentence.</strong>
 </div>
 
