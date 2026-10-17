@@ -11,10 +11,10 @@ permalink: /posts/ai-harness-engineering/
 <p><strong>TL;DR</strong></p>
 <ul>
 <li>The harness builds, the model fills. Code, data, and even database access flow through it. Own that path.</li>
+<li>We control a non-deterministic model with a deterministic harness. The harness only covers the cases it knows about, so it can still miss things. Own it, and you can add a rule the day you find a gap.</li>
 <li>Hosted tools offer Privacy Mode, ZDR, and no-training promises. I am not saying they misuse data. You still cannot independently verify what happens after a prompt leaves your machine.</li>
 <li>A harness you run can keep work local, mask PII, refuse prod writes, and decide which model a person may call.</li>
-<li>Cost (about 3× to 40× tokens) and a roughly four-month open-model gap make this practical now. They are not why I started.</li>
-<li>Keep a balance. Simple work stays with you or a small local model. Frontier is for hard tasks. That keeps grey matter, and it saves money.</li>
+<li>Cost (about 3× to 40× tokens) and a roughly four-month open-model gap make this practical now. They are not why I started. Keep a balance: simple work stays with you or a small local model. Frontier is for hard tasks.</li>
 <li><a href="https://github.com/vijayliebe/Code-Harness" target="_blank" rel="noopener">Code-Harness</a> is my retrieval-harness head start, not a finished privacy platform. <a href="#try-code-harness">Try it</a>.</li>
 </ul>
 </div>
@@ -40,9 +40,21 @@ The **model** is the engine. The **harness** is context, tools, the loop, checks
 
 ![The model is the engine. Steering, brakes, dashboard, and logbook light up around it.]({{ '/assets/images/ai-harness-engineering/01-harness-around-engine.gif' | relative_url }})
 
+We are controlling something **non-deterministic** (the AI model) with something **deterministic** (the harness). Same prompt, two runs, the model can pick a different answer or a different tool. The harness is the part that repeats: if this user, this repo, this tool, then allow or block.
+
+That harness is only as complete as the use cases it knows about. A new path, a new tool, a <a href="https://theintelliwise.com/posts/prompt-injection-guide/" target="_blank" rel="noopener">prompt injection</a> you did not write a rule for — it can miss that. That is exactly why you want to own it. The day you find a gap, you add a rule. You do not open a ticket and wait.
+
+```mermaid
+flowchart TD
+  M["Model: non-deterministic"] --> H["Harness rules: deterministic, known cases"]
+  H --> K[Known case: rule fires]
+  H --> G[Unknown case: a gap]
+  G --> P[You own it: add a rule]
+```
+
 If you want how a real hosted harness is put together, I already walked through Cursor from the outside: <a href="https://theintelliwise.com/posts/reverse-engineering-cursor-ai-agent/" target="_blank" rel="noopener">Reverse Engineering the Cursor AI Agent</a>. This page is the other half. **Who should own that harness, and why privacy is the reason.**
 
-I keep a public working example: <a href="https://github.com/vijayliebe/Code-Harness" target="_blank" rel="noopener">Code-Harness</a> (Apache-2.0). A **retrieval harness for code**, not an autonomous agent. Head start, not a finished privacy platform.
+I keep a public working example: <a href="https://github.com/vijayliebe/Code-Harness" target="_blank" rel="noopener">Code-Harness</a> (Apache-2.0). Retrieval for code, not a finished privacy platform.
 
 ---
 
@@ -59,9 +71,7 @@ I use hosted coding tools. I am not saying <a href="https://cursor.com/help/secu
 - OpenAI: API and business products **do not train on your organisation’s data by default**. **ZDR** exists for qualifying organisations, with approval.
 - Claude Code: on commercial Team / Enterprise / API terms, **no training** unless you opt in. **ZDR** is a separate Enterprise offering, enabled by Anthropic, not in the standard plan.
 
-Those are real features. I would still buy them for a lot of everyday work.
-
-The honest limit: **the guarantee is a contract and a policy page.** You cannot independently verify what happens to a prompt once it leaves your machine. You cannot inspect the provider’s disk. You trust the vendor and the audit they show you. That is fine for many teams. It is not the same as **control**.
+Those are real features. I would still buy them for a lot of everyday work. The honest limit is still the same: **the guarantee is a contract and a policy page.** You cannot independently verify what happens to a prompt once it leaves your machine. You cannot inspect the provider’s disk. You trust the vendor and the audit they show you. That is fine for many teams. It is not the same as **control**.
 
 ---
 
@@ -85,7 +95,7 @@ Governments are already building that picture.
 - <a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=2295477" target="_blank" rel="noopener">IndiaAI</a> is funding sovereign models and compute.
 - The <a href="https://digital-strategy.ec.europa.eu/en/news/eu-launches-ai-gigafactories-call-boost-europes-computing-capacity-and-unlock-more-eu30-billion" target="_blank" rel="noopener">EU</a> is funding AI gigafactories so work can sit on European infrastructure.
 
-**The honest caveat.** Most enterprises still **buy hosted tools**. A 2025 US survey put purchased AI use cases at **76%** (<a href="https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/" target="_blank" rel="noopener">Menlo Ventures</a>; investor in a hosted vendor, so a market snapshot, not gospel). Japan’s slides still start with safe use of Claude Code. Hosted vendors sell regional, VPC, and HIPAA-style setups. Running your own stack costs money and ops time. I expect a mixed world. Teams with the most sensitive code will still want a harness they can open.
+**The honest caveat.** Most enterprises still **buy hosted tools**. A 2025 US survey put purchased AI use cases at **76%** (<a href="https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/" target="_blank" rel="noopener">Menlo Ventures</a>; investor in a hosted vendor, so a market snapshot, not gospel). Hosted vendors also sell regional, VPC, and HIPAA-style setups. I expect a mixed world. [Fair objections](#objections) covers the Docs comparison, vendor self-hosting, and the cost of owning the path.
 
 ### Trust at the database, not only at the chat box
 
@@ -242,7 +252,6 @@ These are **supporting** reasons. They are not the thesis.
 **Cost sits in the harness.** Same model, different bill. <a href="https://arxiv.org/abs/2607.22585" target="_blank" rel="noopener">Vats & Golev</a> (preprint): up to about **40×** more tokens per solved task when the harness changed, pass rates only a few points. <a href="https://arxiv.org/html/2610.04433" target="_blank" rel="noopener">Liu & Han</a> (preprint): up to about **3×** cost, score often inside rerun noise. On <a href="https://labs.scale.com/blog/swe-bench-pro-v2" target="_blank" rel="noopener">SWE-Bench Pro v2</a>: **pick the harness for the bill, not the score.** More loops also means more of your repo in more prompts.
 
 - **Caveat.** Accuracy often barely moves. Liu & Han found harness swaps flip about **13%** of tasks — same rate as a rerun. Labs are absorbing old harness tricks into the model (<a href="https://claude.com/resources/articles/harnessing-claudes-intelligence" target="_blank" rel="noopener">Anthropic</a>). I am not betting that “the harness beats the model.”
-- Retrieve knobs and reuse: <a href="https://theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a>, <a href="https://theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">Semantic Caching for RAG & LLMs</a>.
 
 **Everyday coding can sit on a local model.** <a href="https://epoch.ai/data-insights/open-closed-eci-gap" target="_blank" rel="noopener">Epoch AI</a> puts the open-vs-closed gap at about **four months**. On the clean SWE-Bench Pro v2 *private* set (solved out of 272): Claude Opus 5 **222** (closed), Kimi K3 **214** (open), GLM-5.3 **211** (open).
 
@@ -260,7 +269,7 @@ These are **supporting** reasons. They are not the thesis.
 <a id="decision-mode"></a>
 ### Let the harness decide: decision mode
 
-A chat model writes a paragraph. A **decision model** fills labeled fields — yes/no, one choice, a score. Background: <a href="https://theintelliwise.com/posts/jev-system-one-model/" target="_blank" rel="noopener">Jev: Stamp the Answer, Don't Write It</a>. The harness can ask three cheap questions — how hard, how sensitive, what will it cost — then pick among the models the ACL already allowed. **Policy first. Decision second.** Never the other way around. Simple tasks stay with you or a local model. That is the [grey-matter](#grey-matter) rule.
+A chat model writes a paragraph. A **decision model** fills labeled fields — yes/no, one choice, a score. Background: <a href="https://theintelliwise.com/posts/jev-system-one-model/" target="_blank" rel="noopener">Jev: Stamp the Answer, Don't Write It</a>. The harness can ask three cheap questions — how hard, how sensitive, what will it cost — then pick among the models the ACL already allowed. **Policy first. Decision second.**
 
 ```mermaid
 flowchart TD
@@ -283,9 +292,9 @@ flowchart TD
 <a id="grey-matter"></a>
 ## Keep your grey matter: balance AI and your own thinking
 
-There should be a **balance** between using AI and using our own intelligence, so we do not lose our cognitive skills. Always reaching for a frontier model means we even automate the simple things — a rename, a test we already know how to write. That is how grey matter rusts. The same balance **saves a huge amount on bills**. Just because one has a lot of money, one does not spend it everywhere.
+There should be a **balance** between using AI and using our own intelligence. If every rename goes to a frontier model, grey matter rusts. The same balance **saves a huge amount on bills**. Just because one has a lot of money, one does not spend it everywhere.
 
-A harness can enforce this. Same idea as the [model ACL](#acl): simple work stays with you or a small local model. Frontier only with approval, or for a hard task. Modes I would ship: **try it yourself first**, **explain before you accept**, and a per-team frontier budget.
+A harness can enforce this. Modes I would ship: **try it yourself first**, **explain before you accept**, and a per-team frontier budget.
 
 | Task | Who / what handles it |
 | --- | --- |
@@ -334,9 +343,7 @@ Four design stories. No extra numbers.
 <a id="what-i-measured"></a>
 ### What I measured
 
-This is a **smoke test**, not a benchmark. Golden suite on the Code-Harness repo itself: **8 questions, one run**, 4,289 indexed chunks, MiniLM, cross-encoder rerank. One question flipping moves Recall by **0.125**.
-
-Full harness: Recall@10 **0.3125**, nDCG@10 **0.2629**, citation-path **0.625**. Dense embeddings were the piece that mattered on this set. I did not run an answer-level comparison. There was no LLM key on that run.
+This is a **smoke test**, not a benchmark. Eight questions, one run, on the Code-Harness repo itself (4,289 chunks). One question flipping moves Recall by **0.125**. Full harness: Recall@10 **0.3125**, nDCG@10 **0.2629**, citation-path **0.625**. Dense embeddings were the piece that mattered on this set. Full table and caveats below.
 
 <details markdown="1">
 <summary>Full smoke-test table and how to read it</summary>
@@ -391,9 +398,7 @@ None of this is shipped.
 <a id="try-code-harness"></a>
 ### Try it yourself: Code-Harness
 
-Commands below are from the public <a href="https://github.com/vijayliebe/Code-Harness/blob/main/README.md" target="_blank" rel="noopener">README</a>. I am not adding flags. The repo is <a href="https://github.com/vijayliebe/Code-Harness/blob/main/LICENSE" target="_blank" rel="noopener">Apache-2.0</a>. Retrieval needs no API key. A generated answer does.
-
-Python **3.9+** (CI uses 3.12). On Debian/Ubuntu, `python3 -m venv` needs the `python3-venv` package. After the venv is on, `python` and `python3` are the same interpreter.
+Commands below are from the public <a href="https://github.com/vijayliebe/Code-Harness/blob/main/README.md" target="_blank" rel="noopener">README</a>. I am not adding flags. <a href="https://github.com/vijayliebe/Code-Harness/blob/main/LICENSE" target="_blank" rel="noopener">Apache-2.0</a>. Retrieval needs no API key. A generated answer does. Python **3.9+** (CI uses 3.12). On Debian/Ubuntu, `python3 -m venv` needs `python3-venv`.
 
 ```bash
 git clone https://github.com/vijayliebe/Code-Harness.git
@@ -434,16 +439,30 @@ python3 main.py serve .
 
 For an IDE over stdin/stdout, after you have indexed: `python main.py mcp stdio .`
 
-| Look at this first | Why |
-| --- | --- |
-| <a href="https://github.com/vijayliebe/Code-Harness/blob/main/harness/loop.py" target="_blank" rel="noopener"><code>harness/loop.py</code></a> | Optional corrective retrieve. Off by default. |
-| <a href="https://github.com/vijayliebe/Code-Harness/blob/main/harness/verify.py" target="_blank" rel="noopener"><code>harness/verify.py</code></a> | Default-fail “done” gate. Citations. |
-| <a href="https://github.com/vijayliebe/Code-Harness/blob/main/harness/retriever.py" target="_blank" rel="noopener"><code>harness/retriever.py</code></a> | Dense + BM25 + graph, RRF, rerank, MMR. |
-| <a href="https://github.com/vijayliebe/Code-Harness/blob/main/harness/redact.py" target="_blank" rel="noopener"><code>harness/redact.py</code></a> / <a href="https://github.com/vijayliebe/Code-Harness/blob/main/harness/audit.py" target="_blank" rel="noopener"><code>audit.py</code></a> | Keys stripped outbound. Append-only log. |
-| <a href="https://github.com/vijayliebe/Code-Harness/blob/main/harness/eval.py" target="_blank" rel="noopener"><code>harness/eval.py</code></a> | Golden suite. Misses tagged by stage. |
-| <a href="https://github.com/vijayliebe/Code-Harness/blob/main/harness/decision.py" target="_blank" rel="noopener"><code>harness/decision.py</code></a> | Optional typed decision client. Off by default. Loop / verify only. |
+Start with `loop.py`, `verify.py`, and `retriever.py` in that repo. If something is wrong, or you want a change, open an issue or a PR. I read them.
 
-If something is wrong, or you want a change, open an issue or a PR on that repo. I read them.
+---
+
+<a id="objections"></a>
+## Fair objections, and my answers
+
+Two I hear a lot. Both are fair, and neither is the same as owning the path.
+
+<div class="callout">
+<p><strong>Q:</strong> We already trust SaaS like Google Docs with our documents. Why not trust a vendor harness?</p>
+</div>
+
+With Docs-style SaaS, you still decide what you put in and what you share. The tool does what you click. An AI agent acts on its own. It reads files and runs tools, sometimes in ways no human saw. Data can leave without anyone noticing. I wrote how that happens in <a href="https://theintelliwise.com/posts/prompt-injection-guide/" target="_blank" rel="noopener">Prompt Injection: A Simple Guide</a>. A strict harness you own, plus a local LLM, reduces that risk. The default can be: this prompt does not go out.
+
+<div class="callout">
+<p><strong>Q:</strong> The vendor offers self-hosting / bring-your-own infra. Isn't that enough?</p>
+</div>
+
+It helps. Data can still leave through logs, telemetry, analytics, or crash reports. Even if those are strict, you are still trusting the vendor's harness quality — the rules, the tool allow-list, what happens on a weird prompt.
+
+A harness you own is more trustworthy for that, and you can change it when you need to. No feature-request queue. No waiting on the vendor's roadmap. No extra invoice for each add-on.
+
+**Honest caveat.** Owning it means you carry the build, the security, and the maintenance. That cost is real. For a lot of teams, a hosted tool is still the right buy. I am arguing for the teams that cannot accept "trust the policy page."
 
 ---
 
@@ -453,7 +472,7 @@ If something is wrong, or you want a change, open an issue or a PR on that repo.
 A short list I would own in a review. Measuring this kind of claim needs golden examples and a grader, not one good demo — I wrote that method in <a href="https://theintelliwise.com/posts/ai-agent-evals-golden-examples-grader/" target="_blank" rel="noopener">AI Agent Evals: Golden Examples and the Grader</a>.
 
 - **Self-hosting costs more than the privacy is worth.** You now run models, GPUs, patching, and an ACL. Most teams already buy hosted tools (**76%** in that 2025 survey). If that stays true, this is a regulated-industry niche, not a default.
-- **Hosted privacy modes become independently auditable.** If you can run the model in *your* VPC, with *your* keys, and a third party can prove no extra copy, the trust gap shrinks. I still want the ACL.
+- **Hosted privacy modes become independently auditable.** If you can run the model in *your* VPC, with *your* keys, and a third party can prove no extra copy — logs and telemetry included — the trust gap shrinks. I still want the ACL.
 - **Frontier models absorb the harness.** Labs already talk this way: extra scaffolding is coping, not scaling (<a href="https://claude.com/resources/articles/harnessing-claudes-intelligence" target="_blank" rel="noopener">Anthropic</a>). Then my bet shrinks to redact, audit, and model ACL.
 - **Open models stall.** If the four-month gap opens again, everyday local coding is a server-room story.
 - **Harness upkeep costs more than it saves.** Rules rot. People bypass the ACL with a personal key — which is also how the data leaves.
@@ -465,10 +484,10 @@ A short list I would own in a review. Measuring this kind of claim needs golden 
 ## What to take away
 
 - The harness builds, the model fills. Own the path your code and your records travel on.
-- Hosted privacy is a real contract. It is not independent verify.
+- We control a non-deterministic model with a deterministic harness. The harness only knows the cases you wrote. Own it so you can add a rule the day you find a gap.
+- Hosted privacy is a real contract. It is not independent verify. Vendor self-hosting still leaves logs, telemetry, and harness quality with the vendor.
 - A prompt is not an ACL. Deny by default. Decide which model a person may call.
-- Cost and open models are why this is practical, not why I started.
-- Keep a balance. Simple work is yours. Frontier is for hard tasks. Grey matter and the bill both matter.
+- Cost and open models are why this is practical, not why I started. Keep a balance: simple work is yours, frontier is for hard tasks.
 - Code-Harness is a *retrieval* harness for code. Try the [quickstart](#try-code-harness).
 
 If you change one thing after this page: stop asking “which model?” first. Ask who owns the path.
@@ -515,4 +534,4 @@ If you change one thing after this page: stop asking “which model?” first. A
 - Hao-Ping (Hank) Lee, Advait Sarkar, Lev Tankelevitch, Ian Drosos, Sean Rintel, Richard Banks, and Nicholas Wilson, <a href="https://www.microsoft.com/en-us/research/publication/the-impact-of-generative-ai-on-critical-thinking-self-reported-reductions-in-cognitive-effort-and-confidence-effects-from-a-survey-of-knowledge-workers/" target="_blank" rel="noopener">The Impact of Generative AI on Critical Thinking</a>, CHI 2025. Microsoft Research + Carnegie Mellon. Survey.
 - Judy Hanwen Shen and Alex Tamkin, <a href="https://www.anthropic.com/research/AI-assistance-coding-skills" target="_blank" rel="noopener">How AI assistance impacts the formation of coding skills</a>, Anthropic, 29 Jan 2026. Also <a href="https://arxiv.org/abs/2601.20245" target="_blank" rel="noopener">arXiv 2601.20245</a>. RCT.
 - METR, <a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/" target="_blank" rel="noopener">Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity</a>, 10 Jul 2025. Also <a href="https://arxiv.org/abs/2507.09089" target="_blank" rel="noopener">arXiv 2507.09089</a>. RCT.
-- Vijay Kumar, Intelliwise: <a href="https://theintelliwise.com/posts/reverse-engineering-cursor-ai-agent/" target="_blank" rel="noopener">Cursor AI Agent</a>, <a href="https://theintelliwise.com/posts/prompt-injection-guide/" target="_blank" rel="noopener">prompt injection</a>, <a href="https://theintelliwise.com/posts/human-in-the-loop-approval-fatigue/" target="_blank" rel="noopener">approval fatigue</a>, <a href="https://theintelliwise.com/posts/why-llms-forget-memory/" target="_blank" rel="noopener">why LLMs forget</a>, <a href="https://theintelliwise.com/posts/ai-agent-memory-guide/" target="_blank" rel="noopener">agent memory</a>, <a href="https://theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">RAG five knobs</a>, <a href="https://theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">semantic caching</a>, <a href="https://theintelliwise.com/posts/kv-cache-sticky-notes/" target="_blank" rel="noopener">KV cache</a>, <a href="https://theintelliwise.com/posts/peft-lora-qlora-guide/" target="_blank" rel="noopener">PEFT / LoRA</a>, <a href="https://theintelliwise.com/posts/ai-agent-evals-golden-examples-grader/" target="_blank" rel="noopener">agent evals</a>, <a href="https://theintelliwise.com/posts/jev-system-one-model/" target="_blank" rel="noopener">Jev / System One</a>.
+- Intelliwise posts cited above are listed under Related reads.
