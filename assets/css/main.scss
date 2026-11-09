@@ -860,6 +860,7 @@ a:focus-visible,
 .prose .highlight:empty,
 .prose .mermaid:empty,
 .prose .callout:empty,
+.prose .lab-guess:empty,
 .prose .chat-a:empty,
 .prose .chat-b:empty,
 .prose .show-notes:empty,
@@ -1237,6 +1238,82 @@ a:focus-visible,
   color: #3d2a12;
 }
 
+
+/* Lab guess cards: <details class="lab-guess">. Cream card like .callout, no JS. */
+.prose details.lab-guess,
+details.lab-guess {
+  display: block;
+  margin: 1.25rem 0;
+  padding: 0;
+  background: #fff6e8;
+  border: 1px solid #f0d2a8;
+  border-left: 6px solid #d46a2e;
+  border-radius: 8px;
+  color: #3d2a12;
+
+  > summary {
+    display: block;
+    list-style: none;
+    position: relative;
+    padding: 12px 16px 12px 40px;
+    font-weight: 600;
+    line-height: 1.45;
+    cursor: pointer;
+    user-select: none;
+
+    &::-webkit-details-marker { display: none; }
+
+    &::before {
+      content: "+";
+      position: absolute;
+      left: 14px;
+      top: 10px;
+      width: 18px;
+      text-align: center;
+      font-weight: 700;
+      color: #d46a2e;
+    }
+
+    &:hover { color: #a94f1c; }
+
+    &:focus-visible {
+      outline: 2px solid #d46a2e;
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+  }
+
+  &[open] > summary {
+    border-bottom: 1px dashed #f0d2a8;
+    &::before { content: "\2212"; }
+  }
+
+  > *:not(summary) {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+  > p:first-of-type { margin-top: 12px; }
+  > *:last-child { margin-bottom: 14px; }
+
+  table {
+    width: auto;
+    max-width: calc(100% - 32px);
+    margin-top: 8px;
+    font-size: 0.92em;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.6);
+  }
+  th, td {
+    padding: 4px 10px;
+    border: 1px solid #f0d2a8;
+    text-align: left;
+  }
+}
+
+@media print {
+  details.lab-guess > *:not(summary) { display: block !important; }
+}
+
 .chat-a,
 .chat-b {
   max-width: min(38rem, 94%);
@@ -1421,4 +1498,24 @@ a:focus-visible,
     border-color: #5a4d34;
     border-left-color: #c4a36a;
   }
+
+  .prose details.lab-guess,
+  details.lab-guess {
+    background: #3a2a1a;
+    border-color: #8a6238;
+    border-left-color: #e08a4a;
+    color: #f3e4cc;
+
+    > summary {
+      &::before { color: #e08a4a; }
+      &:hover { color: #ffd2a8; }
+      &:focus-visible { outline-color: #e08a4a; }
+    }
+
+    &[open] > summary { border-bottom-color: #8a6238; }
+
+    table { background: rgba(0, 0, 0, 0.18); }
+    th, td { border-color: #8a6238; }
+  }
+
 }
