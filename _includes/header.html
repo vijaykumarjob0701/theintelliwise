@@ -1,13 +1,13 @@
 <header class="site-header">
   <div class="wrap bar">
-    <a class="wordmark" href="{{ '/' | relative_url }}">
+    <a class="wordmark" href="https://theintelliwise.com/">
       {% include brand-mark.html %}
       <span class="wordmark-text">{{ site.title }}</span>
     </a>
     <nav class="nav" aria-label="Primary">
       <a href="{{ '/' | relative_url }}"{% if page.layout == 'home' or page.url == '/' %} aria-current="page"{% endif %}>
         {% include nav-icon.html name="writing" %}
-        <span>Writing</span>
+        <span>Blogs</span>
       </a>
       <a href="{{ '/about/' | relative_url }}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>
         {% include nav-icon.html name="about" %}

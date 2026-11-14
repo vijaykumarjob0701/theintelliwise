@@ -17,7 +17,7 @@ I did **not** invent these papers. I only sorted the tray.
 Each paper has **three layers**:
 
 1. **This map** — why the box exists, a short **Quick easy read**, and the diagrams.
-2. **A longer guide** — still brief, enough that you do not need to grind the PDF. Linked from the table and from each paper. These guides live under this post. They are **not** listed on the Writing index or in the RSS feed.
+2. **A longer guide** — still brief, enough that you do not need to grind the PDF. Linked from the table and from each paper. These guides live under this post. They are **not** listed on the Blogs index or in the RSS feed.
 3. **The real paper** — official abstract, PDF, conference page, and a **Dataset** link only when a public corpus is honestly tied to that paper.
 
 Skim the map. Open the longer guide when you want more detail. Open the paper when you want the proof.
