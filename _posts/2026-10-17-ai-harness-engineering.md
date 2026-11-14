@@ -43,7 +43,7 @@ The **model** is the engine. The **harness** is context, tools, the loop, checks
 
 We are controlling something **non-deterministic** (the AI model) with something **deterministic** (the harness). Same prompt, two runs, the model can pick a different answer or a different tool. The harness is the part that repeats: if this user, this repo, this tool, then allow or block.
 
-That harness is only as complete as the use cases it knows about. A new path, a new tool, a <a href="https://theintelliwise.com/posts/prompt-injection-guide/" target="_blank" rel="noopener">prompt injection</a> you did not write a rule for — it can miss that. That is exactly why you want to own it. The day you find a gap, you add a rule. You do not open a ticket and wait.
+That harness is only as complete as the use cases it knows about. A new path, a new tool, a <a href="https://blogs.theintelliwise.com/posts/prompt-injection-guide/" target="_blank" rel="noopener">prompt injection</a> you did not write a rule for — it can miss that. That is exactly why you want to own it. The day you find a gap, you add a rule. You do not open a ticket and wait.
 
 ```mermaid
 flowchart TD
@@ -53,7 +53,7 @@ flowchart TD
   G --> P[You own it: add a rule]
 ```
 
-If you want how a real hosted harness is put together, I already walked through Cursor from the outside: <a href="https://theintelliwise.com/posts/reverse-engineering-cursor-ai-agent/" target="_blank" rel="noopener">Reverse Engineering the Cursor AI Agent</a>. This page is the other half: **who should own that harness, and why privacy is the reason.** Working example: <a href="https://github.com/vijayliebe/Code-Harness" target="_blank" rel="noopener">Code-Harness</a> (Apache-2.0). Retrieval for code, not a finished privacy platform.
+If you want how a real hosted harness is put together, I already walked through Cursor from the outside: <a href="https://blogs.theintelliwise.com/posts/reverse-engineering-cursor-ai-agent/" target="_blank" rel="noopener">Reverse Engineering the Cursor AI Agent</a>. This page is the other half: **who should own that harness, and why privacy is the reason.** Working example: <a href="https://github.com/vijayliebe/Code-Harness" target="_blank" rel="noopener">Code-Harness</a> (Apache-2.0). Retrieval for code, not a finished privacy platform.
 
 ---
 
@@ -86,7 +86,7 @@ What it can control:
 | **Data / files** | Keep the pack on your machine. Deny `**/.env`, `secrets/**`, `patients/**`. Prod infra read-only. |
 | **Database** | Read-only prod. Named queries only. Mask PII. No prod writes. |
 | **Models** | Who may call local vs frontier, by user, repo, and data tags. |
-| **Memory / context** | What past chat and repo facts go into the next pack. See <a href="https://theintelliwise.com/posts/why-llms-forget-memory/" target="_blank" rel="noopener">Why LLMs Forget Everything</a> and <a href="https://theintelliwise.com/posts/ai-agent-memory-guide/" target="_blank" rel="noopener">agent memory</a>. |
+| **Memory / context** | What past chat and repo facts go into the next pack. See <a href="https://blogs.theintelliwise.com/posts/why-llms-forget-memory/" target="_blank" rel="noopener">Why LLMs Forget Everything</a> and <a href="https://blogs.theintelliwise.com/posts/ai-agent-memory-guide/" target="_blank" rel="noopener">agent memory</a>. |
 
 Governments are already building that picture.
 
@@ -154,7 +154,7 @@ flowchart TD
 <a id="acl"></a>
 ## Rules and ACLs in practice
 
-A paragraph in the system prompt is not a rule. The model can ignore it. A prompt injection can override it — see <a href="https://theintelliwise.com/posts/prompt-injection-guide/" target="_blank" rel="noopener">Prompt Injection: A Simple Guide</a>. An **access control list (ACL)** at the harness layer is a hard deny. The call does not run.
+A paragraph in the system prompt is not a rule. The model can ignore it. A prompt injection can override it — see <a href="https://blogs.theintelliwise.com/posts/prompt-injection-guide/" target="_blank" rel="noopener">Prompt Injection: A Simple Guide</a>. An **access control list (ACL)** at the harness layer is a hard deny. The call does not run.
 
 Principle I would ship: **deny by default**, **allow explicitly**, **deny always wins**.
 
@@ -184,7 +184,7 @@ flowchart TD
   A -->|yes| F[Local or frontier]
 ```
 
-Frontier calls should not be a tired “yes” click. I kept a one-day toy diary of that failure in <a href="https://theintelliwise.com/posts/human-in-the-loop-approval-fatigue/" target="_blank" rel="noopener">The Human in the Loop Can Get Tired</a>.
+Frontier calls should not be a tired “yes” click. I kept a one-day toy diary of that failure in <a href="https://blogs.theintelliwise.com/posts/human-in-the-loop-approval-fatigue/" target="_blank" rel="noopener">The Human in the Loop Can Get Tired</a>.
 
 <details markdown="1">
 <summary>Example model ACL and <code>allowed_models(user, repo)</code> (made up)</summary>
@@ -259,7 +259,7 @@ These are **supporting** reasons. They are not the thesis.
 
 **A small tuned model plus your harness.** <a href="https://arxiv.org/abs/2601.21649" target="_blank" rel="noopener">SWE-Spot</a> (preprint): a 4B matching models up to 8× larger on one repo. <a href="https://arxiv.org/abs/2602.05780" target="_blank" rel="noopener">IBM</a>: 8B fine-tunes beating 10×-larger models on two private codebases. <a href="https://arxiv.org/abs/2610.02858" target="_blank" rel="noopener">HAD</a> (Choi, Moon, Nam, Lee — **not peer reviewed**): contrast plus a validity filter moved ALFWorld unseen to **63.43%** vs **47.01%**; the 1.7B student sat above the 8B teacher. Stuffing harness text only raised usage **65.7% → 73.1%** and left success ~**43%**.
 
-- **Caveat.** Most of the proven gain is **fine-tuning the weights**, not extra retrieve (<a href="https://arxiv.org/abs/2604.23801" target="_blank" rel="noopener">4B medical test</a>: fine-tune helped, RAG did not). HAD was text environments. Recipe: a **domain-tuned small model plus a custom harness**. <a href="https://theintelliwise.com/posts/peft-lora-qlora-guide/" target="_blank" rel="noopener">PEFT / LoRA</a>.
+- **Caveat.** Most of the proven gain is **fine-tuning the weights**, not extra retrieve (<a href="https://arxiv.org/abs/2604.23801" target="_blank" rel="noopener">4B medical test</a>: fine-tune helped, RAG did not). HAD was text environments. Recipe: a **domain-tuned small model plus a custom harness**. <a href="https://blogs.theintelliwise.com/posts/peft-lora-qlora-guide/" target="_blank" rel="noopener">PEFT / LoRA</a>.
 
 **Route only after policy says the data may leave.** Everyday work on a cheap local model. Frontier only when the task is hard **and** the [model ACL](#acl) says this user, this repo, and this pack may go out. <a href="https://arxiv.org/abs/2406.18665" target="_blank" rel="noopener">RouteLLM</a> and <a href="https://arxiv.org/abs/2305.05176" target="_blank" rel="noopener">FrugalGPT</a> are the known patterns.
 
@@ -268,7 +268,7 @@ These are **supporting** reasons. They are not the thesis.
 <a id="decision-mode"></a>
 ### Let the harness decide: decision mode
 
-A chat model writes a paragraph. A **decision model** fills labeled fields — yes/no, one choice, a score. Background: <a href="https://theintelliwise.com/posts/jev-system-one-model/" target="_blank" rel="noopener">Jev: Stamp the Answer, Don't Write It</a>. The harness can ask three cheap questions — how hard, how sensitive, what will it cost — then pick among the models the ACL already allowed. **Policy first. Decision second.**
+A chat model writes a paragraph. A **decision model** fills labeled fields — yes/no, one choice, a score. Background: <a href="https://blogs.theintelliwise.com/posts/jev-system-one-model/" target="_blank" rel="noopener">Jev: Stamp the Answer, Don't Write It</a>. The harness can ask three cheap questions — how hard, how sensitive, what will it cost — then pick among the models the ACL already allowed. **Policy first. Decision second.**
 
 ```mermaid
 flowchart TD
@@ -468,7 +468,7 @@ Two I hear a lot. Both are fair, and neither is the same as owning the path.
 <p><strong>Q:</strong> We already trust SaaS like Google Docs with our documents. Why not trust a vendor harness?</p>
 </div>
 
-With Docs-style SaaS, you still decide what you put in and what you share. The tool does what you click. An AI agent acts on its own. It reads files and runs tools, sometimes in ways no human saw. Data can leave without anyone noticing. I wrote how that happens in <a href="https://theintelliwise.com/posts/prompt-injection-guide/" target="_blank" rel="noopener">Prompt Injection: A Simple Guide</a>. A strict harness you own, plus a local LLM, reduces that risk. The default can be: this prompt does not go out.
+With Docs-style SaaS, you still decide what you put in and what you share. The tool does what you click. An AI agent acts on its own. It reads files and runs tools, sometimes in ways no human saw. Data can leave without anyone noticing. I wrote how that happens in <a href="https://blogs.theintelliwise.com/posts/prompt-injection-guide/" target="_blank" rel="noopener">Prompt Injection: A Simple Guide</a>. A strict harness you own, plus a local LLM, reduces that risk. The default can be: this prompt does not go out.
 
 <div class="callout">
 <p><strong>Q:</strong> The vendor offers self-hosting / bring-your-own infra. Isn't that enough?</p>
@@ -485,7 +485,7 @@ A harness you own is more trustworthy for that, and you can change it when you n
 <a id="prove-me-wrong"></a>
 ## What would prove me wrong
 
-A short list I would own in a review. How I would measure a claim like this: <a href="https://theintelliwise.com/posts/ai-agent-evals-golden-examples-grader/" target="_blank" rel="noopener">AI Agent Evals: Golden Examples and the Grader</a>.
+A short list I would own in a review. How I would measure a claim like this: <a href="https://blogs.theintelliwise.com/posts/ai-agent-evals-golden-examples-grader/" target="_blank" rel="noopener">AI Agent Evals: Golden Examples and the Grader</a>.
 
 - **Self-hosting costs more than the privacy is worth.** You now run models, GPUs, patching, and an ACL. Most teams already buy hosted tools (**76%** in that 2025 survey). If that stays true, this is a regulated-industry niche, not a default.
 - **Hosted privacy modes become independently auditable.** If you can run the model in *your* VPC, with *your* keys, and a third party can prove no extra copy — logs and telemetry included — the trust gap shrinks. I still want the ACL.
@@ -512,15 +512,15 @@ If you change one thing after this page: stop asking “which model?” first. A
 
 ## Related reads on Intelliwise
 
-- <a href="https://theintelliwise.com/posts/reverse-engineering-cursor-ai-agent/" target="_blank" rel="noopener">Reverse Engineering the Cursor AI Agent</a> — how a real hosted harness is put together.
-- <a href="https://theintelliwise.com/posts/prompt-injection-guide/" target="_blank" rel="noopener">Prompt Injection: A Simple Guide</a> — why a prompt is not an ACL.
-- <a href="https://theintelliwise.com/posts/human-in-the-loop-approval-fatigue/" target="_blank" rel="noopener">The Human in the Loop Can Get Tired</a> — permission clicks before a frontier call.
-- <a href="https://theintelliwise.com/posts/why-llms-forget-memory/" target="_blank" rel="noopener">Why LLMs Forget Everything</a> and <a href="https://theintelliwise.com/posts/ai-agent-memory-guide/" target="_blank" rel="noopener">Different Types of Memory in AI Agents</a> — the context / memory layer.
-- <a href="https://theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a> and <a href="https://theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">Semantic Caching for RAG & LLMs</a> — retrieve cost.
-- <a href="https://theintelliwise.com/posts/kv-cache-sticky-notes/" target="_blank" rel="noopener">KV Cache: Why Chatbots Keep Past Keys and Values</a> — local inference memory.
-- <a href="https://theintelliwise.com/posts/peft-lora-qlora-guide/" target="_blank" rel="noopener">PEFT, LoRA, and QLoRA</a> — domain-tuning a small model.
-- <a href="https://theintelliwise.com/posts/ai-agent-evals-golden-examples-grader/" target="_blank" rel="noopener">AI Agent Evals: Golden Examples and the Grader</a> — how I would measure this bet.
-- <a href="https://theintelliwise.com/posts/jev-system-one-model/" target="_blank" rel="noopener">Jev: Stamp the Answer, Don't Write It</a> — typed decision fields, not a chat paragraph.
+- <a href="https://blogs.theintelliwise.com/posts/reverse-engineering-cursor-ai-agent/" target="_blank" rel="noopener">Reverse Engineering the Cursor AI Agent</a> — how a real hosted harness is put together.
+- <a href="https://blogs.theintelliwise.com/posts/prompt-injection-guide/" target="_blank" rel="noopener">Prompt Injection: A Simple Guide</a> — why a prompt is not an ACL.
+- <a href="https://blogs.theintelliwise.com/posts/human-in-the-loop-approval-fatigue/" target="_blank" rel="noopener">The Human in the Loop Can Get Tired</a> — permission clicks before a frontier call.
+- <a href="https://blogs.theintelliwise.com/posts/why-llms-forget-memory/" target="_blank" rel="noopener">Why LLMs Forget Everything</a> and <a href="https://blogs.theintelliwise.com/posts/ai-agent-memory-guide/" target="_blank" rel="noopener">Different Types of Memory in AI Agents</a> — the context / memory layer.
+- <a href="https://blogs.theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a> and <a href="https://blogs.theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">Semantic Caching for RAG & LLMs</a> — retrieve cost.
+- <a href="https://blogs.theintelliwise.com/posts/kv-cache-sticky-notes/" target="_blank" rel="noopener">KV Cache: Why Chatbots Keep Past Keys and Values</a> — local inference memory.
+- <a href="https://blogs.theintelliwise.com/posts/peft-lora-qlora-guide/" target="_blank" rel="noopener">PEFT, LoRA, and QLoRA</a> — domain-tuning a small model.
+- <a href="https://blogs.theintelliwise.com/posts/ai-agent-evals-golden-examples-grader/" target="_blank" rel="noopener">AI Agent Evals: Golden Examples and the Grader</a> — how I would measure this bet.
+- <a href="https://blogs.theintelliwise.com/posts/jev-system-one-model/" target="_blank" rel="noopener">Jev: Stamp the Answer, Don't Write It</a> — typed decision fields, not a chat paragraph.
 
 ---
 

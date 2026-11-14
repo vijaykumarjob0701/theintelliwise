@@ -5,7 +5,7 @@ Public GitHub Pages site for **approved** technical posts by
 
 Live URL after Pages and DNS are enabled:
 
-**https://theintelliwise.com**
+**https://blogs.theintelliwise.com**
 
 This repository is the public shelf. It starts with **zero** posts on
 purpose. Drafts, outlines, and rough notes stay in the private
@@ -20,7 +20,7 @@ not be cloned, pulled, or synced into this tree.
 pipeline.
 
 Custom-domain `baseurl` is empty. Layouts use `relative_url` /
-`absolute_url` so assets resolve on `https://theintelliwise.com`.
+`absolute_url` so assets resolve on `https://blogs.theintelliwise.com`.
 
 ## Enable GitHub Pages
 
@@ -32,9 +32,9 @@ An admin has to flip this in the GitHub UI. An agent cannot do it.
 4. Branch: **`main`**. Folder: **`/` (root)**.
 5. Click **Save**.
 6. Wait for the Pages build (Actions tab, or the Pages settings status).
-7. Confirm **https://theintelliwise.com** loads the home page, and
-   `/about/` loads About. GitHub Pages should also redirect
-   `www.theintelliwise.com` to the apex domain.
+7. Confirm **https://blogs.theintelliwise.com** loads the home page, and
+   `/about/` loads About. If a `www.blogs` DNS record exists, GitHub Pages
+   should redirect `www.blogs.theintelliwise.com` to the blog subdomain.
 
 If the site 404s after a green build, the usual cause is a missing
 `baseurl` on a hard-coded `/` asset path. All theme links already go
@@ -97,7 +97,7 @@ Short version:
 
 ```text
 .cursor/rules/       Cursor agent rules (writing voice always on)
-CNAME                Custom domain (theintelliwise.com)
+CNAME                Custom domain (blogs.theintelliwise.com)
 _config.yml          Site title (The Intelliwise), author, url, baseurl
 _layouts/            Home, post, page, default
 _includes/           Head, header, footer, giscus, author links

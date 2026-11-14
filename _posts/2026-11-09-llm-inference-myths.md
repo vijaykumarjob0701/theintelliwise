@@ -167,7 +167,7 @@ Practical rule: put the **stable** text first (system instructions, shared docs)
 
 ![Shared system+doc prefix reused; new question still prefills]({{ '/assets/images/llm-inference-myths/05-prefix-reuse.gif' | relative_url }})
 
-Serving engines do this for you. vLLM, for example, hashes KV blocks and reuses them with <a href="https://docs.vllm.ai/en/stable/features/automatic_prefix_caching/" target="_blank" rel="noopener">automatic prefix caching</a>. For the memory side and the paging picture, see <a href="https://theintelliwise.com/posts/kv-cache-sticky-notes/" target="_blank" rel="noopener">KV cache sticky notes</a>.
+Serving engines do this for you. vLLM, for example, hashes KV blocks and reuses them with <a href="https://docs.vllm.ai/en/stable/features/automatic_prefix_caching/" target="_blank" rel="noopener">automatic prefix caching</a>. For the memory side and the paging picture, see <a href="https://blogs.theintelliwise.com/posts/kv-cache-sticky-notes/" target="_blank" rel="noopener">KV cache sticky notes</a>.
 
 <div class="callout">
 <p><strong>Your turn: notebook section 4</strong></p>
@@ -220,7 +220,7 @@ Serving engines do this for you. vLLM, for example, hashes KV blocks and reuses 
 
 ![FP16 weights vs 4-bit weights on the same card]({{ '/assets/images/llm-inference-myths/03-quantization.gif' | relative_url }})
 
-If the model barely fits on your machine, also read <a href="https://theintelliwise.com/posts/local-llm-beyond-vram/" target="_blank" rel="noopener">Local LLM beyond VRAM</a>. Quantization and CPU plus GPU placement solve different parts of the same problem.
+If the model barely fits on your machine, also read <a href="https://blogs.theintelliwise.com/posts/local-llm-beyond-vram/" target="_blank" rel="noopener">Local LLM beyond VRAM</a>. Quantization and CPU plus GPU placement solve different parts of the same problem.
 
 <div class="callout">
 <p><strong>Your turn: notebook section 5</strong></p>
@@ -357,7 +357,7 @@ Continuous batching needs a scheduler that decides who runs in each step.
 
 ### PagedAttention and batch size
 
-Old servers reserved KV memory for the maximum length of every chat, even if the chat used only a small part. That empty reserved space limits how many sequences fit. <a href="https://arxiv.org/abs/2309.06180" target="_blank" rel="noopener">PagedAttention</a> stores the KV cache in small fixed blocks and gives out blocks only when needed. Less reserved empty space means more sequences fit at once, so the batch can be bigger and throughput can rise. The paper reported 2 to 4× throughput over the systems it compared, on their workloads. For the locker picture and the math, see <a href="https://theintelliwise.com/posts/kv-cache-sticky-notes/" target="_blank" rel="noopener">KV cache sticky notes</a>.
+Old servers reserved KV memory for the maximum length of every chat, even if the chat used only a small part. That empty reserved space limits how many sequences fit. <a href="https://arxiv.org/abs/2309.06180" target="_blank" rel="noopener">PagedAttention</a> stores the KV cache in small fixed blocks and gives out blocks only when needed. Less reserved empty space means more sequences fit at once, so the batch can be bigger and throughput can rise. The paper reported 2 to 4× throughput over the systems it compared, on their workloads. For the locker picture and the math, see <a href="https://blogs.theintelliwise.com/posts/kv-cache-sticky-notes/" target="_blank" rel="noopener">KV cache sticky notes</a>.
 
 ### Tensor parallel vs pipeline parallel
 
@@ -472,7 +472,7 @@ Papers and docs for the mechanics. The measured tables come only from the compan
 - <a href="https://arxiv.org/abs/2401.15077" target="_blank" rel="noopener">EAGLE (arXiv:2401.15077)</a>
 - <a href="https://nvidia.github.io/TensorRT-LLM/features/quantization.html" target="_blank" rel="noopener">TensorRT-LLM: Quantization</a>
 - <a href="https://nvidia.github.io/TensorRT-LLM/latest/features/speculative-decoding.html" target="_blank" rel="noopener">TensorRT-LLM: Speculative decoding</a>
-- Related Intelliwise posts: <a href="https://theintelliwise.com/posts/kv-cache-sticky-notes/" target="_blank" rel="noopener">KV cache sticky notes</a> and <a href="https://theintelliwise.com/posts/local-llm-beyond-vram/" target="_blank" rel="noopener">Local LLM beyond VRAM</a>
+- Related Intelliwise posts: <a href="https://blogs.theintelliwise.com/posts/kv-cache-sticky-notes/" target="_blank" rel="noopener">KV cache sticky notes</a> and <a href="https://blogs.theintelliwise.com/posts/local-llm-beyond-vram/" target="_blank" rel="noopener">Local LLM beyond VRAM</a>
 
 ---
 

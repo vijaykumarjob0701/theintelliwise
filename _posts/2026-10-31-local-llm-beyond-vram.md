@@ -49,7 +49,7 @@ Three shelves. Same books.
 
 ![The GPU only holds a slice. Misses walk RAM, then the SSD.]({{ '/assets/images/local-llm-beyond-vram/01-the-trap.gif' | relative_url }})
 
-If you have seen <a href="https://theintelliwise.com/posts/kv-cache-sticky-notes/" target="_blank" rel="noopener">KV cache sticky notes</a>, this is the same idea on the other side of memory. The KV cache is conversation state. The weight shelves are the model itself. Both grow. Both steal the same VRAM.
+If you have seen <a href="https://blogs.theintelliwise.com/posts/kv-cache-sticky-notes/" target="_blank" rel="noopener">KV cache sticky notes</a>, this is the same idea on the other side of memory. The KV cache is conversation state. The weight shelves are the model itself. Both grow. Both steal the same VRAM.
 
 I treat the four engines in this post as **placement policies**, not as magic. llama.cpp already lets you put some layers on the GPU (`-ngl` / `--n-gpu-layers`), pin named tensors (`--override-tensor`), and leave MoE experts on the CPU. That is the baseline. Start there unless you have a reason not to.
 
@@ -104,7 +104,7 @@ The same README is honest about the other bill. The original checkpoint is **dec
 1. Pick one model you actually care about. Not the biggest name on the page.
 2. Confirm disk first. Then VRAM.
 3. Time the first token and the next twenty. If TTFT is minutes, the experiment succeeded as a load test and failed as a chat test.
-4. If you only needed a smaller model plus retrieval, stop here and read <a href="https://theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">the five RAG knobs</a>. A 70B that crawls is not automatically better than an 8B that answers.
+4. If you only needed a smaller model plus retrieval, stop here and read <a href="https://blogs.theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">the five RAG knobs</a>. A 70B that crawls is not automatically better than an 8B that answers.
 
 AirLLM also reports a **3×** decode speed-up from block-wise weight compression, and about **10%** from prefetch. Those are their numbers, on their bottleneck (disk load, not GPU matmul). Useful if you stay on this path. Not a reason to skip the stopwatch.
 
@@ -180,7 +180,7 @@ Setup asks for **8 GB RAM** at the very least (16 GB or more is better) and **22
 
 **You are here if:** the model is in a loop. It calls tools. It writes a thinking block, then deletes it. The next turn is not a fresh chat. Prefill keeps eating the first token.
 
-Short chat and a long agent session are different workloads. I wrote about the harness side of that in <a href="https://theintelliwise.com/posts/ai-harness-engineering/" target="_blank" rel="noopener">Own Your Harness</a>. Here the question is the engine under the harness.
+Short chat and a long agent session are different workloads. I wrote about the harness side of that in <a href="https://blogs.theintelliwise.com/posts/ai-harness-engineering/" target="_blank" rel="noopener">Own Your Harness</a>. Here the question is the engine under the harness.
 
 **Start with:** <a href="https://github.com/FlashML-org/FreeToken" target="_blank" rel="noopener">FreeToken</a>, and still keep llama.cpp as the control.
 
@@ -191,7 +191,7 @@ FreeToken is an edge MoE serving engine. The public README lists four design bet
 - **Elastic VRAM** — move memory between the expert cache and the KV cache at runtime, no restart
 - **Semantic-aware caching** — checkpoint recurrent state and KV at tool-call and thinking-block boundaries, so an edit does not recompute the whole prefix
 
-That last one is the reason this path exists. An agent that strips a thinking block or replaces a tool result invalidates a naive KV prefix. If you only measure a single “hello” prompt, you will miss it. See also <a href="https://theintelliwise.com/posts/why-llms-forget-memory/" target="_blank" rel="noopener">why LLMs forget</a>: the model does not remember the session. The engine and the harness do.
+That last one is the reason this path exists. An agent that strips a thinking block or replaces a tool result invalidates a naive KV prefix. If you only measure a single “hello” prompt, you will miss it. See also <a href="https://blogs.theintelliwise.com/posts/why-llms-forget-memory/" target="_blank" rel="noopener">why LLMs forget</a>: the model does not remember the session. The engine and the harness do.
 
 ![An agent edit should replay from a semantic checkpoint, not rebuild the whole prefix.]({{ '/assets/images/local-llm-beyond-vram/05-agent-cache.gif' | relative_url }})
 
@@ -211,7 +211,7 @@ Treat those as a sales-and-paper snapshot. Copy the *metrics*, not the scores.
 1. Same model, same quant, same machine. llama.cpp first, then FreeToken.
 2. Measure a **session**, not a greeting. Tool call. Thinking block removed. Next turn.
 3. Record TTFT on turn 1 and turn 5. Record tok/s. Record RAM and VRAM while KV grows.
-4. Score the answers with a small golden set. I use the habit from <a href="https://theintelliwise.com/posts/ai-agent-evals-golden-examples-grader/" target="_blank" rel="noopener">golden examples and a grader</a>. Speed without quality is a demo.
+4. Score the answers with a small golden set. I use the habit from <a href="https://blogs.theintelliwise.com/posts/ai-agent-evals-golden-examples-grader/" target="_blank" rel="noopener">golden examples and a grader</a>. Speed without quality is a demo.
 
 Colibri also talks about parking a conversation so an agent’s next turn reads only what is new (`COLI_PARK`). Their README reports one Hermes Agent second turn on Qwen3.8-Flash-Next (14,810 tokens): **86 s → 4.9 s**. That is their number, on their engine. If you are already on Colibri for path 2, measure that before you install a second stack.
 
@@ -279,7 +279,7 @@ All speed and VRAM cells below are **project-reported**. I did not reproduce the
 Work top to bottom. Stop when a line fails.
 
 1. **What is the task?** Chat, code, long RAG, or an agent loop. The model comes from the task, not from a VRAM screenshot.
-2. **Does a smaller model plus retrieval already pass a golden set?** If yes, stay small. See <a href="https://theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">RAG knobs</a> and <a href="https://theintelliwise.com/posts/ai-agent-evals-golden-examples-grader/" target="_blank" rel="noopener">evals</a>.
+2. **Does a smaller model plus retrieval already pass a golden set?** If yes, stay small. See <a href="https://blogs.theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">RAG knobs</a> and <a href="https://blogs.theintelliwise.com/posts/ai-agent-evals-golden-examples-grader/" target="_blank" rel="noopener">evals</a>.
 3. **Can llama.cpp load a quant you trust?** If yes, measure it. That is the control.
 4. **Disk and RAM, not only VRAM.** AirLLM shards, Colibri’s 429 GB GLM-5.2, Strata’s ~70–76 GB downloads, FreeToken host-resident experts — the SSD is part of the machine.
 5. **Interactive, or patient?** Colibri’s own 25 GB laptop floor is 0.05–0.1 tok/s cold. Issue #31 is 0.28 tok/s on a 128 GB CPU box. Say “library, not chat” before you install a dashboard.
@@ -304,11 +304,11 @@ Do not switch because a card-memory number looked small on a README.
 
 ## Related reads on Intelliwise
 
-- <a href="https://theintelliwise.com/posts/kv-cache-sticky-notes/" target="_blank" rel="noopener">KV Cache: Why Chatbots Keep Past Keys and Values</a> — conversation state vs model weights. Both sit on the same GPU.
-- <a href="https://theintelliwise.com/posts/why-llms-forget-memory/" target="_blank" rel="noopener">Why LLMs Forget Everything</a> — the model does not keep the session. The engine and the harness do.
-- <a href="https://theintelliwise.com/posts/ai-harness-engineering/" target="_blank" rel="noopener">Own Your Harness: Privacy First, Model Second</a> — the loop around the engine. This post is the engine under that loop.
-- <a href="https://theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a> — when a smaller model plus retrieval is the real fix.
-- <a href="https://theintelliwise.com/posts/ai-agent-evals-golden-examples-grader/" target="_blank" rel="noopener">AI Agent Evals: Golden Examples and the Grader</a> — how I would score quality next to tok/s.
+- <a href="https://blogs.theintelliwise.com/posts/kv-cache-sticky-notes/" target="_blank" rel="noopener">KV Cache: Why Chatbots Keep Past Keys and Values</a> — conversation state vs model weights. Both sit on the same GPU.
+- <a href="https://blogs.theintelliwise.com/posts/why-llms-forget-memory/" target="_blank" rel="noopener">Why LLMs Forget Everything</a> — the model does not keep the session. The engine and the harness do.
+- <a href="https://blogs.theintelliwise.com/posts/ai-harness-engineering/" target="_blank" rel="noopener">Own Your Harness: Privacy First, Model Second</a> — the loop around the engine. This post is the engine under that loop.
+- <a href="https://blogs.theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a> — when a smaller model plus retrieval is the real fix.
+- <a href="https://blogs.theintelliwise.com/posts/ai-agent-evals-golden-examples-grader/" target="_blank" rel="noopener">AI Agent Evals: Golden Examples and the Grader</a> — how I would score quality next to tok/s.
 
 ---
 

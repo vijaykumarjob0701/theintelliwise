@@ -14,7 +14,7 @@ permalink: /posts/vector-index-myths/
 <li>The running example is a company assistant. A user types "How do I reset my password?" and we need the chunk that says "I forgot my password." The vectors are already built. The question here is how the store finds nearby vectors quickly.</li>
 <li>I do not rerun benchmarks in this post. The only numbers I use are <strong>example memory math</strong>, defaults or formulas copied from docs, and figures quoted from a named paper with its date and dataset.</li>
 <li>I checked the claims against official docs and the original papers in <strong>November 2026</strong>. Links are in the Sources section.</li>
-<li>This post is about the index inside the store. If you are still choosing the store itself, start with the <a href="https://theintelliwise.com/posts/choosing-vector-database-for-rag/" target="_blank" rel="noopener">vector database decision guide</a>.</li>
+<li>This post is about the index inside the store. If you are still choosing the store itself, start with the <a href="https://blogs.theintelliwise.com/posts/choosing-vector-database-for-rag/" target="_blank" rel="noopener">vector database decision guide</a>.</li>
 </ul>
 </div>
 
@@ -99,7 +99,7 @@ I would not treat "1 million" as a hard law. Latency depends on the dimension, t
 
 Three hundred thousand chunks, a size many internal assistants never leave, sit well under 1 GB of raw vectors at the same width. That often fits on one machine. Whether a flat scan is fast enough is a measurement, not a slogan. If you need exact neighbours, or you have not yet proved that an approximate index is worth the recall risk, start with flat and measure recall@k and latency on your own questions.
 
-For the wider retrieval knobs around that measurement, I already wrote <a href="https://theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a>. The index is one of those knobs. It is not the only one.
+For the wider retrieval knobs around that measurement, I already wrote <a href="https://blogs.theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a>. The index is one of those knobs. It is not the only one.
 
 ---
 
@@ -122,7 +122,7 @@ The same FAISS page is clear about limits. HNSW does not require training, which
 HNSW can also be a poor first pick when:
 
 - The data no longer fits in RAM. Then a disk-based graph, such as DiskANN, or a compressed IVF index, is the actual design.
-- You filter hard on metadata. A graph that was built on all points can become weakly connected once a filter removes most of them. I walked through that, including pgvector iterative scans and Qdrant's filter-aware edges, in the <a href="https://theintelliwise.com/posts/choosing-vector-database-for-rag/" target="_blank" rel="noopener">vector database guide</a>.
+- You filter hard on metadata. A graph that was built on all points can become weakly connected once a filter removes most of them. I walked through that, including pgvector iterative scans and Qdrant's filter-aware edges, in the <a href="https://blogs.theintelliwise.com/posts/choosing-vector-database-for-rag/" target="_blank" rel="noopener">vector database guide</a>.
 - Build time or memory during index construction is the constraint, not query latency.
 - You want more compression than a plain HNSW graph usually keeps. FAISS and Milvus both offer HNSW combined with scalar or product quantization.
 
@@ -140,7 +140,7 @@ So I do evaluate HNSW early when the data fits in memory and I can accept approx
 
 FAISS still treats IVF as the standard way to scale a search once a flat scan is too slow. Its 2026 guide sets `nlist` from `4 × sqrt(N)` to `16 × sqrt(N)`, and it gives this method for collections well below 1 million, not only for a billion. At larger sizes it often uses an HNSW index only as the coarse quantizer, so the system can assign a query to the right list quickly. That combination, sometimes written `IVF65536_HNSW32`, is IVF at the top, with a graph used to find the lists. It is not "HNSW versus IVF."
 
-pgvector ships the same idea as **IVFFlat**: faster to build and lighter than HNSW, with a weaker speed-recall trade-off. The docs tell you to start `lists` at `rows / 1000` up to 1 million rows, and at `sqrt(rows)` above that, and to start `probes` at `sqrt(lists)`. The default number of probes is 1, which is usually too low. I already recorded those defaults in the <a href="https://theintelliwise.com/posts/choosing-vector-database-for-rag/" target="_blank" rel="noopener">pgvector card</a>.
+pgvector ships the same idea as **IVFFlat**: faster to build and lighter than HNSW, with a weaker speed-recall trade-off. The docs tell you to start `lists` at `rows / 1000` up to 1 million rows, and at `sqrt(rows)` above that, and to start `probes` at `sqrt(lists)`. The default number of probes is 1, which is usually too low. I already recorded those defaults in the <a href="https://blogs.theintelliwise.com/posts/choosing-vector-database-for-rag/" target="_blank" rel="noopener">pgvector card</a>.
 
 IVF is also the usual partner for compression. `IVFPQ` stores a short code in each list instead of the full vector. That is how a lot of large-scale search actually runs, in FAISS and in Milvus (`IVF_FLAT`, `IVF_SQ8`, `IVF_PQ`, and newer variants such as `IVF_RABITQ`).
 
@@ -231,7 +231,7 @@ Using the same **example math** as before: one million 768-d float32 vectors tak
 
 NVIDIA's CAGRA, described in a 2023 paper and shipped as `GPU_CAGRA` in Milvus, is the GPU-shaped version of the graph idea. I mention it so the shortlist does not pretend that CPU HNSW is the only modern graph.
 
-**Measure it on your questions.** Build a small eval set of real queries and the chunk that should come back. Record recall@k and a latency percentile, with your real filters on. If you later change the embedding model, you have to re-embed everything. I said the same thing in the vector database guide, and it is still the step that catches a confident but wrong index choice. For the embedding models themselves, the companion post is <a href="https://theintelliwise.com/posts/embeddings-interview-qa/" target="_blank" rel="noopener">Embeddings Interview Q&A</a>.
+**Measure it on your questions.** Build a small eval set of real queries and the chunk that should come back. Record recall@k and a latency percentile, with your real filters on. If you later change the embedding model, you have to re-embed everything. I said the same thing in the vector database guide, and it is still the step that catches a confident but wrong index choice. For the embedding models themselves, the companion post is <a href="https://blogs.theintelliwise.com/posts/embeddings-interview-qa/" target="_blank" rel="noopener">Embeddings Interview Q&A</a>.
 
 ---
 
@@ -247,7 +247,7 @@ I do not start from a list of seven names. I ask, in this order:
 
 For most internal RAG assistants I see, the honest answer is still closer to step 1 or 2 than to step 4. Billions of vectors are a real problem, and DiskANN exists because of it. A company handbook with a few hundred thousand chunks is not that problem.
 
-If the same questions come in again and again, that is also not an index problem. That is a cache problem, and I wrote about it in <a href="https://theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">Semantic Caching for RAG and LLMs</a>.
+If the same questions come in again and again, that is also not an index problem. That is a cache problem, and I wrote about it in <a href="https://blogs.theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">Semantic Caching for RAG and LLMs</a>.
 
 ---
 
@@ -303,4 +303,4 @@ Official docs and library guides (checked November 2026):
 - <a href="https://redis.io/docs/latest/develop/ai/search-and-query/vectors/" target="_blank" rel="noopener">Redis: Vector search concepts (FLAT, HNSW, SVS-VAMANA)</a>
 - <a href="https://github.com/microsoft/DiskANN" target="_blank" rel="noopener">Microsoft DiskANN library</a>
 
-Related Intelliwise posts: <a href="https://theintelliwise.com/posts/choosing-vector-database-for-rag/" target="_blank" rel="noopener">Choosing a Vector Database for RAG</a>, <a href="https://theintelliwise.com/posts/embeddings-interview-qa/" target="_blank" rel="noopener">Embeddings Interview Q&A</a>, <a href="https://theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a>, and <a href="https://theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">Semantic Caching for RAG and LLMs</a>.
+Related Intelliwise posts: <a href="https://blogs.theintelliwise.com/posts/choosing-vector-database-for-rag/" target="_blank" rel="noopener">Choosing a Vector Database for RAG</a>, <a href="https://blogs.theintelliwise.com/posts/embeddings-interview-qa/" target="_blank" rel="noopener">Embeddings Interview Q&A</a>, <a href="https://blogs.theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a>, and <a href="https://blogs.theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">Semantic Caching for RAG and LLMs</a>.
