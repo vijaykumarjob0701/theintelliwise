@@ -5,10 +5,12 @@
       <span class="wordmark-text">{{ site.title }}</span>
     </a>
     <nav class="nav" aria-label="Primary">
-      <a href="{{ '/' | relative_url }}"{% if page.layout == 'home' or page.url == '/' %} aria-current="page"{% endif %}>
+      {% unless page.layout == 'home' or page.url == '/' %}
+      <a href="{{ '/' | relative_url }}">
         {% include nav-icon.html name="writing" %}
         <span>Blogs</span>
       </a>
+      {% endunless %}
       <a href="{{ '/about/' | relative_url }}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>
         {% include nav-icon.html name="about" %}
         <span>About</span>
