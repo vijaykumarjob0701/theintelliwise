@@ -29,7 +29,7 @@ flowchart TD
 
 Static word vectors came first: one point per word type. ELMo and BERT then made the vector depend on the rest of the sentence. Sentence-BERT is the step that made those vectors usable for search. After 2019, most production retrievers are still bi-encoders, but they are usually trained with contrastive loss, and many no longer start from BERT. A reranker or a late-interaction model is an optional second stage. CLIP-style models put images and text in the same space. Matryoshka is a training method that lets you shorten a vector and still keep most of the meaning. It is not a separate model family.
 
-If you want the "list of numbers" picture first, I wrote a short post on that: <a href="https://theintelliwise.com/posts/coordinate-vector-matrix-tensor/" target="_blank" rel="noopener">Coordinate, Vector, Matrix, Tensor</a>. This interview is about how those lists are learned, and which one you actually use.
+If you want the "list of numbers" picture first, I wrote a short post on that: <a href="https://blogs.theintelliwise.com/posts/coordinate-vector-matrix-tensor/" target="_blank" rel="noopener">Coordinate, Vector, Matrix, Tensor</a>. This interview is about how those lists are learned, and which one you actually use.
 
 ---
 
@@ -43,7 +43,7 @@ If you want the "list of numbers" picture first, I wrote a short post on that: <
 
 "How do I reset my password?" and "I forgot my password" should be near each other. "Office Wi-Fi code" should be farther away. Once you have that, search becomes "embed the question, find the nearest stored vectors, return those chunks."
 
-That is the retrieval step in RAG. The database that holds the vectors is a different decision. I wrote a <a href="https://theintelliwise.com/posts/choosing-vector-database-for-rag/" target="_blank" rel="noopener">decision guide on choosing a vector store</a>. This interview is about the vectors themselves.
+That is the retrieval step in RAG. The database that holds the vectors is a different decision. I wrote a <a href="https://blogs.theintelliwise.com/posts/choosing-vector-database-for-rag/" target="_blank" rel="noopener">decision guide on choosing a vector store</a>. This interview is about the vectors themselves.
 
 <em>Follow-up they may ask:</em> Is an embedding only for words? No. You can embed a token, a sentence, a whole document, an image, or even audio. The idea is the same. The model that produces the list is not.
 
@@ -289,9 +289,9 @@ A short map I would draw on the whiteboard:
 | Search photos with a text query | A current CLIP-style model, such as CLIP or SigLIP | Any text-only model |
 | The vectors are too wide for the index | A Matryoshka-trained model, and a shorter prefix | Cutting a normal vector and hoping |
 
-I would also measure, not guess. Build a set of real questions with the chunk that should come back. Track recall@k and a latency percentile. When I change the embedding model, I have to re-embed every chunk. Old and new vectors cannot be mixed. I said the same thing in the <a href="https://theintelliwise.com/posts/choosing-vector-database-for-rag/" target="_blank" rel="noopener">vector database guide</a>, and in <a href="https://theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a>.
+I would also measure, not guess. Build a set of real questions with the chunk that should come back. Track recall@k and a latency percentile. When I change the embedding model, I have to re-embed every chunk. Old and new vectors cannot be mixed. I said the same thing in the <a href="https://blogs.theintelliwise.com/posts/choosing-vector-database-for-rag/" target="_blank" rel="noopener">vector database guide</a>, and in <a href="https://blogs.theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a>.
 
-If the same questions come in again and again, that is a cache problem, not an embedding problem. <a href="https://theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">Semantic caching</a> is the post for that.
+If the same questions come in again and again, that is a cache problem, not an embedding problem. <a href="https://blogs.theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">Semantic caching</a> is the post for that.
 
 I am not going to name one "best" public model for 2026 in this interview. Leaderboards move. The right move is to pick two or three current sentence-embedding models, run them on your own questions, and keep the winner.
 
@@ -373,7 +373,7 @@ Official docs and project pages (checked November 2026):
 - <a href="https://github.com/stanford-futuredata/ColBERT/" target="_blank" rel="noopener">ColBERT official repository</a>
 - <a href="https://nlp.stanford.edu/projects/glove/" target="_blank" rel="noopener">Stanford GloVe project page</a>
 
-Related Intelliwise posts: <a href="https://theintelliwise.com/posts/choosing-vector-database-for-rag/" target="_blank" rel="noopener">Choosing a Vector Database for RAG</a>, <a href="https://theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a>, <a href="https://theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">Semantic Caching for RAG and LLMs</a>, and <a href="https://theintelliwise.com/posts/coordinate-vector-matrix-tensor/" target="_blank" rel="noopener">Coordinate, Vector, Matrix, Tensor</a>.
+Related Intelliwise posts: <a href="https://blogs.theintelliwise.com/posts/choosing-vector-database-for-rag/" target="_blank" rel="noopener">Choosing a Vector Database for RAG</a>, <a href="https://blogs.theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a>, <a href="https://blogs.theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">Semantic Caching for RAG and LLMs</a>, and <a href="https://blogs.theintelliwise.com/posts/coordinate-vector-matrix-tensor/" target="_blank" rel="noopener">Coordinate, Vector, Matrix, Tensor</a>.
 
 ---
 

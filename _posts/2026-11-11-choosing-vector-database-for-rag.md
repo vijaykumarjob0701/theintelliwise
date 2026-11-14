@@ -261,7 +261,7 @@ This one-liner holds up well. If BM25 search already lives in Elasticsearch, add
 
 **My take**
 
-"Redis for latency" is fair, but every option here can be fast at small scale. In a RAG request, the LLM call usually takes far longer than the vector lookup. So I pick Redis when it is already in the stack or when I am building a cache. I wrote about that in <a href="https://theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">Semantic Caching for RAG &amp; LLMs</a>.
+"Redis for latency" is fair, but every option here can be fast at small scale. In a RAG request, the LLM call usually takes far longer than the vector lookup. So I pick Redis when it is already in the stack or when I am building a cache. I wrote about that in <a href="https://blogs.theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">Semantic Caching for RAG &amp; LLMs</a>.
 
 ---
 
@@ -347,7 +347,7 @@ Vectors are good at meaning. They are weak at exact strings like `ERR_TLS_1042` 
 
 ![Two ranked lists fused with RRF, D1 comes first]({{ '/assets/images/choosing-vector-database-for-rag/03-hybrid-rrf.gif' | relative_url }})
 
-If you want to tune top-k, recall and precision after this, my earlier post <a href="https://theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a> walks through those knobs.
+If you want to tune top-k, recall and precision after this, my earlier post <a href="https://blogs.theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a> walks through those knobs.
 
 ### Memory math (do this before any meeting)
 
@@ -461,7 +461,7 @@ Papers:
 - <a href="https://www.microsoft.com/en-us/research/publication/diskann-fast-accurate-billion-point-nearest-neighbor-search-on-a-single-node/" target="_blank" rel="noopener">DiskANN: Fast Accurate Billion-point Nearest Neighbor Search on a Single Node (NeurIPS 2019)</a>
 - <a href="https://dl.acm.org/doi/10.1145/1571941.1572114" target="_blank" rel="noopener">Cormack, Clarke and Büttcher: Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods (SIGIR 2009)</a>
 
-Related Intelliwise posts: <a href="https://theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a> and <a href="https://theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">Semantic Caching for RAG &amp; LLMs</a>.
+Related Intelliwise posts: <a href="https://blogs.theintelliwise.com/posts/rag-five-knobs-recall-precision-topk-topp-cost/" target="_blank" rel="noopener">Five Things to Measure and Tune in a RAG System</a> and <a href="https://blogs.theintelliwise.com/posts/rag-semantic-caching/" target="_blank" rel="noopener">Semantic Caching for RAG &amp; LLMs</a>.
 
 ---
 
