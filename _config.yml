@@ -90,7 +90,7 @@ defaults:
       type: pages
     values:
       layout: page
-  # Unlisted lunch-box guides (not in _posts, so they stay off Writing / RSS).
+  # Unlisted lunch-box guides (not in _posts, so they stay off the Blogs listing / RSS).
   - scope:
       path: "papers"
     values:

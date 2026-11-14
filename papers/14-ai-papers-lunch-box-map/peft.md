@@ -56,7 +56,7 @@ flowchart TB
 - **A shared vocabulary.** “We did PEFT” is now a sentence in design docs. Push for the method name.
 - **Adapters were the proof.** Houlsby et al. showed *BERT + tiny inserts* ≈ full fine-tune on GLUE-style work. LoRA later won the LLM era on simplicity + merge.
 
-Deeper tour of knobs (rank, alpha, QLoRA): [PEFT, LoRA, and QLoRA]({{ '/posts/peft-lora-qlora-guide/' | relative_url }}) on this site. That post is a listed Writing piece. This page stays a lunch-box satellite.
+Deeper tour of knobs (rank, alpha, QLoRA): [PEFT, LoRA, and QLoRA]({{ '/posts/peft-lora-qlora-guide/' | relative_url }}) on this site. That post is a listed Blogs piece. This page stays a lunch-box satellite.
 
 ## What to remember
 
